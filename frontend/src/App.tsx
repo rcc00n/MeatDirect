@@ -12,6 +12,7 @@ import PricingPage from "./pages/PricingPage";
 import GalleryPage from "./pages/GalleryPage";
 import BlogListPage from "./pages/BlogListPage";
 import BlogPostPage from "./pages/BlogPostPage";
+import ContactPage from "./pages/ContactPage";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/pricing" element={<PricingPage />} />
         <Route path="/blog" element={<BlogListPage />} />
         <Route path="/blog/:slug" element={<BlogPostPage />} />
+        <Route path="/contact" element={<ContactPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
         <Route path="/success" element={<SuccessPage />} />

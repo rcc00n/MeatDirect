@@ -28,6 +28,8 @@ function Header({ onCartClick }: HeaderProps) {
             <a href="mailto:hello@meatdirect.com">hello@meatdirect.com</a>
             <span className="divider">•</span>
             <a href="tel:555-123-4567">(555) 123-4567</a>
+            <span className="divider">•</span>
+            <Link to="/contact">Contact page</Link>
           </div>
           <div className="topbar__note">Local delivery · Grass-fed & hormone-free · Federally inspected</div>
         </div>
