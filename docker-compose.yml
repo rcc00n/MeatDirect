@@ -11,7 +11,9 @@ services:
       - "15432:5432"
 
   backend:
-    build: ./backend
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
     command: gunicorn shop.wsgi:application --bind 0.0.0.0:8000
     ports:
       - "8000:8000"
