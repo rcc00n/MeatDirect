@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     "products",
     "orders",
     "payments",
+    "contacts",
 ]
 
 MIDDLEWARE = [
@@ -69,6 +70,9 @@ REST_FRAMEWORK = {
         "rest_framework.parsers.JSONParser",
     ],
 }
+
+EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend")
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "hello@meatdirect.com")
 
 AUTH_PASSWORD_VALIDATORS = [
     {
