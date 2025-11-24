@@ -15,6 +15,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "corsheaders",
     "rest_framework",
     "products",
     "orders",
@@ -22,7 +23,9 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -89,5 +92,13 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "static"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+CORS_ALLOWED_ORIGINS = (
+    os.environ.get("DJANGO_CORS_ALLOWED_ORIGINS", "").split(",")
+    if os.environ.get("DJANGO_CORS_ALLOWED_ORIGINS")
+    else []
+)
+CORS_ALLOW_ALL_ORIGINS = DEBUG
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

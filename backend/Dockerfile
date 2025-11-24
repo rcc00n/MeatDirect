@@ -10,4 +10,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
+RUN DJANGO_SETTINGS_MODULE=shop.settings.prod DJANGO_SECRET_KEY=dev-secret-key DJANGO_ALLOWED_HOSTS=localhost python manage.py collectstatic --noinput
+
 CMD ["gunicorn", "shop.wsgi:application", "--bind", "0.0.0.0:8000"]

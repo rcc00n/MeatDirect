@@ -1,4 +1,5 @@
-import { Link, Outlet } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Outlet, useLocation } from "react-router-dom";
 
 import { useCart } from "../../context/CartContext";
 import CartSidebar from "./CartSidebar";
@@ -6,23 +7,45 @@ import Footer from "./Footer";
 import Header from "./Header";
 
 function Layout() {
-  const { items } = useCart();
+  const { items, subtotalCents } = useCart();
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
+  const location = useLocation();
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
+  useEffect(() => {
+    setIsCartOpen(false);
+  }, [location.pathname]);
+
+  const handleOpenCart = () => setIsCartOpen(true);
+  const handleCloseCart = () => setIsCartOpen(false);
 
   return (
     <div className="layout-shell">
-      <Header />
+      <Header onCartClick={handleOpenCart} />
       <div className="layout-content">
         <div className="cart-link-mobile">
-          <Link to="/cart">View cart ({itemCount})</Link>
+          <button type="button" onClick={handleOpenCart}>
+            Open cart ({itemCount})
+          </button>
         </div>
         <div className="layout-main">
           <main className="page-main">
             <Outlet />
           </main>
-          <CartSidebar />
         </div>
       </div>
+      <button
+        type="button"
+        className="cart-fab"
+        onClick={handleOpenCart}
+        aria-expanded={isCartOpen}
+      >
+        <div className="cart-fab__label">Cart</div>
+        <div className="cart-fab__meta">
+          {itemCount} item{itemCount === 1 ? "" : "s"} · ${(subtotalCents / 100).toFixed(2)}
+        </div>
+      </button>
+      <CartSidebar open={isCartOpen} onClose={handleCloseCart} />
       <Footer />
     </div>
   );

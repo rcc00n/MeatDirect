@@ -9,9 +9,14 @@ const navLinkStyle: CSSProperties = {
   fontWeight: 600,
 };
 
-function Header() {
-  const { items } = useCart();
+type HeaderProps = {
+  onCartClick?: () => void;
+};
+
+function Header({ onCartClick }: HeaderProps) {
+  const { items, subtotalCents } = useCart();
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
+  const subtotal = (subtotalCents / 100).toFixed(2);
 
   return (
     <header
@@ -67,6 +72,17 @@ function Header() {
           <NavLink to="/checkout" style={navLinkStyle}>
             Checkout
           </NavLink>
+          <button
+            type="button"
+            onClick={onCartClick}
+            className="header-cart-button"
+            aria-label="Open cart"
+          >
+            <span>Cart</span>
+            <span className="header-cart-button__meta">
+              {itemCount} item{itemCount === 1 ? "" : "s"} · ${subtotal}
+            </span>
+          </button>
         </nav>
       </div>
     </header>
