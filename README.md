@@ -34,6 +34,20 @@ The frontend ships with basic catalog, product detail, cart, checkout, and succe
 
 `docker-compose.yml` contains backend, frontend, and Postgres services. Backend defaults to SQLite unless you point settings to Postgres. Frontend image serves the built bundle via Nginx on port `4173`.
 
+## Production (Dokku env)
+
+- Copy `backend/.env.production.example` to `backend/.env.production` and fill the values. Generate a secret with:
+  ```bash
+  python - <<'PY'
+  import secrets; print(secrets.token_urlsafe(64))
+  PY
+  ```
+- Push the filled values to Dokku:
+  ```bash
+  dokku config:set meatdirect $(sed '/^#/d;/^$/d' backend/.env.production | xargs)
+  ```
+- Rebuild once config is in place: `dokku ps:rebuild meatdirect`
+
 ## Repo structure
 
 ```
