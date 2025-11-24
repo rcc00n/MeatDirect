@@ -6,12 +6,14 @@ import CheckoutPage from "./pages/CheckoutPage";
 import HomePage from "./pages/HomePage";
 import ProductPage from "./pages/ProductPage";
 import SuccessPage from "./pages/SuccessPage";
+import AboutPage from "./pages/AboutPage";
 
 function App() {
   return (
     <Routes>
       <Route element={<Layout />}>
         <Route path="/" element={<HomePage />} />
+        <Route path="/about-us" element={<AboutPage />} />
         <Route path="/products/:slug" element={<ProductPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
