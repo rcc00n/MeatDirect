@@ -56,9 +56,6 @@ function Header({ onCartClick }: HeaderProps) {
           </nav>
 
           <div className="nav__actions">
-            <NavLink to="/cart" className="nav__link nav__link--compact">
-              Cart ({itemCount})
-            </NavLink>
             <button
               type="button"
               onClick={onCartClick}
