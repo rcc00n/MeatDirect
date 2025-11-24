@@ -197,8 +197,8 @@ function AboutPage() {
               ship-to-door orders across provinces without changing our standards.
             </p>
             <div className="good-to-know__links">
-              <Link to="/faq" className="link-button">
-                Read the full FAQ & education page (Day 7/8) →
+              <Link to="/good-to-know" className="link-button">
+                Read the full FAQ & education page →
               </Link>
               <span className="pill pill--small">Transparency first</span>
             </div>

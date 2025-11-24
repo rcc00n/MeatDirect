@@ -14,6 +14,7 @@ function Header({ onCartClick }: HeaderProps) {
     { label: "Home", to: "/" },
     { label: "Menu", to: "/menu" },
     { label: "About Us", to: "/about-us" },
+    { label: "Good to Know", to: "/good-to-know" },
     { label: "Pricing", to: "/pricing" },
     { label: "Gallery", to: "/gallery" },
     { label: "Blog", to: "/blog" },
@@ -30,6 +31,12 @@ function Header({ onCartClick }: HeaderProps) {
             <a href="tel:555-123-4567">(555) 123-4567</a>
             <span className="divider">•</span>
             <Link to="/contact">Contact page</Link>
+          </div>
+          <div className="topbar__education">
+            <Link to="/good-to-know" className="topbar__education-link">
+              Good to Know / Meat education
+            </Link>
+            <span className="pill pill--small">New</span>
           </div>
           <div className="topbar__note">Local delivery · Grass-fed & hormone-free · Federally inspected</div>
         </div>
