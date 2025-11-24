@@ -1,13 +1,6 @@
-import type { CSSProperties } from "react";
 import { Link, NavLink } from "react-router-dom";
 
 import { useCart } from "../../context/CartContext";
-
-const navLinkStyle: CSSProperties = {
-  padding: "8px 12px",
-  borderRadius: "10px",
-  fontWeight: 600,
-};
 
 type HeaderProps = {
   onCartClick?: () => void;
@@ -17,73 +10,68 @@ function Header({ onCartClick }: HeaderProps) {
   const { items, subtotalCents } = useCart();
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
   const subtotal = (subtotalCents / 100).toFixed(2);
+  const navLinks = [
+    { label: "Home", to: "/" },
+    { label: "About Us", to: "/about-us" },
+    { label: "Pricing", to: "/pricing" },
+    { label: "Shop/Menu", to: "/menu" },
+    { label: "Gallery", to: "/gallery" },
+    { label: "Blog", to: "/blog" },
+    { label: "Contact", to: "/contact" },
+  ];
 
   return (
-    <header
-      style={{
-        position: "sticky",
-        top: 0,
-        zIndex: 10,
-        backdropFilter: "blur(10px)",
-        background: "rgba(255, 255, 255, 0.8)",
-        borderBottom: "1px solid #e2e8f0",
-      }}
-    >
-      <div
-        style={{
-          width: "min(1100px, 95vw)",
-          margin: "0 auto",
-          padding: "18px 0",
-          display: "flex",
-          alignItems: "center",
-          gap: "16px",
-        }}
-      >
-        <Link to="/" style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: 38,
-              height: 38,
-              borderRadius: "50%",
-              background: "linear-gradient(135deg, #f97316, #ea580c)",
-              color: "#fff",
-              fontWeight: 700,
-              letterSpacing: 0.2,
-            }}
-          >
-            MD
-          </span>
-          <div>
-            <div style={{ fontWeight: 700 }}>MeatDirect</div>
-            <div style={{ fontSize: 12, color: "#475569" }}>Direct-to-door craft meat</div>
+    <header className="site-header">
+      <div className="topbar">
+        <div className="container topbar__content">
+          <div className="topbar__contact">
+            <a href="mailto:hello@meatdirect.com">hello@meatdirect.com</a>
+            <span className="divider">•</span>
+            <a href="tel:555-123-4567">(555) 123-4567</a>
           </div>
-        </Link>
+          <div className="topbar__note">Local delivery · Grass-fed & hormone-free · Federally inspected</div>
+        </div>
+      </div>
 
-        <nav style={{ display: "flex", alignItems: "center", gap: 8, marginLeft: "auto" }}>
-          <NavLink to="/" style={navLinkStyle}>
-            Home
-          </NavLink>
-          <NavLink to="/cart" style={navLinkStyle}>
-            Cart ({itemCount})
-          </NavLink>
-          <NavLink to="/checkout" style={navLinkStyle}>
-            Checkout
-          </NavLink>
-          <button
-            type="button"
-            onClick={onCartClick}
-            className="header-cart-button"
-            aria-label="Open cart"
-          >
-            <span>Cart</span>
-            <span className="header-cart-button__meta">
-              {itemCount} item{itemCount === 1 ? "" : "s"} · ${subtotal}
-            </span>
-          </button>
-        </nav>
+      <div className="nav-shell">
+        <div className="container nav">
+          <Link to="/" className="brand">
+            <span className="brand__mark">MD</span>
+            <div>
+              <div className="brand__name">MeatDirect</div>
+              <div className="brand__tagline">From farms to your doorstep</div>
+            </div>
+          </Link>
+
+          <nav className="nav__links">
+            {navLinks.map((link) => (
+              <NavLink
+                key={link.to}
+                to={link.to}
+                className={({ isActive }) => `nav__link ${isActive ? "is-active" : ""}`}
+              >
+                {link.label}
+              </NavLink>
+            ))}
+          </nav>
+
+          <div className="nav__actions">
+            <NavLink to="/cart" className="nav__link nav__link--compact">
+              Cart ({itemCount})
+            </NavLink>
+            <button
+              type="button"
+              onClick={onCartClick}
+              className="header-cart-button"
+              aria-label="Open cart"
+            >
+              <span>Cart</span>
+              <span className="header-cart-button__meta">
+                {itemCount} item{itemCount === 1 ? "" : "s"} · ${subtotal}
+              </span>
+            </button>
+          </div>
+        </div>
       </div>
     </header>
   );

@@ -24,7 +24,7 @@ function SimilarProductsRow({ products }: SimilarProductsRowProps) {
             key={product.id}
             style={{ border: "1px solid #e2e8f0", borderRadius: 14, padding: 12, display: "grid", gap: 8 }}
           >
-            <Link to={`/products/${product.id}`} style={{ fontWeight: 700 }}>
+            <Link to={`/products/${product.slug}`} style={{ fontWeight: 700 }}>
               {product.name}
             </Link>
             {product.category && <span style={{ color: "#0f172a", fontSize: 12 }}>{product.category}</span>}

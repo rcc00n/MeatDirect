@@ -9,3 +9,4 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = ProductSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ["name", "category"]
+    lookup_field = "slug"

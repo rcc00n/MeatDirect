@@ -9,7 +9,7 @@ export async function getProducts(search?: string, signal?: AbortSignal): Promis
   return response.data;
 }
 
-export async function getProduct(id: number): Promise<Product> {
-  const response = await api.get<Product>(`/products/${id}/`);
+export async function getProduct(slug: string): Promise<Product> {
+  const response = await api.get<Product>(`/products/${slug}/`);
   return response.data;
 }

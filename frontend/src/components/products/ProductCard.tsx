@@ -15,14 +15,14 @@ function ProductCard({ product }: ProductCardProps) {
 
   return (
     <div className="product-card">
-      <Link to={`/products/${product.id}`} className="product-card__image-wrapper">
+      <Link to={`/products/${product.slug}`} className="product-card__image-wrapper">
         {isPopular && <span className="product-card__badge">Popular pick</span>}
         <img src={imageUrl} alt={product.name} className="product-card__image" />
       </Link>
       <div className="product-card__body">
         <div className="product-card__header">
           <h3 className="product-card__title">
-            <Link to={`/products/${product.id}`}>{product.name}</Link>
+            <Link to={`/products/${product.slug}`}>{product.name}</Link>
           </h3>
           <span className="product-card__price">${(product.price_cents / 100).toFixed(2)}</span>
         </div>
@@ -38,7 +38,7 @@ function ProductCard({ product }: ProductCardProps) {
           <button type="button" onClick={() => addItem(product, 1)} className="button button--primary">
             Add to Cart
           </button>
-          <Link to={`/products/${product.id}`} className="button button--ghost">
+          <Link to={`/products/${product.slug}`} className="button button--ghost">
             Details
           </Link>
         </div>

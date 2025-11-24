@@ -21,3 +21,12 @@ export interface CartItem {
   product: Product;
   quantity: number;
 }
+
+export interface BlogPost {
+  id: number;
+  title: string;
+  slug: string;
+  excerpt?: string;
+  published_at?: string;
+  hero_image_url?: string;
+}
