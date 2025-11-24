@@ -1,7 +1,11 @@
-from rest_framework.response import Response
-from rest_framework.views import APIView
+from rest_framework import filters, viewsets
+
+from .models import Product
+from .serializers import ProductSerializer
 
 
-class ProductListView(APIView):
-    def get(self, request):  # pragma: no cover - placeholder
-        return Response([])
+class ProductViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ["name", "category"]
