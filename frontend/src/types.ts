@@ -11,6 +11,7 @@ export interface Product {
   slug: string;
   description: string;
   price_cents: number;
+  image_url?: string;
   main_image_url?: string;
   category?: string;
   is_popular: boolean;

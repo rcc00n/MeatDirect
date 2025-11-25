@@ -74,6 +74,10 @@ function ProductPage() {
       images.unshift({ url: product.main_image_url, alt: product.name });
     }
 
+    if (product.image_url && !images.some((image) => image.url === product.image_url)) {
+      images.unshift({ url: product.image_url, alt: product.name });
+    }
+
     if (!images.length) {
       images.push({ url: getProductImageUrl(product), alt: product.name });
     }
