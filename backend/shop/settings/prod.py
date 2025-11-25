@@ -4,7 +4,7 @@ import os
 import urllib.parse
 
 # Make sure we're in non-debug mode in prod (optional, but recommended)
-DEBUG = os.environ.get("DJANGO_DEBUG", "False") == "True"
+DEBUG = os.environ.get("DJANGO_DEBUG", "False")
 
 # Force DATABASES from DATABASE_URL, ignoring whatever base.py did
 DATABASE_URL = os.environ.get("DATABASE_URL")
