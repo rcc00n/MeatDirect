@@ -171,4 +171,10 @@ CSRF_TRUSTED_ORIGINS = (
     else []
 )
 
+# Allow overriding cookie settings for cross-site frontend/backend setups.
+CSRF_COOKIE_SAMESITE = os.environ.get("DJANGO_CSRF_COOKIE_SAMESITE", "Lax")
+CSRF_COOKIE_SECURE = os.environ.get("DJANGO_CSRF_COOKIE_SECURE", "False") == "True"
+SESSION_COOKIE_SAMESITE = os.environ.get("DJANGO_SESSION_COOKIE_SAMESITE", "Lax")
+SESSION_COOKIE_SECURE = os.environ.get("DJANGO_SESSION_COOKIE_SECURE", "False") == "True"
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
