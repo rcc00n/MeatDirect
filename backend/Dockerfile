@@ -7,6 +7,8 @@ COPY frontend/. .
 # Build frontend assets with a relative API base (served by the same app) and static base
 ARG VITE_API_BASE_URL=/api
 ENV VITE_API_BASE_URL=${VITE_API_BASE_URL}
+ARG VITE_STRIPE_PUBLISHABLE_KEY=
+ENV VITE_STRIPE_PUBLISHABLE_KEY=${VITE_STRIPE_PUBLISHABLE_KEY}
 RUN npm run build -- --base=/static/
 
 FROM python:3.11-slim

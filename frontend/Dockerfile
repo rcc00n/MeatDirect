@@ -9,6 +9,11 @@ RUN apk add --no-cache python3 make g++
 COPY frontend/package*.json ./
 RUN npm install
 
+ARG VITE_API_BASE_URL
+ENV VITE_API_BASE_URL=${VITE_API_BASE_URL}
+ARG VITE_STRIPE_PUBLISHABLE_KEY
+ENV VITE_STRIPE_PUBLISHABLE_KEY=${VITE_STRIPE_PUBLISHABLE_KEY}
+
 COPY frontend/ .
 RUN npm run build
 
