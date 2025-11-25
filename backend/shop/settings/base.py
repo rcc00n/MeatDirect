@@ -164,5 +164,11 @@ CORS_ALLOWED_ORIGINS = (
     else []
 )
 CORS_ALLOW_ALL_ORIGINS = DEBUG
+CORS_ALLOW_CREDENTIALS = True
+CSRF_TRUSTED_ORIGINS = (
+    os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",")
+    if os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS")
+    else []
+)
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
