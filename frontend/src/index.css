@@ -276,6 +276,64 @@ img {
   gap: 10px;
 }
 
+.nav__mobile-actions {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.nav__mobile-cart {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px dashed #e2e8f0;
+  background: #fff;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.nav__toggle {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: linear-gradient(135deg, #f8fafc, #fff);
+  font-weight: 800;
+  color: #0f172a;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.nav__toggle:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 12px 26px -22px rgba(15, 23, 42, 0.5);
+}
+
+.nav__toggle-bars {
+  display: grid;
+  gap: 4px;
+}
+
+.nav__toggle-bars span {
+  width: 16px;
+  height: 2px;
+  border-radius: 999px;
+  background: #0f172a;
+  transition: width 0.2s ease;
+}
+
+.nav__toggle.is-active .nav__toggle-bars span:nth-child(2) {
+  width: 12px;
+}
+
+.nav__toggle-label {
+  font-size: 14px;
+}
+
 .divider {
   color: #d1d5db;
 }
@@ -294,7 +352,195 @@ img {
   font-weight: 700;
 }
 
+.mobile-menu {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  top: 16px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: 0 26px 52px -32px rgba(15, 23, 42, 0.42);
+  display: grid;
+  gap: 12px;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-8px);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+  z-index: 18;
+}
+
+.mobile-menu.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.mobile-menu__backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease;
+  z-index: 14;
+}
+
+.mobile-menu__backdrop.is-active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobile-menu__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.mobile-menu__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mobile-menu__brand-name {
+  font-weight: 900;
+}
+
+.mobile-menu__brand-tagline {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.mobile-menu__close {
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  font-weight: 800;
+}
+
+.mobile-menu__links {
+  display: grid;
+  gap: 8px;
+}
+
+.mobile-menu__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.mobile-menu__link.is-active {
+  border-color: #0ea5e9;
+  background: #e0f2fe;
+}
+
+.mobile-menu__chevron {
+  color: #94a3b8;
+  font-weight: 800;
+}
+
+.mobile-menu__meta {
+  display: grid;
+  gap: 10px;
+}
+
+.mobile-menu__chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.mobile-menu__chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px dashed #e2e8f0;
+  background: #fff;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.mobile-menu__chip--accent {
+  background: linear-gradient(135deg, #0f3d2c, #166534);
+  color: #fff;
+  border-color: transparent;
+}
+
+.mobile-menu__note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+@media (min-width: 961px) {
+  .mobile-menu,
+  .mobile-menu__backdrop {
+    display: none;
+  }
+}
+
 @media (max-width: 960px) {
+  .topbar__content {
+    padding: 8px 0;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .topbar__contact {
+    display: none;
+  }
+
+  .topbar__education {
+    justify-self: end;
+    padding: 6px 10px;
+    font-size: 13px;
+  }
+
+  .topbar__note {
+    grid-column: 1 / -1;
+    font-size: 12px;
+    color: #e2e8f0;
+  }
+
+  .nav {
+    gap: 12px;
+    padding: 12px 0;
+  }
+
+  .brand__tagline {
+    display: none;
+  }
+
+  .nav__links--desktop,
+  .nav__actions--desktop {
+    display: none;
+  }
+
+  .nav__mobile-actions {
+    display: flex;
+  }
+
+  .nav__toggle {
+    display: inline-flex;
+  }
+
   .cart-link-mobile {
     display: flex;
   }
