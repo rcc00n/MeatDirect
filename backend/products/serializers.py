@@ -29,6 +29,10 @@ class ProductSerializer(serializers.ModelSerializer):
         ]
 
     def get_image_url(self, obj):
+        if getattr(obj, "image_url", ""):
+            return obj.image_url
+        if getattr(obj, "main_image_url", ""):
+            return obj.main_image_url
         if not obj.image:
             return ""
         try:

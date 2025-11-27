@@ -13,8 +13,29 @@ class Product(models.Model):
         help_text="Main product image (stored in S3 or local MEDIA_ROOT).",
     )
     main_image_url = models.URLField(blank=True)
+    image_url = models.URLField(
+        blank=True,
+        default="",
+        help_text="Primary product image hosted by Square (if available).",
+    )
     category = models.CharField(max_length=100, blank=True)
     is_popular = models.BooleanField(default=False)
+    square_item_id = models.CharField(
+        max_length=64,
+        blank=True,
+        db_index=True,
+        help_text="Square Catalog ITEM id",
+    )
+    square_variation_id = models.CharField(
+        max_length=64,
+        blank=True,
+        db_index=True,
+        help_text="Square Catalog ITEM_VARIATION id",
+    )
+    square_quantity = models.IntegerField(
+        default=0,
+        help_text="Cached stock from Square Inventory (for this variation)",
+    )
 
     def __str__(self):
         return self.name

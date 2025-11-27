@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     "notifications",
     "contacts",
     "blog",
+    "square_sync",
 ]
 
 MIDDLEWARE = [
@@ -178,5 +179,16 @@ CSRF_COOKIE_SAMESITE = os.environ.get("DJANGO_CSRF_COOKIE_SAMESITE", "Lax")
 CSRF_COOKIE_SECURE = os.environ.get("DJANGO_CSRF_COOKIE_SECURE", "False") == "True"
 SESSION_COOKIE_SAMESITE = os.environ.get("DJANGO_SESSION_COOKIE_SAMESITE", "Lax")
 SESSION_COOKIE_SECURE = os.environ.get("DJANGO_SESSION_COOKIE_SECURE", "False") == "True"
+
+SQUARE_ACCESS_TOKEN = os.environ.get("SQUARE_ACCESS_TOKEN", "")
+SQUARE_ENVIRONMENT = os.environ.get("SQUARE_ENVIRONMENT", "sandbox")
+SQUARE_API_VERSION = os.environ.get("SQUARE_API_VERSION", "2025-10-16")
+
+if SQUARE_ENVIRONMENT == "sandbox":
+    SQUARE_BASE_URL = "https://connect.squareupsandbox.com/v2"
+else:
+    SQUARE_BASE_URL = "https://connect.squareup.com/v2"
+
+SQUARE_LOCATION_ID = os.environ.get("SQUARE_LOCATION_ID", "")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
