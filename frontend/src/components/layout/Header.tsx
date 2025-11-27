@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-
+import { ShoppingCart } from 'lucide-react';
 import { useCart } from "../../context/CartContext";
 import logo from "../../assets/logo.png";
 
@@ -55,12 +55,9 @@ function Header({ onCartClick }: HeaderProps) {
         </nav>
 
         <div className="nav__actions">
-          <button type="button" onClick={handleCartClick} className="nav__cart" aria-label="Open cart">
-            <span>Cart: ${subtotal}</span>
-            <span className="nav__cart-count">
-              {itemCount} item{itemCount === 1 ? "" : "s"}
-            </span>
-          </button>
+          <button className="bg-red-600 text-white p-2 rounded hover:bg-red-700 transition-colors" onClick={handleCartClick}>
+              <ShoppingCart size={20} />
+            </button>
           <button
             type="button"
             className={`nav__toggle ${isMobileOpen ? "is-active" : ""}`}

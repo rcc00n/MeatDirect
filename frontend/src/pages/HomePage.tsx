@@ -230,6 +230,14 @@ function HomePage() {
               </div>
             ))}
           </div>
+          <div className="text-center mt-12">
+            <Link
+              to="/pricing"
+              className="inline-block border-2 border-black text-black px-8 py-3 rounded hover:bg-black hover:text-white transition-colors"
+            >
+              View Whole & Half Cuts →
+            </Link>
+          </div>
         </div>
       </section>
 
