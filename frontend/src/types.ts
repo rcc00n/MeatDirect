@@ -14,6 +14,8 @@ export interface Product {
   image_url?: string;
   main_image_url?: string;
   category?: string;
+  is_active: boolean;
+  square_quantity?: number;
   is_popular: boolean;
   images: ProductImage[];
 }

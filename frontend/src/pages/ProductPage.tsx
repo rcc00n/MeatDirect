@@ -64,11 +64,11 @@ function ProductPage() {
   }, [slug]);
 
   const galleryImages = useMemo<GalleryImage[]>(() => {
-    if (!product) return [];
-    const images: GalleryImage[] = product.images.map((image) => ({
-      url: image.image_url,
-      alt: image.alt_text || product.name,
-    }));
+  if (!product) return [];
+  const images: GalleryImage[] = product.images.map((image) => ({
+    url: image.image_url,
+    alt: image.alt_text || product.name,
+  }));
 
     if (product.main_image_url && !images.some((image) => image.url === product.main_image_url)) {
       images.unshift({ url: product.main_image_url, alt: product.name });
@@ -109,6 +109,9 @@ function ProductPage() {
   }
 
   const activeImageSrc = activeImage || getProductImageUrl(product);
+  const hasQuantity = typeof product.square_quantity === "number";
+  const isInactive = product.is_active === false;
+  const isOutOfStock = isInactive || (hasQuantity ? product.square_quantity <= 0 : false);
 
   const handleQuantityChange = (value: number) => {
     if (Number.isNaN(value)) return;
@@ -229,12 +232,14 @@ function ProductPage() {
                 min={1}
                 value={quantity}
                 onChange={(event) => handleQuantityChange(Number(event.target.value))}
+                disabled={isOutOfStock}
                 style={{
                   width: "120px",
                   padding: "10px 12px",
                   borderRadius: 12,
                   border: "1px solid #cbd5e1",
                   fontWeight: 700,
+                  backgroundColor: isOutOfStock ? "#f1f5f9" : "#fff",
                 }}
               />
             </div>
@@ -246,12 +251,13 @@ function ProductPage() {
                   padding: "12px",
                   borderRadius: 14,
                   border: "none",
-                  background: "linear-gradient(135deg, #f97316, #ea580c)",
+                  background: isOutOfStock ? "#cbd5e1" : "linear-gradient(135deg, #f97316, #ea580c)",
                   color: "#fff",
                   fontWeight: 700,
                 }}
+                disabled={isOutOfStock}
               >
-                Add to cart
+                {isOutOfStock ? "Out of stock" : "Add to cart"}
               </button>
               <button
                 type="button"
@@ -260,14 +266,29 @@ function ProductPage() {
                   padding: "12px",
                   borderRadius: 14,
                   border: "1px solid #22c55e",
-                  background: "linear-gradient(135deg, #22c55e, #16a34a)",
+                  background: isOutOfStock ? "#cbd5e1" : "linear-gradient(135deg, #22c55e, #16a34a)",
                   color: "#fff",
                   fontWeight: 700,
                 }}
+                disabled={isOutOfStock}
               >
-                Pay right now
+                {isOutOfStock ? "Unavailable" : "Pay right now"}
               </button>
             </div>
+            {isOutOfStock && (
+              <div
+                style={{
+                  padding: "12px",
+                  borderRadius: 12,
+                  background: "#fef2f2",
+                  border: "1px solid #fecdd3",
+                  color: "#b91c1c",
+                  fontWeight: 600,
+                }}
+              >
+                Out of Stock — we will restock soon.
+              </div>
+            )}
             <div style={{ padding: "12px", borderRadius: 12, background: "#ecfdf3", border: "1px solid #bbf7d0", color: "#166534" }}>
               Next overnight delivery cut-off is Sunday 8pm.
             </div>

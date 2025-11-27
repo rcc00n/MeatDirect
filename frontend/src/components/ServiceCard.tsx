@@ -5,6 +5,8 @@ interface ServiceCardProps {
   image?: string;
   addLabel?: string;
   detailsLabel?: string;
+  disabled?: boolean;
+  statusText?: string;
   onAddToCart?: () => void;
   onDetails?: () => void;
 }
@@ -16,6 +18,8 @@ export function ServiceCard({
   image,
   addLabel = "Add to Cart",
   detailsLabel = "Details",
+  disabled = false,
+  statusText,
   onAddToCart,
   onDetails,
 }: ServiceCardProps) {
@@ -36,9 +40,10 @@ export function ServiceCard({
         <p className="text-gray-600 mb-6">{description}</p>
         <div className="flex gap-4">
           <button
-            className="bg-red-600 text-white px-6 py-3 rounded flex-1 hover:bg-red-700 transition-colors"
+            className="bg-red-600 text-white px-6 py-3 rounded flex-1 hover:bg-red-700 transition-colors disabled:bg-gray-300 disabled:text-gray-600 disabled:cursor-not-allowed"
             type="button"
             onClick={onAddToCart}
+            disabled={disabled}
           >
             {addLabel}
           </button>
@@ -50,6 +55,7 @@ export function ServiceCard({
             {detailsLabel}
           </button>
         </div>
+        {statusText && <div className="text-red-600 font-semibold mt-3">{statusText}</div>}
       </div>
     </div>
   );

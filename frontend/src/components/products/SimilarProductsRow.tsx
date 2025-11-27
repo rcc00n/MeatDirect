@@ -31,6 +31,9 @@ function SimilarProductsRow({ products }: SimilarProductsRowProps) {
             <div style={{ color: "#475569", fontSize: 14 }}>{product.description}</div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <strong>${(product.price_cents / 100).toFixed(2)}</strong>
+              {((product.is_active === false) || (typeof product.square_quantity === "number" && product.square_quantity <= 0)) && (
+                <span style={{ color: "#b91c1c", fontSize: 12, fontWeight: 700 }}>Out of Stock</span>
+              )}
               <button
                 type="button"
                 onClick={() => addItem(product, 1)}
@@ -41,7 +44,19 @@ function SimilarProductsRow({ products }: SimilarProductsRowProps) {
                   borderRadius: 10,
                   padding: "6px 10px",
                   fontWeight: 700,
+                  opacity:
+                    product.is_active === false || (typeof product.square_quantity === "number" && product.square_quantity <= 0)
+                      ? 0.5
+                      : 1,
+                  cursor:
+                    product.is_active === false || (typeof product.square_quantity === "number" && product.square_quantity <= 0)
+                      ? "not-allowed"
+                      : "pointer",
                 }}
+                disabled={
+                  product.is_active === false ||
+                  (typeof product.square_quantity === "number" && product.square_quantity <= 0)
+                }
               >
                 Add
               </button>

@@ -12,6 +12,9 @@ function ProductCard({ product }: ProductCardProps) {
   const { addItem } = useCart();
   const imageUrl = getProductImageUrl(product);
   const isPopular = product.is_popular;
+  const hasQuantity = typeof product.square_quantity === "number";
+  const isInactive = product.is_active === false;
+  const isOutOfStock = isInactive || (hasQuantity ? product.square_quantity <= 0 : false);
 
   return (
     <div className="product-card">
@@ -35,13 +38,19 @@ function ProductCard({ product }: ProductCardProps) {
         <p className="product-card__description">{product.description}</p>
 
         <div className="product-card__actions">
-          <button type="button" onClick={() => addItem(product, 1)} className="button button--primary">
-            Add to Cart
+          <button
+            type="button"
+            onClick={() => addItem(product, 1)}
+            className="button button--primary"
+            disabled={isOutOfStock}
+          >
+            {isOutOfStock ? "Unavailable" : "Add to Cart"}
           </button>
           <Link to={`/products/${product.slug}`} className="button button--ghost">
             Details
           </Link>
         </div>
+        {isOutOfStock && <div className="product-card__stock product-card__stock--out">Out of Stock</div>}
       </div>
     </div>
   );

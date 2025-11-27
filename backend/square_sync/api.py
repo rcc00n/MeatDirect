@@ -131,7 +131,6 @@ def batch_change_inventory_for_sale(adjustments: List[dict], idempotency_key: st
                     "from_state": "IN_STOCK",
                     "to_state": "SOLD",
                     "location_id": settings.SQUARE_LOCATION_ID,
-                    "catalog_object_type": "ITEM_VARIATION",
                     "catalog_object_id": vid,
                     "quantity": str(quantity),
                     "occurred_at": occurred_at,

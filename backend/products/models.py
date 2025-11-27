@@ -19,6 +19,10 @@ class Product(models.Model):
         help_text="Primary product image hosted by Square (if available).",
     )
     category = models.CharField(max_length=100, blank=True)
+    is_active = models.BooleanField(
+        default=True,
+        help_text="Whether this product/variation is available for sale.",
+    )
     is_popular = models.BooleanField(default=False)
     square_item_id = models.CharField(
         max_length=64,

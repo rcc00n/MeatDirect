@@ -8,7 +8,10 @@ from rest_framework.views import APIView
 
 from notifications.emails import send_order_receipt_email_once
 from orders.models import Order
-from square_sync.services import decrement_square_inventory_for_order
+from square_sync.services import (
+    decrement_square_inventory_for_order,
+    sync_products_from_square,
+)
 from .services import record_stripe_payment_from_intent
 
 stripe.api_key = os.environ.get("STRIPE_SECRET_KEY", "sk_test_placeholder")
@@ -72,5 +75,6 @@ class StripeWebhookView(APIView):
                 send_order_receipt_email_once(order)
                 if order and order.status == Order.Status.PAID:
                     decrement_square_inventory_for_order(order)
+                    sync_products_from_square()
 
         return Response({"received": True}, status=status.HTTP_200_OK)

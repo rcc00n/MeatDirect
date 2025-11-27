@@ -132,6 +132,8 @@ function HomePage() {
   };
 
   const handleAddToCart = (product: Product) => addItem(product, 1);
+  const isOutOfStock = (product: Product) =>
+    product.is_active === false || (typeof product.square_quantity === "number" && product.square_quantity <= 0);
 
   return (
     <div className="landing-page space-y-0 text-white">
@@ -378,6 +380,8 @@ function HomePage() {
                   description={product.description || product.category || "Popular pick from our shop."}
                   image={getProductImageUrl(product)}
                   onAddToCart={() => handleAddToCart(product)}
+                  disabled={isOutOfStock(product)}
+                  statusText={isOutOfStock(product) ? "Out of Stock" : undefined}
                   onDetails={() => navigate(`/products/${product.slug}`)}
                 />
               ))
