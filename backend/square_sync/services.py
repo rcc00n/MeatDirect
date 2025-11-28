@@ -77,7 +77,18 @@ def sync_products_from_square() -> None:
         item_data = obj.get("item_data", {}) or {}
         item_name = (item_data.get("name") or "").strip()
         description = (item_data.get("description") or "").strip()
+
+        # Square now returns categories as a list under item_data["categories"].
+        # Fall back to legacy item_data["category_id"] and reporting_category if present.
         category_id = item_data.get("category_id") or ""
+        if not category_id:
+            categories = item_data.get("categories") or []
+            if categories:
+                category_id = categories[0].get("id") or ""
+        if not category_id:
+            reporting_category = item_data.get("reporting_category") or {}
+            category_id = reporting_category.get("id") or ""
+
         category_name = category_map.get(category_id, "")
         image_ids = item_data.get("image_ids") or []
         primary_image_url = image_map.get(image_ids[0]) if image_ids else ""
