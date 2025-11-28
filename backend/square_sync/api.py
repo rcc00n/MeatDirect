@@ -18,7 +18,7 @@ def list_catalog_items() -> list[dict]:
     Use ListCatalog to get all ITEM and IMAGE objects (with pagination).
     Equivalent to the cURL from the docs:
 
-    curl https://connect.squareupsandbox.com/v2/catalog/list?types=ITEM,IMAGE \\
+    curl https://connect.squareupsandbox.com/v2/catalog/list?types=ITEM,IMAGE,CATEGORY \\
       -H 'Square-Version: 2025-10-16' \\
       -H 'Authorization: Bearer {ACCESS_TOKEN}' \\
       -H 'Content-Type: application/json'
@@ -29,8 +29,8 @@ def list_catalog_items() -> list[dict]:
     base_url = settings.SQUARE_BASE_URL.rstrip("/")
     url = f"{base_url}/catalog/list"
 
-    # Request both ITEM and IMAGE types
-    params: dict = {"types": "ITEM,IMAGE"}
+    # Request ITEM, IMAGE, CATEGORY types so we can attach descriptions and category names
+    params: dict = {"types": "ITEM,IMAGE,CATEGORY"}
     objects: list[dict] = []
     cursor: str | None = None
 

@@ -33,6 +33,9 @@ def sync_products_from_square() -> None:
     - Product.name = item name + variation name in parentheses if variation has a name.
     - Product.price_cents = price_money.amount (integer, in cents).
     - Product.image_url = primary image URL from ITEM.image_ids[0] -> IMAGE.image_data.url
+    - Product.description = item's description from Square.
+    - Product.category = category name from Square (requires CATEGORY objects).
+    - Product.square_quantity/is_active are refreshed from Square Inventory when available.
     - Product.square_item_id, Product.square_variation_id are set from Square ids.
     - Existing Products matched by square_variation_id are updated.
     - New variations are inserted as new Products.
@@ -53,6 +56,16 @@ def sync_products_from_square() -> None:
         if url:
             image_map[obj["id"]] = url
 
+    # Build category_id -> name map from CATEGORY objects
+    category_map: Dict[str, str] = {}
+    for obj in objects:
+        if obj.get("type") != "CATEGORY":
+            continue
+        category_data = obj.get("category_data") or {}
+        name = (category_data.get("name") or "").strip()
+        if name:
+            category_map[obj["id"]] = name
+
     variation_meta: Dict[str, dict] = {}
 
     # Build meta for each variation (ITEM_VARIATION)
@@ -63,6 +76,9 @@ def sync_products_from_square() -> None:
         item_id = obj["id"]
         item_data = obj.get("item_data", {}) or {}
         item_name = (item_data.get("name") or "").strip()
+        description = (item_data.get("description") or "").strip()
+        category_id = item_data.get("category_id") or ""
+        category_name = category_map.get(category_id, "")
         image_ids = item_data.get("image_ids") or []
         primary_image_url = image_map.get(image_ids[0]) if image_ids else ""
 
@@ -88,11 +104,16 @@ def sync_products_from_square() -> None:
                 "price_cents": amount,
                 "image_url": primary_image_url or "",
                 "main_image_url": primary_image_url or "",
+                "description": description,
+                "category": category_name,
             }
 
     variation_ids = list(variation_meta.keys())
     if not variation_ids:
         return
+
+    # Fetch inventory counts so new/updated products include current stock levels
+    counts: Dict[str, int] = batch_retrieve_inventory_counts(variation_ids)
 
     with transaction.atomic():
         existing = {
@@ -104,6 +125,7 @@ def sync_products_from_square() -> None:
 
         for v_id, meta in variation_meta.items():
             seen_ids.add(v_id)
+            qty = counts.get(v_id) if counts else None
 
             defaults = {
                 "name": meta["name"],
@@ -111,9 +133,14 @@ def sync_products_from_square() -> None:
                 "square_item_id": meta["item_id"],
                 "image_url": meta.get("image_url", ""),
                 "main_image_url": meta.get("main_image_url", ""),
+                "description": meta.get("description", ""),
+                "category": meta.get("category", ""),
             }
 
-            if hasattr(Product, "is_active"):
+            if qty is not None:
+                defaults["square_quantity"] = qty
+                defaults["is_active"] = qty > 0
+            elif hasattr(Product, "is_active"):
                 defaults["is_active"] = True
 
             product = existing.get(v_id)
