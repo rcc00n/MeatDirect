@@ -1,288 +1,508 @@
 import { Link } from "react-router-dom";
+import { ArrowRight, CheckCircle2, Drumstick, Flame, Fish, ShieldCheck, Snowflake } from "lucide-react";
 
-const inspectionHighlights = [
-  "Licensed for both provincial and federal inspection so we can serve local families and ship interprovincially.",
-  "Inspectors review sanitation, humane handling, and traceability on every production day.",
-  "Every label carries pack date, lot, and cut sheet details so you always know the source.",
-  "Cold chain is logged from farm pickup through delivery vans—kept between 0–4°C.",
+const facilityHighlights = [
+  {
+    title: "Inspection ready",
+    description:
+      "Provincial + federal programs with daily sanitation logs, humane handling notes, and batch-by-batch oversight.",
+    icon: ShieldCheck,
+  },
+  {
+    title: "Cold-chain obsessed",
+    description: "0–4°C tracked from receiving through packing, insulated liners, and routed vans.",
+    icon: Snowflake,
+  },
+  {
+    title: "Labels with receipts",
+    description: "Pack date, lot, and farm group printed so restaurants and families know the source.",
+    icon: CheckCircle2,
+  },
+];
+
+const promiseStats = [
+  { value: "48 hrs", label: "Avg order-to-door", note: "Local delivery windows" },
+  { value: "40+", label: "Partner farms walked", note: "In-person sourcing, no brokers" },
+  { value: "0 added hormones", label: "Across our programs", note: "Better-for-family proteins" },
+];
+
+const pillars = [
+  {
+    title: "Farm-direct sourcing",
+    description:
+      "We hand-pick prairie partners, pay for the specs we publish, and keep batch sizes small to protect flavor.",
+    icon: Drumstick,
+  },
+  {
+    title: "Eastern European craft",
+    description: "Old-world curing, smoke, and spice layered onto Alberta beef, bison, pork, and poultry.",
+    icon: Flame,
+  },
+  {
+    title: "Seafood & staples that fit",
+    description: "Smoked fish, poultry, pantry add-ons, and ready-to-cook kits that round out the butcher case.",
+    icon: Fish,
+  },
+];
+
+const processSteps = [
+  {
+    title: "Sourcing without shortcuts",
+    detail: "Mike walks herds, reviews feed plans, and aligns genetics before booking space in the plant.",
+  },
+  {
+    title: "Cut, age, and label",
+    detail: "Small-batch cutting, consistent aging windows, and hand-trimmed portions with clear spec notes.",
+  },
+  {
+    title: "Paperwork travels with product",
+    detail: "Lot tracking, pack dates, inspector sign-offs, and cold-chain logs printed and stored with each batch.",
+  },
+  {
+    title: "Delivery built around temperature",
+    detail: "Insulated liners, ice packs, next-day local delivery, and insulated shipping across provinces.",
+  },
 ];
 
 const founders = [
   {
     name: "Mike",
-    role: "Co-founder · Sourcing & fabrication",
-    bio: "Raised on a mixed farm and trained under old-world butchers, Mike handpicks the partner ranches and specs every cut that leaves our shop.",
-    points: [
-      "Walks herds with ranchers before we sign on.",
-      "Works shoulder-to-shoulder with inspectors to keep paperwork clean.",
-      "Obsessed with consistent aging, trimming, and marbling.",
+    role: "Co-founder • Sourcing & fabrication",
+    summary: "Farm kid turned butcher who still walks pastures before signing partners.",
+    bullets: [
+      "Sets specs, aging windows, and marbling targets.",
+      "Keeps fabrication room aligned with inspectors daily.",
+      "Teaches customers how to cook undervalued cuts.",
     ],
   },
   {
     name: "Natalia",
-    role: "Co-founder · Food safety & community",
-    bio: "Natalia grew up on a dairy farm and studied supply chain. She runs the cold room, delivery routes, and customer programs that keep orders dependable.",
-    points: [
-      "Builds routes that keep everything within safe temps.",
-      "Translates inspection rules into simple labels and guides.",
-      "Champions family-friendly cuts and ready-to-cook kits.",
+    role: "Co-founder • Food safety & logistics",
+    summary: "Supply-chain pro who runs the cold room, labels, and delivery routes.",
+    bullets: [
+      "Builds delivery windows that protect the cold chain.",
+      "Translates inspection language into simple guides.",
+      "Owns community programs and subscription boxes.",
     ],
   },
 ];
 
-const standards = [
+const programs = [
   {
-    title: "Grass-Fed Meat",
-    summary:
-      "Pasture-first diets with winter hay when the prairie freezes. Leaner, cleaner flavor with healthy omega-3s and CLA.",
+    eyebrow: "Grass-fed program",
+    title: "Pasture-first beef and bison with a natural finish.",
     bullets: [
-      "Natural marbling without heavy grain finish.",
-      "Higher in nutrients and clean, mineral-rich flavor.",
-      "Great for weeknight grills and meal prep.",
+      "Marbling without heavy grain finishing.",
+      "Higher omega-3s and clean, mineral-rich flavor.",
+      "Great for grills, meal prep, and athletes.",
     ],
-    linkLabel: "Read the grass-fed article",
-    linkTo: "/blog",
+    cta: { label: "View pricing", to: "/pricing" },
   },
   {
-    title: "Hormone Free Meat",
-    summary: "Raised without growth hormones or routine stimulants. Predictable cooking, honest texture, and kinder sourcing.",
+    eyebrow: "Hormone-free promise",
+    title: "No added growth hormones or routine stimulants across proteins.",
     bullets: [
-      "No added hormones—ever.",
-      "Better-for-family choice for staples and school lunches.",
+      "Better-for-family cuts for weekly staples.",
       "Pairs with our clean spice blends for quick dinners.",
+      "Backed by transparent paperwork and labels.",
     ],
-    linkLabel: "Why hormone-free matters",
-    linkTo: "/blog",
+    cta: { label: "Shop the menu", to: "/menu" },
+  },
+  {
+    eyebrow: "Transparency first",
+    title: "Labels that match inspection logs so restaurants and families know the source.",
+    bullets: [
+      "Pack date, lot, and farm group on every sleeve.",
+      "Sanitation and temperature logs stored with batches.",
+      "FAQ and education for anyone who wants to verify.",
+    ],
+    cta: { label: "Read FAQ", to: "/good-to-know" },
   },
 ];
 
 const metrics = [
-  { value: "100%", label: "Grass-fed beef & bison line", note: "Nature-led sourcing" },
-  { value: "20+", label: "Awards & community nods", note: "Taste, service, and safety" },
-  { value: "2", label: "Inspection programs", note: "Provincial + federal" },
-  { value: "48 hrs", label: "Avg. order-to-door", note: "Cold-packed delivery windows" },
+  { value: "48 hrs", label: "Avg order-to-door", note: "Local delivery windows" },
+  { value: "2 programs", label: "Provincial + federal inspection", note: "Paperwork-ready daily" },
+  { value: "40+ farms", label: "Visited in person", note: "Farm-direct sourcing" },
+  { value: "0 added hormones", label: "Across our lineup", note: "Family-safe proteins" },
 ];
 
 function AboutPage() {
   return (
-    <div className="about-page">
-      <section className="about-hero">
-        <div className="container about-hero__grid">
-          <div className="about-hero__copy">
-            <div className="eyebrow">About Us</div>
-            <h1>Meat Direct is Mike & Natalia—connecting prairie farms to your family table.</h1>
-            <p>
-              We built Meat Direct Inc to be the honest butcher shop we wanted nearby: transparent sourcing, grass-fed
-              and hormone-free programs, and inspection-ready processes that keep every box trustworthy.
+    <div className="landing-page space-y-0">
+      <section className="landing-section bg-gradient-to-br from-black via-red-950 to-black text-white py-16 border-b-2 border-red-600">
+        <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-14 grid md:grid-cols-[1.1fr_0.9fr] gap-12 items-start">
+          <div className="space-y-4">
+            <p className="text-red-400 uppercase tracking-[0.2em] text-xs">About MeatDirect</p>
+            <h1 className="text-4xl md:text-5xl font-semibold leading-tight">
+              Prairie-born butchers, inspection-ready delivery.
+            </h1>
+            <p className="text-gray-300 max-w-2xl">
+              MeatDirect is the honest butcher shop we wanted nearby: Eastern European craft, Alberta proteins, and
+              paperwork that keeps every box accountable.
             </p>
-            <div className="about-hero__pills">
-              <span className="pill pill--strong">Provincial + federal inspection</span>
-              <span className="pill">Local Alberta shop & delivery</span>
-              <span className="pill">Grass-fed · Hormone-free</span>
+            <div className="flex flex-wrap gap-2">
+              <span className="border border-red-700 bg-white/5 text-white px-4 py-2 rounded-full text-sm">
+                Provincial + federal inspection
+              </span>
+              <span className="border border-red-700 bg-white/5 text-white px-4 py-2 rounded-full text-sm">
+                Grass-fed & hormone-free programs
+              </span>
+              <span className="border border-red-700 bg-white/5 text-white px-4 py-2 rounded-full text-sm">
+                Local delivery & insulated shipping
+              </span>
             </div>
-            <div className="about-hero__actions">
-              <a className="btn btn--primary" href="#founders">
-                Meet the founders
-              </a>
-              <a className="btn btn--ghost" href="#standards">
-                Our standards
-              </a>
+            <div className="flex flex-wrap gap-3 pt-2">
+              <Link
+                to="/menu"
+                className="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors"
+              >
+                Shop the lineup
+              </Link>
+              <Link
+                to="/good-to-know"
+                className="border-2 border-white text-white px-6 py-3 rounded-lg hover:bg-white hover:text-black transition-colors"
+              >
+                Inspection FAQ
+              </Link>
             </div>
           </div>
 
-          <div className="about-hero__card">
-            <div className="about-hero__card-header">
-              <div className="eyebrow eyebrow--green">Local shop position</div>
-              <h3>Inspection-ready facility positioned for Alberta and Canada-wide delivery.</h3>
-              <p className="muted">
-                From our cold room and counter service, we can serve neighbors, supply restaurants, and ship nationwide
-                under both provincial and federal programs.
+          <div className="bg-white text-black p-8 rounded-2xl shadow-2xl border border-red-100 relative overflow-hidden">
+            <div className="absolute -right-10 -top-14 h-40 w-40 bg-red-100 rounded-full blur-3xl" />
+            <div className="absolute -left-10 bottom-0 h-28 w-28 bg-red-50 rounded-full blur-2xl" />
+            <div className="relative space-y-6">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-red-600 uppercase tracking-wider text-sm">Facility snapshot</p>
+                  <h3 className="text-2xl font-semibold">Standards that mirror our shop floor.</h3>
+                </div>
+                <span className="text-sm text-gray-500">Trusted by families & chefs</span>
+              </div>
+              <div className="grid sm:grid-cols-3 gap-3">
+                {promiseStats.map((stat) => (
+                  <div key={stat.label} className="rounded-xl border border-red-100 bg-red-50/60 px-4 py-3">
+                    <div className="text-xl font-semibold text-red-700">{stat.value}</div>
+                    <div className="text-sm font-semibold text-black">{stat.label}</div>
+                    <div className="text-xs text-gray-600">{stat.note}</div>
+                  </div>
+                ))}
+              </div>
+              <div className="space-y-3">
+                {facilityHighlights.map((item) => (
+                  <div
+                    key={item.title}
+                    className="flex items-start gap-3 rounded-xl border border-gray-200 bg-white/80 px-4 py-3 shadow-sm"
+                  >
+                    <div className="h-10 w-10 rounded-lg bg-red-600 text-white inline-flex items-center justify-center">
+                      <item.icon size={18} />
+                    </div>
+                    <div>
+                      <div className="font-semibold text-black">{item.title}</div>
+                      <p className="text-sm text-gray-600 mb-0">{item.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <Link
+                to="/pricing"
+                className="inline-flex items-center gap-2 text-red-600 font-semibold hover:text-red-700"
+              >
+                View pricing for halves & wholes <ArrowRight size={18} />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="landing-section bg-white text-black py-16">
+        <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-14 space-y-10">
+          <div className="flex flex-col md:flex-row justify-between items-start gap-6">
+            <div className="space-y-3">
+              <p className="text-red-600 uppercase tracking-wider text-sm">Why we exist</p>
+              <h2 className="text-4xl font-semibold leading-tight max-w-2xl">
+                We make European-inspired, inspection-ready meat easy to trust.
+              </h2>
+              <p className="text-gray-600 max-w-2xl">
+                Eastern European comfort food meets Alberta farms. We cut, age, and package small batches so families and
+                restaurants get the flavor and paperwork they expect.
               </p>
             </div>
-            <dl className="about-hero__facts">
-              <div>
-                <dt>Location</dt>
-                <dd>Alberta-based shop with pickup, local delivery routes, and insulated shipping.</dd>
+            <div className="bg-black text-white rounded-2xl p-6 shadow-lg border border-red-700/50 max-w-md space-y-2">
+              <p className="text-red-400 uppercase tracking-[0.2em] text-xs">Shipping & pickup</p>
+              <h3 className="text-2xl font-semibold">
+                Local delivery next-day, insulated shipping cross-province.
+              </h3>
+              <p className="text-sm text-white/80">
+                Boxes leave our cold room with liners, ice packs, and labeling that matches our inspection logs.
+              </p>
+              <div className="flex flex-wrap gap-2 pt-2">
+                <span className="bg-white text-black px-3 py-1 rounded-full text-xs font-semibold">0–4°C cold chain</span>
+                <span className="border border-white/50 px-3 py-1 rounded-full text-xs font-semibold">Pickup or delivery</span>
               </div>
-              <div>
-                <dt>Credentials</dt>
-                <dd>Provincially and federally inspected with documented lot tracking.</dd>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {pillars.map((pillar) => (
+              <div
+                key={pillar.title}
+                className="rounded-2xl border border-gray-200 bg-gradient-to-br from-white via-red-50/40 to-white p-6 shadow-sm"
+              >
+                <div className="inline-flex items-center justify-center h-12 w-12 rounded-xl bg-red-600 text-white">
+                  <pillar.icon size={20} />
+                </div>
+                <h3 className="text-xl font-semibold mt-4 mb-2">{pillar.title}</h3>
+                <p className="text-gray-700">{pillar.description}</p>
               </div>
-              <div>
-                <dt>Focus</dt>
-                <dd>Grass-fed beef, heritage pork, bison, and hormone-free poultry.</dd>
-              </div>
-            </dl>
-            <ul className="about-hero__checks">
-              <li>CFIA-ready paperwork & sanitation logs</li>
-              <li>Temperature-controlled processing and delivery</li>
-              <li>Transparent labels with pack date and farm group</li>
-            </ul>
+            ))}
           </div>
         </div>
       </section>
 
-      <section className="container about-story" id="story">
-        <div className="about-section-header">
-          <div>
-            <div className="eyebrow">Intro story</div>
-            <h2>We started with family recipes and a promise to keep things honest.</h2>
+      <section className="landing-section bg-black text-white py-16 border-t-2 border-red-600">
+        <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-14 grid md:grid-cols-[1.1fr_0.9fr] gap-10 items-start">
+          <div className="space-y-5">
+            <p className="text-red-400 uppercase tracking-[0.2em] text-xs">How we operate</p>
+            <h2 className="text-4xl font-semibold leading-tight">Less guesswork. More labels and logged temperatures.</h2>
+            <div className="space-y-4">
+              {processSteps.map((step, index) => (
+                <div
+                  key={step.title}
+                  className="flex gap-4 items-start bg-white/5 border border-red-900/60 rounded-2xl p-5"
+                >
+                  <div className="h-10 w-10 rounded-full bg-red-600 text-white flex items-center justify-center font-semibold">
+                    {String(index + 1).padStart(2, "0")}
+                  </div>
+                  <div className="space-y-1">
+                    <div className="font-semibold text-white text-lg">{step.title}</div>
+                    <p className="text-sm text-gray-300 mb-0">{step.detail}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <span className="px-3 py-1 rounded-full bg-white/10 border border-white/20 text-xs">Hand-trimmed batches</span>
+              <span className="px-3 py-1 rounded-full bg-white/10 border border-white/20 text-xs">Lot + pack date on label</span>
+              <span className="px-3 py-1 rounded-full bg-white/10 border border-white/20 text-xs">Sanitation logs daily</span>
+            </div>
           </div>
-          <span className="pill pill--accent">Built on trust & inspection</span>
-        </div>
-        <div className="about-story__grid">
-          <div className="about-story__text">
-            <p>
-              Mike grew up watching his family cut and cure meat by hand. Natalia spent her childhood rotating between
-              chores in the barn and the kitchen table. Together we knew there was a gap between big-box meat and the
-              flavor—and accountability—of small farms. Meat Direct closes that gap.
-            </p>
-            <p>
-              We keep relationships personal: walking pastures, confirming feed plans, and keeping batch sizes small so
-              every cut gets attention. That respect extends to inspection—we welcome oversight because it keeps our
-              promises real.
-            </p>
-          </div>
-          <div className="about-story__values">
-            <h3>Mission & values</h3>
-            <ul className="checklist">
-              <li>Pay farmers fairly and put their names on the label.</li>
-              <li>Make inspection logs and cold-chain data easy to understand.</li>
-              <li>Offer cuts for everyday families, athletes, and chefs alike.</li>
-              <li>Ship with minimal additives—just clean, honest flavor.</li>
-            </ul>
-          </div>
-        </div>
-      </section>
 
-      <section className="container founders" id="founders">
-        <div className="section-heading">
-          <div>
-            <div className="eyebrow">Founders story</div>
-            <h2>Meet Mike & Natalia</h2>
-            <p className="muted">
-              A farmer-butcher and a supply-chain pro running one inspected, transparent shop.
-            </p>
-          </div>
-          <span className="pill">Farm partners · Family-run</span>
-        </div>
-        <div className="founder-grid">
-          {founders.map((founder) => (
-            <div key={founder.name} className="founder-card">
-              <div className="founder-card__header">
-                <div className="founder-card__avatar">{founder.name[0]}</div>
+          <div className="space-y-4">
+            <div className="bg-red-600 rounded-3xl p-8 shadow-2xl border border-red-500/60 space-y-4">
+              <p className="uppercase tracking-[0.18em] text-xs text-white/80">Inspection & education</p>
+              <h3 className="text-3xl font-semibold leading-tight">
+                Provincial + federal oversight without losing flavor.
+              </h3>
+              <p className="text-white/90">
+                We keep paperwork simple and invite oversight because it protects the families and chefs we serve.
+              </p>
+              <div className="space-y-2">
+                {[
+                  "Daily sanitation checks and logged cold-chain data.",
+                  "Labels that match the batch paperwork for restaurants.",
+                  "Clear FAQ for anyone who wants to verify programs.",
+                ].map((item) => (
+                  <div key={item} className="flex items-start gap-2 text-sm">
+                    <CheckCircle2 className="text-white" size={18} />
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+              <Link
+                to="/good-to-know"
+                className="inline-flex items-center gap-2 bg-white text-black px-4 py-2 rounded-lg font-semibold hover:bg-red-50 transition-colors"
+              >
+                Visit education page <ArrowRight size={16} />
+              </Link>
+            </div>
+
+            <div className="bg-white text-black rounded-2xl p-6 border border-red-100 shadow-lg">
+              <div className="flex items-center justify-between gap-3">
                 <div>
-                  <div className="founder-card__name">{founder.name}</div>
-                  <div className="founder-card__role">{founder.role}</div>
+                  <p className="text-red-600 uppercase tracking-[0.2em] text-xs">Cold chain</p>
+                  <h4 className="text-xl font-semibold">
+                    Insulated liners, ice packs, and routed delivery windows.
+                  </h4>
+                </div>
+                <Snowflake className="text-red-600" size={32} />
+              </div>
+              <p className="text-gray-700">
+                Every order leaves our cold room between 0–4°C and stays there through pickup or delivery.
+              </p>
+              <div className="flex flex-wrap gap-2 text-sm">
+                <span className="px-3 py-1 rounded-full bg-red-50 text-red-700 border border-red-100">Tracked vans</span>
+                <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-800">Insulated shipping boxes</span>
+                <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-800">Route planning by Natalia</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="landing-section bg-gradient-to-br from-red-50 via-white to-red-50 text-black py-16">
+        <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-14 space-y-8">
+          <div className="flex flex-col md:flex-row justify-between items-start gap-6">
+            <div className="space-y-3 max-w-2xl">
+              <p className="text-red-600 uppercase tracking-wider text-sm">Founders</p>
+              <h2 className="text-4xl font-semibold leading-tight">
+                Hands-on owners who still pack boxes and sign every label.
+              </h2>
+              <p className="text-gray-700">
+                MeatDirect is still run by its founders—no brokers or distant partners. We stay close to the cut room,
+                delivery routes, and paperwork.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <span className="bg-black text-white px-3 py-1 rounded-full text-xs font-semibold">Family-owned</span>
+              <span className="border border-red-200 text-red-700 px-3 py-1 rounded-full text-xs font-semibold">
+                On-site daily
+              </span>
+              <span className="border border-red-200 text-red-700 px-3 py-1 rounded-full text-xs font-semibold">
+                European roots
+              </span>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            {founders.map((founder) => (
+              <div
+                key={founder.name}
+                className="rounded-2xl bg-black text-white p-6 border border-red-700/60 shadow-xl space-y-4"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="h-12 w-12 rounded-xl bg-white text-black flex items-center justify-center font-bold text-lg">
+                    {founder.name[0]}
+                  </div>
+                  <div>
+                    <div className="text-lg font-semibold">{founder.name}</div>
+                    <div className="text-sm text-white/70">{founder.role}</div>
+                  </div>
+                </div>
+                <p className="text-white/85">{founder.summary}</p>
+                <div className="space-y-2">
+                  {founder.bullets.map((bullet) => (
+                    <div key={bullet} className="flex items-start gap-2 text-sm text-white/90">
+                      <ArrowRight className="text-red-300" size={14} />
+                      <span>{bullet}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
-              <p>{founder.bio}</p>
-              <ul className="founder-card__list">
-                {founder.points.map((point) => (
-                  <li key={point}>{point}</li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="container good-to-know" id="good-to-know">
-        <div className="good-to-know__card">
-          <div>
-            <div className="eyebrow eyebrow--green">Good to know</div>
-            <h3>Yes—Meat Direct is both provincially and federally inspected.</h3>
-            <p>
-              That means daily oversight, full traceability, and the ability to serve local pickup customers and
-              ship-to-door orders across provinces without changing our standards.
-            </p>
-            <div className="good-to-know__links">
-              <Link to="/good-to-know" className="link-button">
-                Read the full FAQ & education page →
-              </Link>
-              <span className="pill pill--small">Transparency first</span>
-            </div>
-          </div>
-          <div className="good-to-know__badge">
-            <div className="good-to-know__seal">Inspected</div>
-            <div className="muted">CFIA-ready · Provincial retail & federal shipping</div>
-          </div>
-        </div>
-      </section>
-
-      <section className="container inspection" id="inspection-summary">
-        <div className="section-heading">
-          <div>
-            <div className="eyebrow">What it means</div>
-            <h2>Provincial & federal inspection, condensed.</h2>
-          </div>
-          <span className="pill">3–5 point summary</span>
-        </div>
-        <div className="inspection__grid">
-          <ul className="inspection__list">
-            {inspectionHighlights.map((item) => (
-              <li key={item}>{item}</li>
             ))}
-          </ul>
-          <div className="inspection__card">
-            <div className="inspection__tag">Documentation</div>
-            <h3>Paperwork that travels with every box.</h3>
-            <p>
-              Lot tracking, cut sheets, sanitation logs, and temperature charts live with each batch. Restaurants, gyms,
-              and families get the same level of clarity.
-            </p>
-            <div className="inspection__meta">
-              <span className="pill pill--small">HACCP-minded</span>
-              <span className="pill pill--accent">Cold-chain protected</span>
-            </div>
           </div>
         </div>
       </section>
 
-      <section className="container standards" id="standards">
-        <div className="section-heading">
-          <div>
-            <div className="eyebrow">Standards</div>
-            <h2>Grass-fed & hormone-free programs, at a glance.</h2>
+      <section className="landing-section bg-white text-black py-16">
+        <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-14 space-y-8">
+          <div className="flex flex-col md:flex-row justify-between items-start gap-4">
+            <div className="space-y-2">
+              <p className="text-red-600 uppercase tracking-wider text-sm">Programs & standards</p>
+              <h2 className="text-4xl font-semibold leading-tight">
+                Grass-fed, hormone-free, and labeled for accountability.
+              </h2>
+              <p className="text-gray-700 max-w-2xl">
+                We keep flavor front and center while making sure every batch has the paperwork to back it up.
+              </p>
+            </div>
+            <Link
+              to="/blog"
+              className="inline-flex items-center gap-2 text-red-600 font-semibold hover:text-red-700"
+            >
+              Read the extended articles <ArrowRight size={18} />
+            </Link>
           </div>
-          <Link to="/blog" className="link-button">
-            Extended articles →
-          </Link>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {programs.map((program) => (
+              <div
+                key={program.eyebrow}
+                className="relative overflow-hidden rounded-2xl border border-red-100 bg-gradient-to-br from-white via-red-50/60 to-white p-6 shadow-sm"
+              >
+                <div className="absolute -right-10 -top-16 h-36 w-36 bg-red-100 rounded-full blur-3xl" />
+                <div className="relative space-y-3">
+                  <p className="text-xs uppercase tracking-[0.2em] text-red-600">{program.eyebrow}</p>
+                  <h3 className="text-xl font-semibold">{program.title}</h3>
+                  <ul className="space-y-2 text-gray-700 list-disc list-inside">
+                    {program.bullets.map((bullet) => (
+                      <li key={bullet}>{bullet}</li>
+                    ))}
+                  </ul>
+                  <Link
+                    to={program.cta.to}
+                    className="inline-flex items-center gap-2 text-red-600 font-semibold hover:text-red-700"
+                  >
+                    {program.cta.label} <ArrowRight size={16} />
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="standards__grid">
-          {standards.map((standard) => (
-            <div key={standard.title} className="standard-card">
-              <div className="standard-card__eyebrow">{standard.title}</div>
-              <h3>{standard.summary}</h3>
-              <ul className="standard-card__list">
-                {standard.bullets.map((bullet) => (
-                  <li key={bullet}>{bullet}</li>
-                ))}
-              </ul>
-              <Link to={standard.linkTo} className="link-button">
-                {standard.linkLabel} →
+      </section>
+
+      <section className="landing-section bg-black text-white py-16 border-t-2 border-red-600">
+        <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-14 space-y-8">
+          <div className="flex flex-col md:flex-row justify-between items-start gap-4">
+            <div className="space-y-2">
+              <p className="text-red-400 uppercase tracking-[0.2em] text-xs">Proof points</p>
+              <h2 className="text-3xl md:text-4xl font-semibold leading-tight">Numbers that stay on the label.</h2>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                to="/menu"
+                className="bg-red-600 text-white px-5 py-2 rounded-lg hover:bg-red-700 transition-colors"
+              >
+                Shop the menu
+              </Link>
+              <Link
+                to="/contact"
+                className="border border-white/30 text-white px-5 py-2 rounded-lg hover:border-white transition-colors"
+              >
+                Talk to the team
               </Link>
             </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="container metrics" id="metrics">
-        <div className="section-heading">
-          <div>
-            <div className="eyebrow">Metrics</div>
-            <h2>Proof points in the open.</h2>
           </div>
-          <p className="muted">Configurable fields you can swap as new milestones land.</p>
-        </div>
-        <div className="metrics__grid">
-          {metrics.map((metric) => (
-            <div key={metric.label} className="metric">
-              <div className="metric__value">{metric.value}</div>
-              <div className="metric__label">{metric.label}</div>
-              <div className="metric__note">{metric.note}</div>
+
+          <div className="grid md:grid-cols-4 gap-4">
+            {metrics.map((metric) => (
+              <div
+                key={metric.label}
+                className="rounded-2xl border border-red-900/60 bg-white/5 px-4 py-5 shadow-lg"
+              >
+                <div className="text-3xl font-semibold text-white">{metric.value}</div>
+                <div className="text-sm font-semibold text-gray-200">{metric.label}</div>
+                <div className="text-xs text-gray-400 mt-1">{metric.note}</div>
+              </div>
+            ))}
+          </div>
+
+          <div className="bg-white/5 border border-red-900/60 rounded-2xl p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <div className="text-red-300 uppercase tracking-[0.2em] text-xs">Ready when you are</div>
+              <p className="text-lg font-semibold text-white mb-0">
+                Transparent sourcing, cold-packed delivery, and old-world flavor.
+              </p>
+              <p className="text-sm text-gray-300 mb-0">
+                Tap into the shop, browse pricing, or read the education page if you need the paperwork first.
+              </p>
             </div>
-          ))}
+            <div className="flex flex-wrap gap-3">
+              <Link
+                to="/pricing"
+                className="bg-white text-black px-4 py-2 rounded-lg font-semibold hover:bg-red-50 transition-colors"
+              >
+                View pricing
+              </Link>
+              <Link
+                to="/good-to-know"
+                className="border border-white/40 text-white px-4 py-2 rounded-lg font-semibold hover:border-white transition-colors"
+              >
+                See inspection details
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
     </div>
