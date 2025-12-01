@@ -60,9 +60,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [items]);
 
   const addItem = (product: Product, quantity = 1) => {
-    const hasQuantity = typeof product.square_quantity === "number";
+    const quantityRemaining = typeof product.square_quantity === "number" ? product.square_quantity : null;
     const isInactive = product.is_active === false;
-    const isOutOfStock = isInactive || (hasQuantity ? product.square_quantity <= 0 : false);
+    const isOutOfStock = isInactive || (quantityRemaining !== null ? quantityRemaining <= 0 : false);
     if (isOutOfStock) {
       console.warn("Attempted to add out-of-stock item to cart", { productId: product.id });
       return;

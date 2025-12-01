@@ -109,9 +109,9 @@ function ProductPage() {
   }
 
   const activeImageSrc = activeImage || getProductImageUrl(product);
-  const hasQuantity = typeof product.square_quantity === "number";
+  const quantityRemaining = typeof product.square_quantity === "number" ? product.square_quantity : null;
   const isInactive = product.is_active === false;
-  const isOutOfStock = isInactive || (hasQuantity ? product.square_quantity <= 0 : false);
+  const isOutOfStock = isInactive || (quantityRemaining !== null ? quantityRemaining <= 0 : false);
 
   const handleQuantityChange = (value: number) => {
     if (Number.isNaN(value)) return;
@@ -131,172 +131,131 @@ function ProductPage() {
   };
 
   return (
-    <div style={{ display: "grid", gap: 18 }}>
-      <Link to="/" style={{ color: "#2563eb", fontWeight: 600 }}>
-        ← Back to catalog
-      </Link>
+    <div className="landing-section bg-gradient-to-b from-white to-red-50/30 text-black">
+      <div className="w-full max-w-[1200px] mx-auto px-4 md:px-6 lg:px-10 space-y-8">
+        <Link to="/" className="inline-flex items-center gap-2 text-red-600 font-semibold hover:underline">
+          ← Back to catalog
+        </Link>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 18, alignItems: "start" }}>
-        <div style={{ display: "grid", gap: 10 }}>
-          <div
-            style={{
-              width: "100%",
-              borderRadius: 18,
-              overflow: "hidden",
-              border: "1px solid #e2e8f0",
-              background: "#f8fafc",
-            }}
-          >
-            <img
-              src={activeImageSrc}
-              alt={product.name}
-              style={{ width: "100%", height: 420, objectFit: "cover", display: "block" }}
-            />
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(72px, 1fr))", gap: 8 }}>
-            {galleryImages.map((image) => (
-              <button
-                type="button"
-                key={image.url}
-                onClick={() => setActiveImage(image.url)}
-                style={{
-                  border: image.url === activeImageSrc ? "2px solid #0ea5e9" : "1px solid #e2e8f0",
-                  borderRadius: 12,
-                  padding: 4,
-                  background: "#fff",
-                  transition: "border-color 0.16s ease",
-                }}
-              >
-                <img
-                  src={image.url}
-                  alt={image.alt || product.name}
-                  style={{
-                    width: "100%",
-                    height: 70,
-                    objectFit: "cover",
-                    borderRadius: 10,
-                  }}
-                />
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div style={{ display: "grid", gap: 12 }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <div>
-              <h2 style={{ margin: 0 }}>{product.name}</h2>
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
-                {product.category && (
-                  <span
-                    style={{
-                      padding: "4px 10px",
-                      borderRadius: 999,
-                      background: "#f8fafc",
-                      border: "1px solid #e2e8f0",
-                      fontSize: 12,
-                    }}
-                  >
-                    {product.category}
-                  </span>
-                )}
-                {product.is_popular && (
-                  <span
-                    style={{
-                      padding: "4px 10px",
-                      borderRadius: 999,
-                      background: "#fee2e2",
-                      border: "1px solid #fecaca",
-                      color: "#991b1b",
-                      fontSize: 12,
-                    }}
-                  >
-                    Popular pick
-                  </span>
-                )}
-              </div>
-            </div>
-            <div style={{ textAlign: "right" }}>
-              <div style={{ color: "#475569", fontSize: 14 }}>Per unit</div>
-              <strong style={{ fontSize: 22 }}>${(product.price_cents / 100).toFixed(2)}</strong>
-            </div>
-          </div>
-
-          <p style={{ margin: 0, color: "#475569", lineHeight: 1.6 }}>{product.description}</p>
-
-          <div style={{ display: "grid", gap: 10 }}>
-            <div style={{ display: "grid", gap: 6 }}>
-              <label style={{ fontWeight: 700 }}>Quantity</label>
-              <input
-                type="number"
-                min={1}
-                value={quantity}
-                onChange={(event) => handleQuantityChange(Number(event.target.value))}
-                disabled={isOutOfStock}
-                style={{
-                  width: "120px",
-                  padding: "10px 12px",
-                  borderRadius: 12,
-                  border: "1px solid #cbd5e1",
-                  fontWeight: 700,
-                  backgroundColor: isOutOfStock ? "#f1f5f9" : "#fff",
-                }}
+        <div className="grid md:grid-cols-[1.05fr_0.95fr] gap-8 items-start">
+          <div className="bg-white/95 border border-gray-200 rounded-3xl shadow-xl p-4 space-y-4">
+            <div className="rounded-2xl overflow-hidden border border-gray-200 bg-gray-50">
+              <img
+                src={activeImageSrc}
+                alt={product.name}
+                className="w-full h-[420px] md:h-[520px] object-cover"
               />
             </div>
-            <div style={{ display: "grid", gap: 8 }}>
-              <button
-                type="button"
-                onClick={handleAddToCart}
-                style={{
-                  padding: "12px",
-                  borderRadius: 14,
-                  border: "none",
-                  background: isOutOfStock ? "#cbd5e1" : "linear-gradient(135deg, #f97316, #ea580c)",
-                  color: "#fff",
-                  fontWeight: 700,
-                }}
-                disabled={isOutOfStock}
-              >
-                {isOutOfStock ? "Out of stock" : "Add to cart"}
-              </button>
-              <button
-                type="button"
-                onClick={handlePayNow}
-                style={{
-                  padding: "12px",
-                  borderRadius: 14,
-                  border: "1px solid #22c55e",
-                  background: isOutOfStock ? "#cbd5e1" : "linear-gradient(135deg, #22c55e, #16a34a)",
-                  color: "#fff",
-                  fontWeight: 700,
-                }}
-                disabled={isOutOfStock}
-              >
-                {isOutOfStock ? "Unavailable" : "Pay right now"}
-              </button>
-            </div>
-            {isOutOfStock && (
-              <div
-                style={{
-                  padding: "12px",
-                  borderRadius: 12,
-                  background: "#fef2f2",
-                  border: "1px solid #fecdd3",
-                  color: "#b91c1c",
-                  fontWeight: 600,
-                }}
-              >
-                Out of Stock — we will restock soon.
-              </div>
-            )}
-            <div style={{ padding: "12px", borderRadius: 12, background: "#ecfdf3", border: "1px solid #bbf7d0", color: "#166534" }}>
-              Next overnight delivery cut-off is Sunday 8pm.
+            <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-3">
+              {galleryImages.map((image) => (
+                <button
+                  type="button"
+                  key={image.url}
+                  onClick={() => setActiveImage(image.url)}
+                  className={`rounded-xl border ${
+                    image.url === activeImageSrc ? "border-red-600 ring-2 ring-red-100" : "border-gray-200"
+                  } overflow-hidden bg-white transition-colors`}
+                >
+                  <img
+                    src={image.url}
+                    alt={image.alt || product.name}
+                    className="w-full h-20 object-cover"
+                  />
+                </button>
+              ))}
             </div>
           </div>
-        </div>
-      </div>
 
-      <SimilarProductsRow products={similarProducts} />
+          <div className="bg-white/95 rounded-3xl border-2 border-black shadow-2xl p-6 space-y-6">
+            <div className="flex justify-between items-start gap-4 flex-wrap">
+              <div className="space-y-2">
+                <h1 className="text-3xl font-semibold leading-tight">{product.name}</h1>
+                <div className="flex gap-2 flex-wrap items-center">
+                  {product.category && (
+                    <span className="px-3 py-1 rounded-full bg-red-50 text-red-700 border border-red-200 text-sm">
+                      {product.category}
+                    </span>
+                  )}
+                  {product.is_popular && (
+                    <span className="px-3 py-1 rounded-full bg-black text-white text-sm border border-red-600">
+                      Popular pick
+                    </span>
+                  )}
+                </div>
+              </div>
+              <div className="text-right">
+                <p className="text-sm text-gray-500">Per unit</p>
+                <p className="text-3xl font-semibold text-red-600">${(product.price_cents / 100).toFixed(2)}</p>
+                <p className={`text-sm font-semibold ${isOutOfStock ? "text-red-600" : "text-emerald-600"}`}>
+                  {isOutOfStock ? "Out of stock" : "In stock"}
+                </p>
+              </div>
+            </div>
+
+            <p className="text-gray-700 leading-relaxed">
+              {product.description || "Hand-trimmed, cold-packed, and ready for your next cook."}
+            </p>
+
+            <div className="flex flex-wrap gap-2 text-sm">
+              <span className="px-3 py-1 rounded-full bg-gray-100 border border-gray-200">Cold-packed shipping</span>
+              <span className="px-3 py-1 rounded-full bg-gray-100 border border-gray-200">Local delivery</span>
+              <span className="px-3 py-1 rounded-full bg-gray-100 border border-gray-200">Hormone-free partners</span>
+            </div>
+
+            <div className="grid sm:grid-cols-[0.9fr_1.1fr] gap-4 items-end">
+              <div className="space-y-2">
+                <label className="font-semibold text-sm text-gray-800">Quantity</label>
+                <input
+                  type="number"
+                  min={1}
+                  value={quantity}
+                  onChange={(event) => handleQuantityChange(Number(event.target.value))}
+                  disabled={isOutOfStock}
+                  className="w-full max-w-[150px] px-4 py-3 rounded-2xl border-2 border-black font-semibold focus:outline-none focus:ring-2 focus:ring-red-200 disabled:bg-gray-100"
+                />
+              </div>
+              <div className="grid sm:grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={handleAddToCart}
+                  className={`rounded-2xl px-4 py-3 font-semibold text-white shadow-lg transition-transform ${
+                    isOutOfStock
+                      ? "bg-gray-300 cursor-not-allowed"
+                      : "bg-gradient-to-r from-red-600 to-red-700 hover:translate-y-[-2px]"
+                  }`}
+                  disabled={isOutOfStock}
+                >
+                  {isOutOfStock ? "Out of stock" : "Add to cart"}
+                </button>
+                <button
+                  type="button"
+                  onClick={handlePayNow}
+                  className={`rounded-2xl px-4 py-3 font-semibold border-2 transition-transform ${
+                    isOutOfStock
+                      ? "border-gray-200 text-gray-400 cursor-not-allowed"
+                      : "border-black bg-black text-white hover:translate-y-[-2px]"
+                  }`}
+                  disabled={isOutOfStock}
+                >
+                  {isOutOfStock ? "Unavailable" : "Checkout now"}
+                </button>
+              </div>
+            </div>
+
+            {isOutOfStock ? (
+              <div className="px-4 py-3 rounded-2xl bg-red-50 border border-red-200 text-red-700 font-semibold">
+                Out of Stock — we will restock soon.
+              </div>
+            ) : (
+              <div className="px-4 py-3 rounded-2xl bg-red-50 border border-red-200 text-red-700">
+                Next overnight delivery cut-off is Sunday 8pm. Cold-packed with liners and ice.
+              </div>
+            )}
+          </div>
+        </div>
+
+        <SimilarProductsRow products={similarProducts} />
+      </div>
     </div>
   );
 }

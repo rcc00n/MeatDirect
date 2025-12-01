@@ -216,104 +216,115 @@ function MenuPage() {
             </div>
           </div>
 
-          <div className="grid md:grid-cols-[1.3fr_0.7fr] gap-6 items-start">
-            <div className="bg-gray-50 border border-gray-200 rounded-2xl p-5 space-y-4 shadow-sm">
-              <div className="flex items-center gap-3 bg-white border border-gray-200 rounded-xl px-4 py-3 focus-within:border-red-600 focus-within:ring-2 focus-within:ring-red-100">
-                <Search className="text-gray-400" size={18} />
-                <input
-                  type="search"
-                  value={searchTerm}
-                  onChange={(event) => setSearchTerm(event.target.value)}
-                  placeholder="Search for cuts, farms, or tags"
-                  className="flex-1 bg-transparent outline-none text-gray-800 placeholder:text-gray-400"
-                />
-              </div>
-              <div className="flex flex-wrap gap-3">
-                {CATEGORY_TABS.map((tab) => {
-                  const isActive = selectedCategory === tab.value;
-                  return (
-                    <button
-                      key={tab.label}
-                      type="button"
-                      onClick={() => handleCategorySelect(tab.value)}
-                      className={`rounded-full border-2 px-4 py-2 text-left transition-colors shadow-sm ${
-                        isActive
-                          ? "border-red-600 bg-red-50 text-red-700"
-                          : "border-gray-300 bg-white text-gray-800 hover:border-red-200"
-                      }`}
-                    >
-                      <div className="font-semibold text-sm">{tab.label}</div>
-                      <div className="text-xs text-gray-500">{tab.note}</div>
-                    </button>
-                  );
-                })}
-              </div>
-              <div className="flex flex-wrap gap-2 text-sm text-gray-600">
-                <span className="px-3 py-1 rounded-full bg-black text-white">{activeTab.label}</span>
-                <span className="px-3 py-1 rounded-full bg-gray-200 text-gray-800">{products.length} products</span>
-                {debouncedSearch && (
-                  <span className="px-3 py-1 rounded-full bg-gray-100 border border-gray-200">
-                    Search: "{debouncedSearch}"
-                  </span>
-                )}
-              </div>
-            </div>
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-red-50 via-white to-red-50 rounded-[28px] blur-sm" />
+            <div className="relative grid md:grid-cols-[1.2fr_0.8fr] gap-5 items-start">
+              <div className="bg-white/95 border border-gray-200 rounded-3xl p-6 shadow-xl space-y-5">
+                <div className="flex items-start justify-between gap-3 flex-wrap">
+                  <div>
+                    <p className="text-red-500 uppercase tracking-[0.2em] text-xs">Find your cut</p>
+                    <p className="text-sm text-gray-600 max-w-xl">
+                      Search or tap a category to jump straight to the section you want.
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-2 text-xs">
+                    <span className="px-3 py-1 rounded-full bg-black text-white">{products.length} live items</span>
+                    <span className="px-3 py-1 rounded-full bg-red-50 text-red-700 border border-red-100">
+                      {resultLabel}
+                    </span>
+                  </div>
+                </div>
 
-            <div className="bg-black text-white rounded-2xl border-2 border-red-600 p-6 space-y-4 shadow-xl">
-              <p className="text-red-400 uppercase tracking-[0.2em] text-xs">How we pack</p>
-              <h3 className="text-2xl font-semibold">Butcher-cut, cold, and ready to cook.</h3>
-              <div className="space-y-3 text-sm text-white/80">
-                <div className="flex gap-3">
-                  <span className="h-8 w-8 rounded-full bg-white text-black flex items-center justify-center font-bold">
-                    1
-                  </span>
-                  <div>
-                    <div className="font-semibold">Choose your section</div>
-                    <p className="text-white/70">Use the tabs to jump straight to beef, sausages, seafood, or imports.</p>
-                  </div>
+                <div className="flex items-center gap-3 bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3 focus-within:border-red-600 focus-within:ring-2 focus-within:ring-red-100">
+                  <Search className="text-gray-400" size={18} />
+                  <input
+                    type="search"
+                    value={searchTerm}
+                    onChange={(event) => setSearchTerm(event.target.value)}
+                    placeholder="Search for cuts, farms, or tags"
+                    className="flex-1 bg-transparent outline-none text-gray-800 placeholder:text-gray-400"
+                  />
                 </div>
-                <div className="flex gap-3">
-                  <span className="h-8 w-8 rounded-full bg-white text-black flex items-center justify-center font-bold">
-                    2
-                  </span>
-                  <div>
-                    <div className="font-semibold">Add exact cuts</div>
-                    <p className="text-white/70">See pricing before checkout and add to cart with one click.</p>
-                  </div>
+
+                <div className="grid sm:grid-cols-3 gap-3">
+                  {CATEGORY_TABS.map((tab) => {
+                    const isActive = selectedCategory === tab.value;
+                    return (
+                      <button
+                        key={tab.label}
+                        type="button"
+                        onClick={() => handleCategorySelect(tab.value)}
+                        className={`rounded-2xl border-2 px-4 py-3 text-left transition-colors ${
+                          isActive
+                            ? "border-red-600 bg-red-50 text-red-700 shadow-md"
+                            : "border-gray-200 bg-white text-gray-900 hover:border-red-200"
+                        }`}
+                      >
+                        <div className="font-semibold text-sm">{tab.label}</div>
+                        <div className="text-xs text-gray-500">{tab.note}</div>
+                      </button>
+                    );
+                  })}
                 </div>
-                <div className="flex gap-3">
-                  <span className="h-8 w-8 rounded-full bg-white text-black flex items-center justify-center font-bold">
-                    3
-                  </span>
-                  <div>
-                    <div className="font-semibold">Delivery or pickup</div>
-                    <p className="text-white/70">Insulated liners, ice packs, and next-day local delivery options.</p>
-                  </div>
+
+                <div className="flex flex-wrap gap-2 text-sm text-gray-600">
+                  <span className="px-3 py-1 rounded-full bg-black text-white">{activeTab.label}</span>
+                  <span className="px-3 py-1 rounded-full bg-gray-200 text-gray-800">{products.length} products</span>
+                  {debouncedSearch && (
+                    <span className="px-3 py-1 rounded-full bg-gray-100 border border-gray-200">
+                      Search: "{debouncedSearch}"
+                    </span>
+                  )}
                 </div>
               </div>
-              <div className="flex flex-wrap gap-3">
-                <button
-                  type="button"
-                  className="bg-white text-black px-4 py-2 rounded-lg hover:bg-red-50 transition-colors"
-                  onClick={() => handleCategorySelect("sausages")}
-                >
-                  Shop sausages
-                </button>
-                <button
-                  type="button"
-                  className="border border-white text-white px-4 py-2 rounded-lg hover:bg-white hover:text-black transition-colors"
-                  onClick={() => handleCategorySelect("smoked fish")}
-                >
-                  Smoked fish
-                </button>
-              </div>
-              <div className="flex flex-wrap gap-3 text-sm text-white/80">
-                <span className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-red-700">
-                  <Truck size={16} /> Next-day local delivery
-                </span>
-                <span className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-red-700">
-                  <Snowflake size={16} /> Cold-packed shipping
-                </span>
+
+              <div className="bg-gradient-to-br from-black via-zinc-950 to-black text-white rounded-3xl border border-red-700/60 p-6 space-y-5 shadow-2xl">
+                <p className="text-red-400 uppercase tracking-[0.2em] text-xs">How we pack</p>
+                <h3 className="text-3xl font-semibold leading-tight">Butcher-cut, cold, and ready to cook.</h3>
+                <div className="space-y-3 text-sm text-white/85">
+                  {[
+                    {
+                      title: "Choose your section",
+                      detail: "Jump straight to beef, sausages, seafood, or imports.",
+                    },
+                    { title: "Add exact cuts", detail: "See pricing first, then add to cart with one click." },
+                    { title: "Delivery or pickup", detail: "Insulated liners, ice packs, next-day local delivery." },
+                  ].map((step, index) => (
+                    <div key={step.title} className="flex gap-3">
+                      <span className="h-7 w-7 rounded-full bg-white text-black flex items-center justify-center font-bold text-sm">
+                        {index + 1}
+                      </span>
+                      <div>
+                        <div className="font-semibold">{step.title}</div>
+                        <p className="text-white/70 text-sm">{step.detail}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="grid sm:grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    className="bg-white text-black px-4 py-2 rounded-xl hover:bg-red-50 transition-colors"
+                    onClick={() => handleCategorySelect("sausages")}
+                  >
+                    Shop sausages
+                  </button>
+                  <button
+                    type="button"
+                    className="border border-white/70 text-white px-4 py-2 rounded-xl hover:bg-white hover:text-black transition-colors"
+                    onClick={() => handleCategorySelect("smoked fish")}
+                  >
+                    Smoked fish
+                  </button>
+                </div>
+                <div className="flex flex-wrap gap-3 text-sm text-white/80">
+                  <span className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-red-700/70">
+                    <Truck size={16} /> Next-day local delivery
+                  </span>
+                  <span className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-red-700/70">
+                    <Snowflake size={16} /> Cold-packed shipping
+                  </span>
+                </div>
               </div>
             </div>
           </div>

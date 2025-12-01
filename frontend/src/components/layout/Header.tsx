@@ -55,9 +55,20 @@ function Header({ onCartClick }: HeaderProps) {
         </nav>
 
         <div className="nav__actions">
-          <button className="bg-red-600 text-white p-2 rounded hover:bg-red-700 transition-colors" onClick={handleCartClick}>
+          <div className="relative">
+            <button
+              className="bg-red-600 text-white p-2 rounded hover:bg-red-700 transition-colors"
+              onClick={handleCartClick}
+              aria-label="Open cart"
+            >
               <ShoppingCart size={20} />
             </button>
+            {itemCount > 0 && (
+              <span className="absolute -top-2 -right-2 text-[11px] bg-white text-red-700 border border-red-600 rounded-full px-2 py-[2px] font-semibold">
+                {itemCount}
+              </span>
+            )}
+          </div>
           <button
             type="button"
             className={`nav__toggle ${isMobileOpen ? "is-active" : ""}`}
@@ -93,7 +104,7 @@ function Header({ onCartClick }: HeaderProps) {
         </div>
         <div className="nav-drawer__meta">
           <button type="button" className="btn btn--solid btn--full" onClick={handleCartClick}>
-            Cart · ${subtotal}
+            Cart · {itemCount} · ${subtotal}
           </button>
           <div className="nav-drawer__contact">
             <a href="tel:555-123-4567">(555) 123-4567</a>

@@ -12,9 +12,9 @@ function ProductCard({ product }: ProductCardProps) {
   const { addItem } = useCart();
   const imageUrl = getProductImageUrl(product);
   const isPopular = product.is_popular;
-  const hasQuantity = typeof product.square_quantity === "number";
   const isInactive = product.is_active === false;
-  const isOutOfStock = isInactive || (hasQuantity ? product.square_quantity <= 0 : false);
+  const quantityRemaining = typeof product.square_quantity === "number" ? product.square_quantity : null;
+  const isOutOfStock = isInactive || (quantityRemaining !== null ? quantityRemaining <= 0 : false);
 
   return (
     <div className="product-card">
