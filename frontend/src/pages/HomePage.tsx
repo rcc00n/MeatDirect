@@ -93,6 +93,13 @@ const productHighlights = [
   },
 ];
 
+const structureLinks = [
+  { label: "Shop", to: "/menu", description: "Retail cuts, deli favorites, and smoked fish." },
+  { label: "Boxes", to: "/pricing", description: "Quarter, half, and whole animal boxes ready to reserve." },
+  { label: "Learn", to: "/good-to-know", description: "Cooking temps, sourcing standards, and butcher tips." },
+  { label: "Support", to: "/contact", description: "Call, pickup, delivery windows, and wholesale help." },
+];
+
 function HomePage() {
   const { addItem } = useCart();
   const navigate = useNavigate();
@@ -208,6 +215,33 @@ function HomePage() {
             >
               Shop the lineup
             </button>
+          </div>
+        </div>
+      </section>
+
+      <section className="landing-section bg-white text-black border-b border-red-100" id="site-structure">
+        <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-14 space-y-6">
+          <div className="flex flex-col md:flex-row justify-between items-start gap-4">
+            <div>
+              <p className="text-red-600 uppercase tracking-wider text-sm">Site structure</p>
+              <h2 className="text-3xl font-semibold">Everything from the top bar, simplified.</h2>
+              <p className="text-gray-600 mt-1">
+                Pick your starting point—shop now, reserve a box, read how we source, or get support.
+              </p>
+            </div>
+            <Link to="/contact" className="inline-flex items-center gap-2 text-red-600 font-semibold hover:text-red-700">
+              Talk to a butcher <ArrowRight size={16} />
+            </Link>
+          </div>
+
+          <div className="structure-grid">
+            {structureLinks.map((item) => (
+              <Link key={item.to} to={item.to} className="structure-card">
+                <div className="structure-card__label">{item.label}</div>
+                <p className="structure-card__note">{item.description}</p>
+                <span className="structure-card__cta">Go to {item.label.toLowerCase()}</span>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
