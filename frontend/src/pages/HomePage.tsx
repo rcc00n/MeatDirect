@@ -3,9 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight, Drumstick, Fish, Flame } from "lucide-react";
 
 import { getProducts } from "../api/products";
-import quarterCowImage from "../assets/quarter-cow.webp";
-import halfCowImage from "../assets/half-cow.webp";
-import wholeCowImage from "../assets/Whole-cow.webp";
+import quarterCowImage from "../assets/quarter-cow.jpg";
+import halfCowImage from "../assets/half-cow.jpg";
+import wholeCowImage from "../assets/full-cow.jpg";
 import { CategoryCard } from "../components/CategoryCard";
 import { FeatureCard } from "../components/FeatureCard";
 import { ProductCard } from "../components/ProductCard";
@@ -217,8 +217,8 @@ function HomePage() {
           <div className="grid md:grid-cols-3 gap-8">
             {cowPackages.map((pkg) => (
               <div key={pkg.title} className="text-center bg-gray-50 rounded-2xl p-6 shadow-sm">
-                <div className="mb-6 h-48 overflow-hidden rounded-xl border border-gray-200">
-                  <img src={pkg.image} alt={pkg.title} className="w-full h-full object-cover"/>
+                <div className="mb-6 h-48 rounded-xl border border-gray-200 bg-white flex items-center justify-center">
+                  <img src={pkg.image} alt={pkg.title} className="h-full max-w-full object-contain" />
                 </div>
                 <h3 className="text-2xl font-semibold mb-2">{pkg.title}</h3>
                 <p className="text-red-600 font-semibold mb-4">{pkg.price}</p>
