@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { loadStripe, type Stripe } from "@stripe/stripe-js";
@@ -97,13 +97,9 @@ function CheckoutPageInner() {
   };
 
   return (
-    <div style={{ display: "grid", gap: 16 }}>
-      <div>
-        <h2 style={{ margin: 0 }}>Checkout</h2>
-        <p style={{ color: "#475569" }}>Finalize your details and pay securely.</p>
-      </div>
+    <div className="checkout-form-shell">
       {items.length === 0 ? (
-        <p style={{ color: "#475569" }}>Cart is empty. Add items to proceed.</p>
+        <div className="checkout-alert checkout-alert--muted">Cart is empty. Add items to proceed.</div>
       ) : (
         <CheckoutForm
           subtotalCents={subtotalCents}
@@ -113,8 +109,8 @@ function CheckoutPageInner() {
           submitting={submitting}
         />
       )}
-      {error && <p style={{ color: "#b91c1c" }}>{error}</p>}
-      {submitting && <p style={{ color: "#475569" }}>Processing payment...</p>}
+      {error && <div className="checkout-alert checkout-alert--error">{error}</div>}
+      {submitting && <div className="checkout-alert checkout-alert--info">Processing payment...</div>}
     </div>
   );
 }
@@ -126,6 +122,18 @@ function CheckoutPage() {
   const [stripePromise, setStripePromise] = useState<Promise<Stripe | null> | null>(null);
   const [loadingStripe, setLoadingStripe] = useState(true);
   const [stripeError, setStripeError] = useState<string | null>(null);
+  const renderLayout = (content: ReactNode) => (
+    <div className="checkout-page">
+      <div className="checkout-shell">
+        <div className="checkout-header">
+          <p className="checkout-header__eyebrow">Secure checkout</p>
+          <h1 className="checkout-header__title">Review & place your order</h1>
+          <p className="checkout-header__muted">Finalize your details and pay securely.</p>
+        </div>
+        {content}
+      </div>
+    </div>
+  );
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -199,33 +207,19 @@ function CheckoutPage() {
   }, [envStripeKey]);
 
   if (stripeError) {
-    return (
-      <div style={{ display: "grid", gap: 16 }}>
-        <div>
-          <h2 style={{ margin: 0 }}>Checkout</h2>
-          <p style={{ color: "#475569" }}>Finalize your details and pay securely.</p>
-        </div>
-        <p style={{ color: "#b91c1c" }}>{stripeError}</p>
-      </div>
-    );
+    return renderLayout(<div className="checkout-alert checkout-alert--error">{stripeError}</div>);
   }
 
   if (loadingStripe || !stripePromise) {
-    return (
-      <div style={{ display: "grid", gap: 16 }}>
-        <div>
-          <h2 style={{ margin: 0 }}>Checkout</h2>
-          <p style={{ color: "#475569" }}>Preparing a secure payment form...</p>
-        </div>
-        <p style={{ color: "#475569" }}>Loading payments...</p>
-      </div>
+    return renderLayout(
+      <div className="checkout-alert checkout-alert--info">Preparing a secure payment form...</div>,
     );
   }
 
-  return (
+  return renderLayout(
     <Elements stripe={stripePromise}>
       <CheckoutPageInner />
-    </Elements>
+    </Elements>,
   );
 }
 
