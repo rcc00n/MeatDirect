@@ -7,22 +7,6 @@ import { ProductCard as HighlightProductCard } from "../components/ProductCard";
 import ProductGrid from "../components/products/ProductGrid";
 import type { Product } from "../types";
 
-type CategoryTab = {
-  label: string;
-  value: string | null;
-  note: string;
-};
-
-const CATEGORY_TABS: CategoryTab[] = [
-  { label: "All items", value: null, note: "Full butcher case" },
-  { label: "Meat", value: "meat", note: "Beef, pork, bison, lamb" },
-  { label: "Poultry", value: "poultry", note: "Chicken, turkey, duck" },
-  { label: "Sausages", value: "sausages", note: "Links, patties, pepperoni" },
-  { label: "Smoked Fish", value: "smoked fish", note: "Salmon, spreads, fillets" },
-  { label: "European Products", value: "european products", note: "Kielbasa, pierogi, pantry" },
-  { label: "South African", value: "south african", note: "Boerewors, biltong, spices" },
-];
-
 const curatedCollections = [
   {
     name: "Grass-fed Beef",
@@ -46,12 +30,28 @@ const curatedCollections = [
 
 const formatPrice = (priceCents: number) => `$${(priceCents / 100).toFixed(2)}`;
 
+const buildCategoryList = (items: Product[]): string[] => {
+  const categories = new Map<string, string>();
+
+  items.forEach((product) => {
+    const value = product.category?.trim();
+    if (!value) return;
+
+    const key = value.toLowerCase();
+    if (!categories.has(key)) {
+      categories.set(key, value);
+    }
+  });
+
+  return Array.from(categories.values()).sort((a, b) => a.localeCompare(b));
+};
+
 function MenuPage() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [showMobileCategories, setShowMobileCategories] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const catalogRef = useRef<HTMLElement | null>(null);
@@ -73,7 +73,23 @@ function MenuPage() {
       },
       controller.signal,
     )
-      .then((result) => setProducts(result))
+      .then((result) => {
+        setProducts(result);
+        setCategories((current) => {
+          const derivedCategories = buildCategoryList(result);
+          const shouldSyncCategories = !debouncedSearch && !selectedCategory;
+
+          if (!derivedCategories.length) {
+            return current;
+          }
+
+          if (!current.length || shouldSyncCategories) {
+            return derivedCategories;
+          }
+
+          return current;
+        });
+      })
       .catch((fetchError) => {
         if (controller.signal.aborted) return;
         console.error("Failed to fetch products", fetchError);
@@ -87,20 +103,16 @@ function MenuPage() {
   }, [debouncedSearch, selectedCategory]);
 
   const featuredProducts = useMemo(() => products.filter((product) => product.is_popular).slice(0, 3), [products]);
-  const activeTab = useMemo(
-    () => CATEGORY_TABS.find((tab) => tab.value === selectedCategory) ?? CATEGORY_TABS[0],
-    [selectedCategory],
-  );
+  const categoryLabel = selectedCategory || "All categories";
 
   const scrollToCatalog = () => catalogRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
 
   const handleCategorySelect = (category: string | null) => {
     setSelectedCategory(category);
     scrollToCatalog();
-    setShowMobileCategories(false);
   };
 
-  const resultLabel = selectedCategory ? `${activeTab.label} ready to ship` : "All categories available";
+  const resultLabel = selectedCategory ? `${categoryLabel} ready to ship` : "All categories available";
 
   return (
     <div className="landing-page space-y-0 bg-black text-white">
@@ -226,7 +238,7 @@ function MenuPage() {
                   <div>
                     <p className="text-red-500 uppercase tracking-[0.2em] text-xs">Find your cut</p>
                     <p className="text-sm text-gray-600 max-w-xl">
-                      Search or tap a category to jump straight to the section you want.
+                      Search or pick a Square category to jump straight to the section you want.
                     </p>
                   </div>
                   <div className="flex flex-wrap gap-2 text-xs">
@@ -248,67 +260,50 @@ function MenuPage() {
                   />
                 </div>
 
-                <div className="md:hidden space-y-3">
-                  <button
-                    type="button"
-                    className="w-full flex items-center justify-between rounded-2xl border-2 px-4 py-3 text-left transition-colors border-gray-200 bg-white text-gray-900 hover:border-red-200"
-                    onClick={() => setShowMobileCategories((open) => !open)}
-                    aria-expanded={showMobileCategories}
-                  >
-                    <span className="font-semibold text-sm">Categories</span>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between gap-2">
+                    <div>
+                      <p className="text-sm font-semibold text-gray-800">Categories (synced from Square)</p>
+                      <p className="text-xs text-gray-500">Loaded from the categories on the products we receive.</p>
+                    </div>
+                    {selectedCategory && (
+                      <button
+                        type="button"
+                        onClick={() => handleCategorySelect(null)}
+                        className="text-xs font-semibold text-red-700 hover:text-red-800"
+                      >
+                        Clear
+                      </button>
+                    )}
+                  </div>
+                  <div className="relative">
+                    <select
+                      value={selectedCategory ?? ""}
+                      onChange={(event) => handleCategorySelect(event.target.value || null)}
+                      className="w-full appearance-none rounded-2xl border-2 border-gray-200 bg-white px-4 py-3 pr-10 text-sm text-gray-900 shadow-sm transition focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-100"
+                    >
+                      <option value="">All categories</option>
+                      {categories.map((category) => (
+                        <option key={category} value={category}>
+                          {category}
+                        </option>
+                      ))}
+                    </select>
                     <ChevronDown
                       size={18}
-                      className={`text-gray-500 transition-transform ${showMobileCategories ? "rotate-180" : ""}`}
+                      className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
                     />
-                  </button>
-                  {showMobileCategories && (
-                    <div className="grid grid-cols-2 gap-3">
-                      {CATEGORY_TABS.map((tab) => {
-                        const isActive = selectedCategory === tab.value;
-                        return (
-                          <button
-                            key={tab.label}
-                            type="button"
-                            onClick={() => handleCategorySelect(tab.value)}
-                            className={`rounded-2xl border-2 px-4 py-3 text-left transition-colors ${
-                              isActive
-                                ? "border-red-600 bg-red-50 text-red-700 shadow-md"
-                                : "border-gray-200 bg-white text-gray-900 hover:border-red-200"
-                            }`}
-                          >
-                            <div className="font-semibold text-sm">{tab.label}</div>
-                            <div className="text-xs text-gray-500">{tab.note}</div>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-
-                <div className="hidden md:grid sm:grid-cols-3 gap-3">
-                  {CATEGORY_TABS.map((tab) => {
-                    const isActive = selectedCategory === tab.value;
-                    return (
-                      <button
-                        key={tab.label}
-                        type="button"
-                        onClick={() => handleCategorySelect(tab.value)}
-                        className={`rounded-2xl border-2 px-4 py-3 text-left transition-colors ${
-                          isActive
-                            ? "border-red-600 bg-red-50 text-red-700 shadow-md"
-                            : "border-gray-200 bg-white text-gray-900 hover:border-red-200"
-                        }`}
-                      >
-                        <div className="font-semibold text-sm">{tab.label}</div>
-                        <div className="text-xs text-gray-500">{tab.note}</div>
-                      </button>
-                    );
-                  })}
+                  </div>
                 </div>
 
                 <div className="flex flex-wrap gap-2 text-sm text-gray-600">
-                  <span className="px-3 py-1 rounded-full bg-black text-white">{activeTab.label}</span>
+                  <span className="px-3 py-1 rounded-full bg-black text-white">{categoryLabel}</span>
                   <span className="px-3 py-1 rounded-full bg-gray-200 text-gray-800">{products.length} products</span>
+                  {categories.length > 0 && (
+                    <span className="px-3 py-1 rounded-full bg-gray-100 border border-gray-200">
+                      {categories.length} Square categories
+                    </span>
+                  )}
                   {debouncedSearch && (
                     <span className="px-3 py-1 rounded-full bg-gray-100 border border-gray-200">
                       Search: "{debouncedSearch}"
