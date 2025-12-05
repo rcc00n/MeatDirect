@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Drumstick, Fish, Flame, Search, Snowflake, Truck } from "lucide-react";
+import { ChevronDown, Drumstick, Fish, Flame, Search, Snowflake, Truck } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { getProducts } from "../api/products";
@@ -51,6 +51,7 @@ function MenuPage() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [showMobileCategories, setShowMobileCategories] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const catalogRef = useRef<HTMLElement | null>(null);
@@ -96,13 +97,14 @@ function MenuPage() {
   const handleCategorySelect = (category: string | null) => {
     setSelectedCategory(category);
     scrollToCatalog();
+    setShowMobileCategories(false);
   };
 
   const resultLabel = selectedCategory ? `${activeTab.label} ready to ship` : "All categories available";
 
   return (
     <div className="landing-page space-y-0 bg-black text-white">
-      <section className="landing-section bg-gradient-to-br from-black via-red-950 to-black py-16 border-b-2 border-red-600">
+      <section className="landing-section bg-gradient-to-br from-black via-red-950 to-black py-16 border-b-2 border-red-600 hidden md:block">
         <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-14 grid md:grid-cols-[1.05fr_0.95fr] gap-12 items-start">
           <div className="space-y-4">
             <p className="text-red-400 uppercase tracking-[0.2em] text-xs">Shop • Butcher Case</p>
@@ -246,7 +248,44 @@ function MenuPage() {
                   />
                 </div>
 
-                <div className="grid sm:grid-cols-3 gap-3">
+                <div className="md:hidden space-y-3">
+                  <button
+                    type="button"
+                    className="w-full flex items-center justify-between rounded-2xl border-2 px-4 py-3 text-left transition-colors border-gray-200 bg-white text-gray-900 hover:border-red-200"
+                    onClick={() => setShowMobileCategories((open) => !open)}
+                    aria-expanded={showMobileCategories}
+                  >
+                    <span className="font-semibold text-sm">Categories</span>
+                    <ChevronDown
+                      size={18}
+                      className={`text-gray-500 transition-transform ${showMobileCategories ? "rotate-180" : ""}`}
+                    />
+                  </button>
+                  {showMobileCategories && (
+                    <div className="grid grid-cols-2 gap-3">
+                      {CATEGORY_TABS.map((tab) => {
+                        const isActive = selectedCategory === tab.value;
+                        return (
+                          <button
+                            key={tab.label}
+                            type="button"
+                            onClick={() => handleCategorySelect(tab.value)}
+                            className={`rounded-2xl border-2 px-4 py-3 text-left transition-colors ${
+                              isActive
+                                ? "border-red-600 bg-red-50 text-red-700 shadow-md"
+                                : "border-gray-200 bg-white text-gray-900 hover:border-red-200"
+                            }`}
+                          >
+                            <div className="font-semibold text-sm">{tab.label}</div>
+                            <div className="text-xs text-gray-500">{tab.note}</div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+
+                <div className="hidden md:grid sm:grid-cols-3 gap-3">
                   {CATEGORY_TABS.map((tab) => {
                     const isActive = selectedCategory === tab.value;
                     return (
@@ -278,7 +317,7 @@ function MenuPage() {
                 </div>
               </div>
 
-              <div className="bg-gradient-to-br from-black via-zinc-950 to-black text-white rounded-3xl border border-red-700/60 p-6 space-y-5 shadow-2xl">
+              <div className="hidden md:block bg-gradient-to-br from-black via-zinc-950 to-black text-white rounded-3xl border border-red-700/60 p-6 space-y-5 shadow-2xl">
                 <p className="text-red-400 uppercase tracking-[0.2em] text-xs">How we pack</p>
                 <h3 className="text-3xl font-semibold leading-tight">Butcher-cut, cold, and ready to cook.</h3>
                 <div className="space-y-3 text-sm text-white/85">
@@ -329,7 +368,7 @@ function MenuPage() {
             </div>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="hidden md:grid md:grid-cols-3 gap-6">
             {curatedCollections.map((collection) => (
               <HighlightProductCard
                 key={collection.name}

@@ -1740,11 +1740,18 @@ img {
 
 .product-card__title {
   margin: 0;
+  flex: 1;
+  min-width: 0;
 }
 
 .product-card__title a {
   color: #0f172a;
   text-decoration: none;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .product-card__price {
@@ -4117,6 +4124,13 @@ a {
 .product-card__actions .button--ghost {
   border-color: #0f0f1f;
   color: #0f0f1f;
+}
+
+@media (max-width: 640px) {
+  .product-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
 }
 
 .site-footer {
