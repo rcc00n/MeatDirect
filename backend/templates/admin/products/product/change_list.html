@@ -1,19 +1,27 @@
 {% extends "admin/change_list.html" %}
-{% load i18n %}
+{% load i18n admin_urls %}
 
-{% block object-tools-items %}
-  <li>
-    <a href="{% url 'admin:products_product_sync_square' %}" class="button sync-square-button">
-      {% trans "Sync products with Square" %}
-    </a>
-  </li>
-  {{ block.super }}
+{# Replace the object tools so the sync action sits next to the Add button #}
+{% block object-tools %}
+  {% if has_add_permission %}
+    <ul class="object-tools">
+      <li>
+        <a href="{% url 'admin:products_product_sync_square' %}" class="button sync-square-button">
+          {% trans "Sync products with Square" %}
+        </a>
+      </li>
+      <li>
+        <a href="{% url cl.opts|admin_urlname:'add' %}" class="addlink">
+          {% blocktrans with cl.opts.verbose_name|capfirst as name %}Add {{ name }}{% endblocktrans %}
+        </a>
+      </li>
+    </ul>
+  {% endif %}
 {% endblock %}
 
 {% block extrahead %}
   {{ block.super }}
   <style>
-    /* Highlight the sync action so admins can find it quickly */
     .object-tools .sync-square-button {
       background: linear-gradient(135deg, #0f172a, #0b5ed7);
       border-color: #0b5ed7;
