@@ -1736,6 +1736,7 @@ img {
   gap: 8px;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .product-card__title {
@@ -1781,6 +1782,25 @@ img {
   grid-template-columns: 1fr 1fr;
   gap: 8px;
   align-items: center;
+}
+
+@media (max-width: 640px) {
+  .product-card__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .product-card__price {
+    font-size: 14px;
+  }
+
+  .product-card__actions {
+    grid-template-columns: 1fr;
+  }
+
+  .product-card__actions .button--ghost {
+    display: none;
+  }
 }
 
 .product-card--skeleton {
