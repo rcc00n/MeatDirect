@@ -1,442 +1,175 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, CheckCircle2, Drumstick, Flame, Fish, Snowflake } from "lucide-react";
+import { ArrowRight, BadgeCheck, CheckCircle2, Drumstick, Leaf, ShieldCheck, Snowflake, Truck } from "lucide-react";
+import heroMain from "../assets/hero-large-cuts.jpg";
+import pastureImg from "../assets/full-cow.jpg";
+import boardImg from "../assets/hero-menu.jpg";
 
-const pillars = [
-  {
-    title: "Farm-direct sourcing",
-    description:
-      "We hand-pick prairie partners, pay for the specs we publish, and keep batch sizes small to protect flavor.",
-    icon: Drumstick,
-  },
-  {
-    title: "Eastern European craft",
-    description: "Old-world curing, smoke, and spice layered onto Alberta beef, bison, pork, and poultry.",
-    icon: Flame,
-  },
-  {
-    title: "Seafood & staples that fit",
-    description: "Smoked fish, poultry, pantry add-ons, and ready-to-cook kits that round out the butcher case.",
-    icon: Fish,
-  },
+const featurePills = [
+  { title: "European craft", icon: Drumstick },
+  { title: "Farm direct", icon: Leaf },
+  { title: "Fast delivery", icon: Truck },
+  { title: "Certified", icon: ShieldCheck },
 ];
 
-const processSteps = [
-  {
-    title: "Sourcing without shortcuts",
-    detail: "Our sourcing team walks herds, reviews feed plans, and aligns genetics before booking space in the plant.",
-  },
-  {
-    title: "Cut, age, and label",
-    detail: "Small-batch cutting, consistent aging windows, and hand-trimmed portions with clear spec notes.",
-  },
-  {
-    title: "Paperwork travels with product",
-    detail: "Lot tracking, pack dates, inspector sign-offs, and cold-chain logs printed and stored with each batch.",
-  },
-  {
-    title: "Delivery built around temperature",
-    detail: "Insulated liners, ice packs, next-day local delivery, and insulated shipping across provinces.",
-  },
+const proofPoints = [
+  { value: "100%", label: "Traceable sources" },
+  { value: "24hr", label: "Cold chain delivery" },
+  { value: "2x", label: "Daily inspections" },
 ];
 
-const operationsTeam = [
-  {
-    title: "Cut & fabrication",
-    summary: "Small-batch cutting, consistent specs, and trim that protects flavor.",
-    bullets: [
-      "Set specs, aging windows, and marbling targets with partners.",
-      "Keep the fabrication room aligned with inspectors daily.",
-      "Prep labels that match paperwork for every batch.",
-    ],
-  },
-  {
-    title: "Cold chain & logistics",
-    summary: "Routes, liners, and temperature logs built for 0–4°C delivery.",
-    bullets: [
-      "Builds delivery windows that protect the cold chain.",
-      "Translates inspection language into simple guides.",
-      "Run local pickup, next-day delivery, and insulated shipping.",
-    ],
-  },
-  {
-    title: "Customer & education",
-    summary: "Guides, FAQ, and support so families and chefs know what arrives.",
-    bullets: [
-      "Teach customers how to work with undervalued cuts.",
-      "Publish clear FAQ and lot tracking for every program.",
-      "Support wholesale, family bundles, and community drops.",
-    ],
-  },
-];
-
-const programs = [
-  {
-    eyebrow: "Grass-fed program",
-    title: "Pasture-first beef and bison with a natural finish.",
-    bullets: [
-      "Marbling without heavy grain finishing.",
-      "Higher omega-3s and clean, mineral-rich flavor.",
-      "Great for grills, meal prep, and athletes.",
-    ],
-    cta: { label: "Shop large cuts", to: "/large-cuts" },
-  },
-  {
-    eyebrow: "Hormone-free promise",
-    title: "No added growth hormones or routine stimulants across proteins.",
-    bullets: [
-      "Better-for-family cuts for weekly staples.",
-      "Pairs with our clean spice blends for quick dinners.",
-      "Backed by transparent paperwork and labels.",
-    ],
-    cta: { label: "Shop the menu", to: "/menu" },
-  },
-  {
-    eyebrow: "Transparency first",
-    title: "Labels that match inspection logs so restaurants and families know the source.",
-    bullets: [
-      "Pack date, lot, and farm group on every sleeve.",
-      "Sanitation and temperature logs stored with batches.",
-      "FAQ and education for anyone who wants to verify.",
-    ],
-    cta: { label: "Read FAQ", to: "/good-to-know" },
-  },
-];
-
-const metrics = [
-  { value: "48 hrs", label: "Avg order-to-door", note: "Local delivery windows" },
-  { value: "2 programs", label: "Provincial + federal inspection", note: "Paperwork-ready daily" },
-  { value: "40+ farms", label: "Visited in person", note: "Farm-direct sourcing" },
-  { value: "0 added hormones", label: "Across our lineup", note: "Family-safe proteins" },
+const checklist = [
+  "Paperwork-backed programs with clear labels and pack dates.",
+  "Boxes that stay between 0–4°C with ice packs and insulated liners.",
+  "Family-ready cuts without added hormones or shortcuts in the grind.",
 ];
 
 function AboutPage() {
   return (
-    <div className="landing-page space-y-0">
-      <section className="landing-section bg-gradient-to-br from-black via-red-950 to-black text-white py-16 border-b-2 border-red-600">
-        <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-14">
-          <div className="space-y-4 max-w-3xl">
-            <p className="text-red-400 uppercase tracking-[0.2em] text-xs">About MeatDirect</p>
-            <h1 className="text-4xl md:text-5xl font-semibold leading-tight">
-              Prairie-born butchers, inspection-ready delivery.
-            </h1>
-            <p className="text-gray-300 max-w-2xl">
-              MeatDirect is the honest butcher shop we wanted nearby: Eastern European craft, Alberta proteins, and
-              paperwork that keeps every box accountable.
-            </p>
-            <div className="flex flex-wrap gap-2">
-              <span className="border border-red-700 bg-white/5 text-white px-4 py-2 rounded-full text-sm">
-                Provincial + federal inspection
-              </span>
-              <span className="border border-red-700 bg-white/5 text-white px-4 py-2 rounded-full text-sm">
-                Grass-fed & hormone-free programs
-              </span>
-              <span className="border border-red-700 bg-white/5 text-white px-4 py-2 rounded-full text-sm">
-                Local delivery & insulated shipping
-              </span>
-            </div>
-            <div className="flex flex-wrap gap-3 pt-2">
-              <Link
-                to="/menu"
-                className="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors"
-              >
-                Shop the lineup
-              </Link>
-              <Link
-                to="/good-to-know"
-                className="border-2 border-white text-white px-6 py-3 rounded-lg hover:bg-white hover:text-black transition-colors"
-              >
-                Inspection FAQ
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="landing-section bg-white text-black py-16">
-        <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-14 space-y-10">
-          <div className="flex flex-col md:flex-row justify-between items-start gap-6">
+    <div className="landing-page">
+      <section className="landing-section bg-gradient-to-br from-[#f5eee7] via-[#f7f1ea] to-[#efe6dd] text-[#1f2937] py-16">
+        <div className="w-full max-w-6xl mx-auto grid lg:grid-cols-[1.05fr_0.95fr] gap-12 items-center">
+          <div className="space-y-6">
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#c22030] text-white text-xs font-semibold shadow-md">
+              <BadgeCheck size={14} /> About MeatDirect
+            </span>
             <div className="space-y-3">
-              <p className="text-red-600 uppercase tracking-wider text-sm">Why we exist</p>
-              <h2 className="text-4xl font-semibold leading-tight max-w-2xl">
-                We make European-inspired, inspection-ready meat easy to trust.
-              </h2>
-              <p className="text-gray-600 max-w-2xl">
-                Eastern European comfort food meets Alberta farms. We cut, age, and package small batches so families and
-                restaurants get the flavor and paperwork they expect.
+              <h1 className="text-4xl md:text-5xl font-extrabold leading-tight">
+                Prairie-born butchers, inspection-ready delivery.
+              </h1>
+              <p className="text-lg text-[#4b5563] max-w-2xl">
+                MeatDirect is the first boxed butcher shop we've worked hands-in. Eastern European craft, prairie
+                partners, and paperwork that keeps every box honest from source to table.
               </p>
             </div>
-            <div className="bg-black text-white rounded-2xl p-6 shadow-lg border border-red-700/50 max-w-md space-y-2">
-              <p className="text-red-400 uppercase tracking-[0.2em] text-xs">Shipping & pickup</p>
-              <h3 className="text-2xl font-semibold">
-                Local delivery next-day, insulated shipping cross-province.
-              </h3>
-              <p className="text-sm text-white/80">
-                Boxes leave our cold room with liners, ice packs, and labeling that matches our inspection logs.
-              </p>
-              <div className="flex flex-wrap gap-2 pt-2">
-                <span className="bg-white text-black px-3 py-1 rounded-full text-xs font-semibold">0–4°C cold chain</span>
-                <span className="border border-white/50 px-3 py-1 rounded-full text-xs font-semibold">Pickup or delivery</span>
-              </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {featurePills.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <div
+                    key={item.title}
+                    className="flex flex-col items-center gap-2 rounded-2xl bg-white/80 border border-[#e5d8c9] px-4 py-4 shadow-sm"
+                  >
+                    <div className="h-10 w-10 rounded-full bg-[#f8f1e8] flex items-center justify-center text-[#c22030] border border-white">
+                      <Icon size={18} />
+                    </div>
+                    <div className="text-sm font-semibold text-center">{item.title}</div>
+                  </div>
+                );
+              })}
             </div>
-          </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            {pillars.map((pillar) => (
-              <div
-                key={pillar.title}
-                className="rounded-2xl border border-gray-200 bg-gradient-to-br from-white via-red-50/40 to-white p-6 shadow-sm"
-              >
-                <div className="inline-flex items-center justify-center h-12 w-12 rounded-xl bg-red-600 text-white">
-                  <pillar.icon size={20} />
-                </div>
-                <h3 className="text-xl font-semibold mt-4 mb-2">{pillar.title}</h3>
-                <p className="text-gray-700">{pillar.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="landing-section bg-black text-white py-16 border-t-2 border-red-600">
-        <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-14 grid md:grid-cols-[1.1fr_0.9fr] gap-10 items-start">
-          <div className="space-y-5">
-            <p className="text-red-400 uppercase tracking-[0.2em] text-xs">How we operate</p>
-            <h2 className="text-4xl font-semibold leading-tight">Less guesswork. More labels and logged temperatures.</h2>
-            <div className="space-y-4">
-              {processSteps.map((step, index) => (
-                <div
-                  key={step.title}
-                  className="flex gap-4 items-start bg-white/5 border border-red-900/60 rounded-2xl p-5"
-                >
-                  <div className="h-10 w-10 rounded-full bg-red-600 text-white flex items-center justify-center font-semibold">
-                    {String(index + 1).padStart(2, "0")}
-                  </div>
-                  <div className="space-y-1">
-                    <div className="font-semibold text-white text-lg">{step.title}</div>
-                    <p className="text-sm text-gray-300 mb-0">{step.detail}</p>
-                  </div>
+            <div className="bg-white/90 backdrop-blur-md border border-[#ebdfd0] rounded-2xl shadow-lg grid sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-[#f1e5d7]">
+              {proofPoints.map((point) => (
+                <div key={point.label} className="px-6 py-4 flex flex-col items-center text-center">
+                  <div className="text-3xl font-bold text-[#c22030]">{point.value}</div>
+                  <div className="text-sm font-semibold text-[#1f2937]">{point.label}</div>
                 </div>
               ))}
             </div>
-            <div className="flex flex-wrap gap-2">
-              <span className="px-3 py-1 rounded-full bg-white/10 border border-white/20 text-xs">Hand-trimmed batches</span>
-              <span className="px-3 py-1 rounded-full bg-white/10 border border-white/20 text-xs">Lot + pack date on label</span>
-              <span className="px-3 py-1 rounded-full bg-white/10 border border-white/20 text-xs">Sanitation logs daily</span>
-            </div>
-          </div>
 
-          <div className="space-y-4">
-            <div className="bg-red-600 rounded-3xl p-8 shadow-2xl border border-red-500/60 space-y-4">
-              <p className="uppercase tracking-[0.18em] text-xs text-white/80">Inspection & education</p>
-              <h3 className="text-3xl font-semibold leading-tight">
-                Provincial + federal oversight without losing flavor.
-              </h3>
-              <p className="text-white/90">
-                We keep paperwork simple and invite oversight because it protects the families and chefs we serve.
-              </p>
-              <div className="space-y-2">
-                {[
-                  "Daily sanitation checks and logged cold-chain data.",
-                  "Labels that match the batch paperwork for restaurants.",
-                  "Clear FAQ for anyone who wants to verify programs.",
-                ].map((item) => (
-                  <div key={item} className="flex items-start gap-2 text-sm">
-                    <CheckCircle2 className="text-white" size={18} />
-                    <span>{item}</span>
-                  </div>
-                ))}
-              </div>
-              <Link
-                to="/good-to-know"
-                className="inline-flex items-center gap-2 bg-white text-black px-4 py-2 rounded-lg font-semibold hover:bg-red-50 transition-colors"
-              >
-                Visit education page <ArrowRight size={16} />
-              </Link>
-            </div>
-
-            <div className="bg-white text-black rounded-2xl p-6 border border-red-100 shadow-lg">
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <p className="text-red-600 uppercase tracking-[0.2em] text-xs">Cold chain</p>
-                  <h4 className="text-xl font-semibold">
-                    Insulated liners, ice packs, and routed delivery windows.
-                  </h4>
-                </div>
-                <Snowflake className="text-red-600" size={32} />
-              </div>
-              <p className="text-gray-700">
-                Every order leaves our cold room between 0–4°C and stays there through pickup or delivery.
-              </p>
-              <div className="flex flex-wrap gap-2 text-sm">
-                <span className="px-3 py-1 rounded-full bg-red-50 text-red-700 border border-red-100">Tracked vans</span>
-                <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-800">Insulated shipping boxes</span>
-                <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-800">Routes planned in-house</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="landing-section bg-gradient-to-br from-red-50 via-white to-red-50 text-black py-16">
-        <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-14 space-y-8">
-          <div className="flex flex-col md:flex-row justify-between items-start gap-6">
-            <div className="space-y-3 max-w-2xl">
-              <p className="text-red-600 uppercase tracking-wider text-sm">Operations team</p>
-              <h2 className="text-4xl font-semibold leading-tight">
-                Hands-on crew that still packs boxes and signs every label.
-              </h2>
-              <p className="text-gray-700">
-                MeatDirect is run by an in-house crew—no brokers or distant partners. We stay close to the cut room,
-                delivery routes, and paperwork.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <span className="bg-black text-white px-3 py-1 rounded-full text-xs font-semibold">In-house crew</span>
-              <span className="border border-red-200 text-red-700 px-3 py-1 rounded-full text-xs font-semibold">
-                On-site daily
-              </span>
-              <span className="border border-red-200 text-red-700 px-3 py-1 rounded-full text-xs font-semibold">
-                European roots
-              </span>
-            </div>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {operationsTeam.map((team) => (
-              <div
-                key={team.title}
-                className="rounded-2xl bg-black text-white p-6 border border-red-700/60 shadow-xl space-y-4"
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <div className="text-lg font-semibold">{team.title}</div>
-                    <div className="text-sm text-white/70">In-house leads</div>
-                  </div>
-                  <div className="h-12 w-12 rounded-xl bg-white text-black flex items-center justify-center">
-                    <CheckCircle2 size={22} />
-                  </div>
-                </div>
-                <p className="text-white/85">{team.summary}</p>
-                <div className="space-y-2">
-                  {team.bullets.map((bullet) => (
-                    <div key={bullet} className="flex items-start gap-2 text-sm text-white/90">
-                      <ArrowRight className="text-red-300" size={14} />
-                      <span>{bullet}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="landing-section bg-white text-black py-16">
-        <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-14 space-y-8">
-          <div className="flex flex-col md:flex-row justify-between items-start gap-4">
-            <div className="space-y-2">
-              <p className="text-red-600 uppercase tracking-wider text-sm">Programs & standards</p>
-              <h2 className="text-4xl font-semibold leading-tight">
-                Grass-fed, hormone-free, and labeled for accountability.
-              </h2>
-              <p className="text-gray-700 max-w-2xl">
-                We keep flavor front and center while making sure every batch has the paperwork to back it up.
-              </p>
-            </div>
-            <Link
-              to="/blog"
-              className="inline-flex items-center gap-2 text-red-600 font-semibold hover:text-red-700"
-            >
-              Read the extended articles <ArrowRight size={18} />
-            </Link>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {programs.map((program) => (
-              <div
-                key={program.eyebrow}
-                className="relative overflow-hidden rounded-2xl border border-red-100 bg-gradient-to-br from-white via-red-50/60 to-white p-6 shadow-sm"
-              >
-                <div className="absolute -right-10 -top-16 h-36 w-36 bg-red-100 rounded-full blur-3xl" />
-                <div className="relative space-y-3">
-                  <p className="text-xs uppercase tracking-[0.2em] text-red-600">{program.eyebrow}</p>
-                  <h3 className="text-xl font-semibold">{program.title}</h3>
-                  <ul className="space-y-2 text-gray-700 list-disc list-inside">
-                    {program.bullets.map((bullet) => (
-                      <li key={bullet}>{bullet}</li>
-                    ))}
-                  </ul>
-                  <Link
-                    to={program.cta.to}
-                    className="inline-flex items-center gap-2 text-red-600 font-semibold hover:text-red-700"
-                  >
-                    {program.cta.label} <ArrowRight size={16} />
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="landing-section bg-black text-white py-16 border-t-2 border-red-600">
-        <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-14 space-y-8">
-          <div className="flex flex-col md:flex-row justify-between items-start gap-4">
-            <div className="space-y-2">
-              <p className="text-red-400 uppercase tracking-[0.2em] text-xs">Proof points</p>
-              <h2 className="text-3xl md:text-4xl font-semibold leading-tight">Numbers that stay on the label.</h2>
-            </div>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-3 pt-1">
               <Link
                 to="/menu"
-                className="bg-red-600 text-white px-5 py-2 rounded-lg hover:bg-red-700 transition-colors"
+                className="bg-[#c22030] text-white px-6 py-3 rounded-xl font-semibold shadow-md hover:bg-[#b01b2a] transition-colors"
               >
-                Shop the menu
-              </Link>
-              <Link
-                to="/contact"
-                className="border border-white/30 text-white px-5 py-2 rounded-lg hover:border-white transition-colors"
-              >
-                Talk to the team
-              </Link>
-            </div>
-          </div>
-
-          <div className="grid md:grid-cols-4 gap-4">
-            {metrics.map((metric) => (
-              <div
-                key={metric.label}
-                className="rounded-2xl border border-red-900/60 bg-white/5 px-4 py-5 shadow-lg"
-              >
-                <div className="text-3xl font-semibold text-white">{metric.value}</div>
-                <div className="text-sm font-semibold text-gray-200">{metric.label}</div>
-                <div className="text-xs text-gray-400 mt-1">{metric.note}</div>
-              </div>
-            ))}
-          </div>
-
-          <div className="bg-white/5 border border-red-900/60 rounded-2xl p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-            <div className="space-y-1">
-              <div className="text-red-300 uppercase tracking-[0.2em] text-xs">Ready when you are</div>
-              <p className="text-lg font-semibold text-white mb-0">
-                Transparent sourcing, cold-packed delivery, and old-world flavor.
-              </p>
-              <p className="text-sm text-gray-300 mb-0">
-                Tap into the shop, browse large cuts, or read the education page if you need the paperwork first.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              <Link
-                to="/large-cuts"
-                className="bg-white text-black px-4 py-2 rounded-lg font-semibold hover:bg-red-50 transition-colors"
-              >
-                Large cuts
+                Shop the fridge
               </Link>
               <Link
                 to="/good-to-know"
-                className="border border-white/40 text-white px-4 py-2 rounded-lg font-semibold hover:border-white transition-colors"
+                className="bg-white/80 text-[#1f2937] px-6 py-3 rounded-xl font-semibold border border-[#e5d8c9] hover:bg-white transition-colors"
               >
-                See inspection details
+                I'll visit FAQ
+              </Link>
+            </div>
+
+            <div className="flex flex-wrap gap-2 text-sm text-[#6b7280]">
+              <span className="px-3 py-1 rounded-full bg-white/70 border border-[#e8dbcd]">Local + insulated shipping</span>
+              <span className="px-3 py-1 rounded-full bg-white/70 border border-[#e8dbcd]">Labels that match the lot</span>
+              <span className="px-3 py-1 rounded-full bg-white/70 border border-[#e8dbcd]">0–4°C routes</span>
+            </div>
+          </div>
+
+          <div className="relative">
+            <div className="absolute -right-2 -top-4 z-10 inline-flex items-center gap-2 bg-[#c22030] text-white px-4 py-2 rounded-full shadow-xl">
+              <ShieldCheck size={16} />
+              <span className="text-sm font-semibold">Certified</span>
+            </div>
+            <div className="space-y-4">
+              <div className="rounded-[28px] overflow-hidden shadow-2xl border border-white/60 bg-white">
+                <img
+                  src={heroMain}
+                  alt="Hand-cut steaks on butcher paper"
+                  className="w-full h-[260px] md:h-[320px] object-cover"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="rounded-[22px] overflow-hidden shadow-xl border border-white/60 bg-white">
+                  <img src={pastureImg} alt="Cattle grazing on prairie grass" className="w-full h-44 object-cover" />
+                </div>
+                <div className="rounded-[22px] overflow-hidden shadow-xl border border-white/60 bg-white">
+                  <img src={boardImg} alt="Butchered steaks ready to cook" className="w-full h-44 object-cover" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="landing-section bg-white text-[#111827] py-12">
+        <div className="w-full max-w-6xl mx-auto grid lg:grid-cols-[1.05fr_0.95fr] gap-10 items-start">
+          <div className="space-y-4">
+            <p className="text-[#c22030] uppercase tracking-[0.2em] text-xs font-semibold">More than a box</p>
+            <h2 className="text-3xl md:text-4xl font-bold leading-tight">
+              Small-batch cutting, cold-chain delivery, and paperwork you can keep.
+            </h2>
+            <p className="text-[#4b5563]">
+              We still sign every sleeve, walk the farms, and build delivery routes around temperature. The goal: clear,
+              honest labels that make families and chefs feel confident.
+            </p>
+            <div className="space-y-3">
+              {checklist.map((item) => (
+                <div
+                  key={item}
+                  className="flex items-start gap-3 bg-[#f8f5ee] border border-[#efe3d4] rounded-xl px-4 py-3"
+                >
+                  <CheckCircle2 className="text-[#c22030]" size={18} />
+                  <span className="text-sm text-[#374151]">{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div className="rounded-2xl border border-[#efe3d4] bg-gradient-to-br from-[#fdfaf5] to-[#f4ede4] p-5 shadow-sm">
+              <div className="flex items-center gap-2 text-sm font-semibold text-[#c22030] mb-2">
+                <Snowflake size={16} /> 0–4°C cold chain
+              </div>
+              <p className="text-[#374151] text-sm">
+                Ice packs, insulated liners, and routed drop times keep each order inspection-ready when it arrives.
+              </p>
+            </div>
+            <div className="rounded-2xl border border-[#efe3d4] bg-gradient-to-br from-[#fdfaf5] to-[#f4ede4] p-5 shadow-sm">
+              <div className="flex items-center gap-2 text-sm font-semibold text-[#c22030] mb-2">
+                <Truck size={16} /> Built for delivery
+              </div>
+              <p className="text-[#374151] text-sm">
+                Local delivery, pickup, and insulated shipping across provinces with labels that match the paperwork.
+              </p>
+            </div>
+            <div className="rounded-2xl border border-[#efe3d4] bg-gradient-to-br from-[#fdfaf5] to-[#f4ede4] p-5 shadow-sm sm:col-span-2">
+              <div className="flex items-center gap-2 text-sm font-semibold text-[#c22030] mb-2">
+                <BadgeCheck size={16} /> Transparent programs
+              </div>
+              <p className="text-[#374151] text-sm">
+                Grass-fed, hormone-free, and European-inspired cuts with documentation and FAQs ready for anyone who
+                wants to verify.
+              </p>
+              <Link
+                to="/good-to-know"
+                className="inline-flex items-center gap-2 mt-3 text-[#c22030] font-semibold hover:text-[#b01b2a]"
+              >
+                See inspection FAQ <ArrowRight size={16} />
               </Link>
             </div>
           </div>
