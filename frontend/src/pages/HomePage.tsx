@@ -93,6 +93,9 @@ const productHighlights = [
   },
 ];
 
+const EUROPEAN_CATEGORY = "Eurogrocer";
+const europeanCountryBadges = ["Ukraine", "Poland", "Lithuania", "Latvia"];
+
 function HomePage() {
   const { addItem } = useCart();
   const navigate = useNavigate();
@@ -253,38 +256,58 @@ function HomePage() {
         </div>
       </section>
 
-      <section className="landing-section py-16 bg-black border-t-2 border-red-600">
-        <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-14">
-          <div className="grid md:grid-cols-2 gap-12">
-            <div className="space-y-4">
-              <p className="text-red-500 uppercase tracking-wider text-sm">From Europe to Your Table</p>
-              <h2 className="text-4xl font-semibold">Eastern European delicacies without hopping a flight.</h2>
-              <p className="text-gray-300">
-                We collaborate with Central European butchers, curate a seasonal menu, and deliver traditional fresh
-                meats to customers near local farms and beyond for authentic comfort food.
-              </p>
-              <div className="flex gap-4 flex-wrap">
-                <Link
-                  to="/menu"
-                  className="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors"
-                >
-                  View European Products
-                </Link>
-                <Link
-                  to="/menu"
-                  className="border-2 border-white text-white px-6 py-3 rounded-lg hover:bg-white hover:text-black transition-colors"
-                >
-                  Shop All
-                </Link>
-              </div>
+      <section className="landing-section py-16 bg-[#f8f4ed] text-[#1f150d] border-t-2 border-red-600">
+        <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-14 grid lg:grid-cols-[1.05fr_0.95fr] gap-12 items-center">
+          <div className="space-y-5">
+            <div className="flex items-center gap-3 text-xs uppercase tracking-[0.28em] text-red-700">
+              <span className="h-10 w-[3px] rounded-full bg-red-500" />
+              <span>From Europe to your table</span>
             </div>
-            <div className="bg-red-600 p-8 rounded-2xl shadow-lg space-y-4">
-              <p className="text-white uppercase tracking-wider text-sm">Your Order = Less Travel</p>
-              <h3 className="text-3xl font-semibold">Go-boxes: breakfast, lunch, curated boxes.</h3>
-              <p className="text-white/90">
-                Explore new cuts with hand-curated take-out boxes—beef, pork, and chicken bundles ready to add to any
-                order.
-              </p>
+            <h2 className="text-4xl md:text-5xl font-semibold leading-tight text-[#24150c]">
+              European delicacies without hopping a flight.
+            </h2>
+            <p className="text-lg text-[#3c2717]">
+              In our store you can find a diverse selection of Eastern European delicacies, with a particular focus on
+              the finest products from Ukraine, Poland, Lithuania, and Latvia.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={() => navigate(`/menu?category=${encodeURIComponent(EUROPEAN_CATEGORY)}#shop`)}
+                className="bg-red-600 text-white px-7 py-3 rounded-xl hover:bg-red-700 transition-colors shadow-[0_16px_36px_-26px_rgba(185,28,28,0.9)]"
+              >
+                Shop European now
+              </button>
+              <Link
+                to="/menu#shop"
+                className="border-2 border-[#2a1a0f] text-[#2a1a0f] px-7 py-3 rounded-xl hover:bg-[#2a1a0f] hover:text-white transition-colors"
+              >
+                Browse all
+              </Link>
+            </div>
+            <div className="flex flex-wrap gap-2 text-sm text-[#3c2717]">
+              {europeanCountryBadges.map((country) => (
+                <span
+                  key={country}
+                  className="px-3 py-2 rounded-full bg-white border border-[#e8dbcc] shadow-sm"
+                >
+                  {country}
+                </span>
+              ))}
+              <span className="px-3 py-2 rounded-full bg-red-50 border border-red-100 text-red-700">
+                Kvass • Sweets • Pantry
+              </span>
+            </div>
+          </div>
+          <div className="relative">
+            <div className="absolute -inset-6 bg-red-200/60 blur-3xl rounded-full" aria-hidden />
+            <div className="relative bg-white rounded-3xl border border-[#f1e6d8] shadow-[0_32px_80px_-48px_rgba(0,0,0,0.55)] overflow-hidden">
+              <img
+                src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1400&q=80"
+                alt="Imported European sweets and pantry staples"
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
             </div>
           </div>
         </div>

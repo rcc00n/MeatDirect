@@ -1,30 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, CheckCircle2, Drumstick, Flame, Fish, ShieldCheck, Snowflake } from "lucide-react";
-
-const facilityHighlights = [
-  {
-    title: "Inspection ready",
-    description:
-      "Provincial + federal programs with daily sanitation logs, humane handling notes, and batch-by-batch oversight.",
-    icon: ShieldCheck,
-  },
-  {
-    title: "Cold-chain obsessed",
-    description: "0–4°C tracked from receiving through packing, insulated liners, and routed vans.",
-    icon: Snowflake,
-  },
-  {
-    title: "Labels with receipts",
-    description: "Pack date, lot, and farm group printed so restaurants and families know the source.",
-    icon: CheckCircle2,
-  },
-];
-
-const promiseStats = [
-  { value: "48 hrs", label: "Avg order-to-door", note: "Local delivery windows" },
-  { value: "40+", label: "Partner farms walked", note: "In-person sourcing, no brokers" },
-  { value: "0 added hormones", label: "Across our programs", note: "Better-for-family proteins" },
-];
+import { ArrowRight, CheckCircle2, Drumstick, Flame, Fish, Snowflake } from "lucide-react";
 
 const pillars = [
   {
@@ -131,8 +106,8 @@ function AboutPage() {
   return (
     <div className="landing-page space-y-0">
       <section className="landing-section bg-gradient-to-br from-black via-red-950 to-black text-white py-16 border-b-2 border-red-600">
-        <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-14 grid md:grid-cols-[1.1fr_0.9fr] gap-12 items-start">
-          <div className="space-y-4">
+        <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-14">
+          <div className="space-y-4 max-w-3xl">
             <p className="text-red-400 uppercase tracking-[0.2em] text-xs">About MeatDirect</p>
             <h1 className="text-4xl md:text-5xl font-semibold leading-tight">
               Prairie-born butchers, inspection-ready delivery.
@@ -164,51 +139,6 @@ function AboutPage() {
                 className="border-2 border-white text-white px-6 py-3 rounded-lg hover:bg-white hover:text-black transition-colors"
               >
                 Inspection FAQ
-              </Link>
-            </div>
-          </div>
-
-          <div className="bg-white text-black p-8 rounded-2xl shadow-2xl border border-red-100 relative overflow-hidden">
-            <div className="absolute -right-10 -top-14 h-40 w-40 bg-red-100 rounded-full blur-3xl" />
-            <div className="absolute -left-10 bottom-0 h-28 w-28 bg-red-50 rounded-full blur-2xl" />
-            <div className="relative space-y-6">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="text-red-600 uppercase tracking-wider text-sm">Facility snapshot</p>
-                  <h3 className="text-2xl font-semibold">Standards that mirror our shop floor.</h3>
-                </div>
-                <span className="text-sm text-gray-500">Trusted by families & chefs</span>
-              </div>
-              <div className="grid sm:grid-cols-3 gap-3">
-                {promiseStats.map((stat) => (
-                  <div key={stat.label} className="rounded-xl border border-red-100 bg-red-50/60 px-4 py-3">
-                    <div className="text-xl font-semibold text-red-700">{stat.value}</div>
-                    <div className="text-sm font-semibold text-black">{stat.label}</div>
-                    <div className="text-xs text-gray-600">{stat.note}</div>
-                  </div>
-                ))}
-              </div>
-              <div className="space-y-3">
-                {facilityHighlights.map((item) => (
-                  <div
-                    key={item.title}
-                    className="flex items-start gap-3 rounded-xl border border-gray-200 bg-white/80 px-4 py-3 shadow-sm"
-                  >
-                    <div className="h-10 w-10 rounded-lg bg-red-600 text-white inline-flex items-center justify-center">
-                      <item.icon size={18} />
-                    </div>
-                    <div>
-                      <div className="font-semibold text-black">{item.title}</div>
-                      <p className="text-sm text-gray-600 mb-0">{item.description}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <Link
-                to="/large-cuts"
-                className="inline-flex items-center gap-2 text-red-600 font-semibold hover:text-red-700"
-              >
-                See large cuts & halves <ArrowRight size={18} />
               </Link>
             </div>
           </div>

@@ -195,7 +195,7 @@ function LargeCutsPage() {
   return (
     <div className="landing-page bg-black text-white">
       <section className="landing-section bg-gradient-to-br from-black via-[#120a10] to-[#04070b] py-16 md:py-20 border-b border-red-900/50">
-        <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-14 grid lg:grid-cols-[1.05fr_0.95fr] gap-10 items-center">
+        <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-14 grid gap-10 items-center">
           <div className="space-y-6">
             <p className="text-red-400 uppercase tracking-[0.22em] text-xs">Large Cuts • Smoker & Roast Ready</p>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold leading-tight">
@@ -249,49 +249,6 @@ function LargeCutsPage() {
                   </div>
                 );
               })}
-            </div>
-          </div>
-
-          <div className="bg-white text-black rounded-3xl shadow-2xl overflow-hidden border border-red-100">
-            <div className="bg-gradient-to-r from-red-600 to-red-500 text-white p-6 flex flex-col gap-2">
-              <p className="uppercase tracking-[0.22em] text-xs">Cut Sheet • Large Format</p>
-              <h3 className="text-3xl font-semibold">Reserve a roast or smoker centerpiece</h3>
-              <p className="text-white/85">
-                Choose beef, pork, lamb, fish, or whole birds. We can hold, trim, and label exactly how you want it.
-              </p>
-            </div>
-            <div className="p-6 space-y-4">
-              <div className="grid grid-cols-2 gap-3">
-                <div className="rounded-2xl bg-red-50 border border-red-100 p-4">
-                  <div className="text-xs uppercase tracking-[0.2em] text-red-600">Weights</div>
-                  <div className="text-2xl font-semibold text-red-800">6–18 lb typical</div>
-                  <p className="text-sm text-red-700">Packers, prime rib, loins, and whole birds.</p>
-                </div>
-                <div className="rounded-2xl bg-gray-900 text-white border border-gray-800 p-4">
-                  <div className="text-xs uppercase tracking-[0.2em] text-red-300">Lead time</div>
-                  <div className="text-2xl font-semibold">1–3 days</div>
-                  <p className="text-sm text-gray-200">Hold cold for pickup or add to a delivery route.</p>
-                </div>
-              </div>
-              <ul className="space-y-2 text-gray-800">
-                {[
-                  "Whole briskets, ribs, racks, and crown roasts.",
-                  "Leave fat on for the pit or ask us to tidy for oven work.",
-                  "Vac-seal available by request; paper wrap included.",
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-2">
-                    <span className="mt-1 h-2 w-2 rounded-full bg-red-600" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-              <button
-                type="button"
-                onClick={scrollToCatalog}
-                className="w-full bg-black text-white rounded-xl px-4 py-3 font-semibold hover:bg-red-600 transition-colors"
-              >
-                See what&apos;s in the case
-              </button>
             </div>
           </div>
         </div>

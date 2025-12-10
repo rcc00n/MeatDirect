@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Drumstick, Fish, Flame, Search } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 import { getProducts } from "../api/products";
 import { ProductCard as HighlightProductCard } from "../components/ProductCard";
@@ -47,9 +47,13 @@ const buildCategoryList = (items: Product[]): string[] => {
 };
 
 function MenuPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(() => {
+    const categoryParam = searchParams.get("category");
+    return categoryParam ? categoryParam.trim() : null;
+  });
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [loading, setLoading] = useState(false);
@@ -58,6 +62,7 @@ function MenuPage() {
   const [pageSize, setPageSize] = useState<number>(50);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const catalogRef = useRef<HTMLElement | null>(null);
+  const hasScrolledToCategoryRef = useRef(false);
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => setDebouncedSearch(searchTerm.trim()), 250);
@@ -145,8 +150,30 @@ function MenuPage() {
 
   const handleCategorySelect = (category: string | null) => {
     setSelectedCategory(category);
+
+    const params = new URLSearchParams(searchParams);
+    if (category) {
+      params.set("category", category);
+    } else {
+      params.delete("category");
+    }
+    setSearchParams(params, { replace: true });
+
     scrollToCatalog();
+    hasScrolledToCategoryRef.current = true;
   };
+
+  useEffect(() => {
+    const categoryParam = searchParams.get("category");
+    const normalizedCategory = categoryParam ? categoryParam.trim() : null;
+
+    setSelectedCategory((current) => (current === normalizedCategory ? current : normalizedCategory));
+
+    if (normalizedCategory && !hasScrolledToCategoryRef.current) {
+      catalogRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      hasScrolledToCategoryRef.current = true;
+    }
+  }, [searchParams]);
 
   const resultLabel = useMemo(() => {
     if (selectedCategory) {
