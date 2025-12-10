@@ -96,7 +96,7 @@ const programs = [
       "Higher omega-3s and clean, mineral-rich flavor.",
       "Great for grills, meal prep, and athletes.",
     ],
-    cta: { label: "View pricing", to: "/pricing" },
+    cta: { label: "Shop large cuts", to: "/large-cuts" },
   },
   {
     eyebrow: "Hormone-free promise",
@@ -205,10 +205,10 @@ function AboutPage() {
                 ))}
               </div>
               <Link
-                to="/pricing"
+                to="/large-cuts"
                 className="inline-flex items-center gap-2 text-red-600 font-semibold hover:text-red-700"
               >
-                View pricing for halves & wholes <ArrowRight size={18} />
+                See large cuts & halves <ArrowRight size={18} />
               </Link>
             </div>
           </div>
@@ -485,15 +485,15 @@ function AboutPage() {
                 Transparent sourcing, cold-packed delivery, and old-world flavor.
               </p>
               <p className="text-sm text-gray-300 mb-0">
-                Tap into the shop, browse pricing, or read the education page if you need the paperwork first.
+                Tap into the shop, browse large cuts, or read the education page if you need the paperwork first.
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
               <Link
-                to="/pricing"
+                to="/large-cuts"
                 className="bg-white text-black px-4 py-2 rounded-lg font-semibold hover:bg-red-50 transition-colors"
               >
-                View pricing
+                Large cuts
               </Link>
               <Link
                 to="/good-to-know"

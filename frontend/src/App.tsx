@@ -8,12 +8,12 @@ import MenuPage from "./pages/MenuPage";
 import ProductPage from "./pages/ProductPage";
 import SuccessPage from "./pages/SuccessPage";
 import AboutPage from "./pages/AboutPage";
-import PricingPage from "./pages/PricingPage";
 import GalleryPage from "./pages/GalleryPage";
 import BlogListPage from "./pages/BlogListPage";
 import BlogPostPage from "./pages/BlogPostPage";
 import ContactPage from "./pages/ContactPage";
 import GoodToKnowPage from "./pages/GoodToKnowPage";
+import LargeCutsPage from "./pages/LargeCutsPage";
 
 function App() {
   return (
@@ -26,7 +26,8 @@ function App() {
           <Route path="/menu" element={<MenuPage />} />
           <Route path="/shop" element={<MenuPage />} />
           <Route path="/products/:slug" element={<ProductPage />} />
-          <Route path="/pricing" element={<PricingPage />} />
+          <Route path="/large-cuts" element={<LargeCutsPage />} />
+          <Route path="/pricing" element={<LargeCutsPage />} />
           <Route path="/good-to-know" element={<GoodToKnowPage />} />
           <Route path="/meat-education" element={<GoodToKnowPage />} />
           <Route path="/blog" element={<BlogListPage />} />

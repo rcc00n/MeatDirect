@@ -62,8 +62,8 @@ const microFaq = [
     question: "Can I order in bulk?",
     answer:
       "Absolutely. Half/whole beef, family freezer bundles, and wholesale cuts are cut to spec. We help you choose wrap sizes so nothing goes to waste.",
-    linkLabel: "Bulk pricing",
-    linkTo: "/pricing",
+    linkLabel: "Large cuts & bulk",
+    linkTo: "/large-cuts",
   },
   {
     question: "Do you deliver or ship?",

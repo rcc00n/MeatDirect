@@ -155,10 +155,10 @@ function HomePage() {
                 Shop Now
               </button>
               <Link
-                to="/pricing"
+                to="/large-cuts"
                 className="border-2 border-white text-white px-6 py-3 rounded-lg hover:bg-white hover:text-black transition-colors"
               >
-                View Pricing
+                Large cuts & roasts
               </Link>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -234,10 +234,10 @@ function HomePage() {
           </div>
           <div className="text-center mt-12">
             <Link
-              to="/pricing"
+              to="/large-cuts"
               className="inline-block border-2 border-black text-black px-8 py-3 rounded hover:bg-black hover:text-white transition-colors"
             >
-              View Whole & Half Cuts →
+              View Large Cuts →
             </Link>
           </div>
         </div>

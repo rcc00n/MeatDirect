@@ -177,10 +177,10 @@ function MenuPage() {
                 Browse catalog
               </button>
               <Link
-                to="/pricing"
+                to="/large-cuts"
                 className="border-2 border-white text-white px-6 py-3 rounded-lg hover:bg-white hover:text-black transition-colors"
               >
-                Pricing for bulk
+                Large cuts & roasts
               </Link>
             </div>
             <div className="flex flex-wrap gap-2 text-sm text-white/80">

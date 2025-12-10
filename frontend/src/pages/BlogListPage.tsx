@@ -265,10 +265,10 @@ function BlogListPage() {
               Shop the menu
             </Link>
             <Link
-              to="/pricing"
+              to="/large-cuts"
               className="border-2 border-white text-white px-6 py-3 rounded-lg hover:bg-white hover:text-black transition-colors font-semibold"
             >
-              See pricing
+              Large cuts
             </Link>
           </div>
         </div>
