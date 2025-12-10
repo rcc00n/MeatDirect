@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Drumstick, Fish, Flame, Search, Snowflake, Truck } from "lucide-react";
+import { Drumstick, Fish, Flame, Search } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { getProducts } from "../api/products";
@@ -27,8 +27,6 @@ const curatedCollections = [
     category: "smoked fish",
   },
 ];
-
-const formatPrice = (priceCents: number) => `$${(priceCents / 100).toFixed(2)}`;
 
 const PAGE_SIZES = [25, 50, 75, 100];
 
@@ -127,7 +125,6 @@ function MenuPage() {
   const showingStart = products.length ? (currentPage - 1) * pageSize + 1 : 0;
   const showingEnd = Math.min(products.length, currentPage * pageSize);
 
-  const featuredProducts = useMemo(() => products.filter((product) => product.is_popular).slice(0, 3), [products]);
   const categoryLabel = selectedCategory || "All categories";
 
   const scrollToCatalog = () => catalogRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -142,12 +139,12 @@ function MenuPage() {
   return (
     <div className="landing-page space-y-0 bg-black text-white">
       <section className="landing-section bg-gradient-to-br from-[#0b0b12] via-[#1b0a10] to-[#0c1718] py-16 md:py-20 border-b border-red-900/50">
-        <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-14 grid lg:grid-cols-[1.05fr_0.95fr] gap-12 items-center">
-          <div className="space-y-5">
-            <div className="flex items-center gap-3 text-xs uppercase tracking-[0.3em] text-rose-200">
-              <span className="hidden sm:block h-px w-10 bg-rose-200/60" />
-              <span>Shop • Butcher Case</span>
-            </div>
+        <div className="w-full max-w-[1200px] mx-auto px-4 md:px-8 lg:px-14 space-y-6">
+          <div className="flex items-center gap-3 text-xs uppercase tracking-[0.3em] text-rose-200">
+            <span className="hidden sm:block h-px w-10 bg-rose-200/60" />
+            <span>Shop • Butcher Case</span>
+          </div>
+          <div className="space-y-5 max-w-4xl">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold leading-tight">Shop the full MeatDirect lineup.</h1>
             <p className="text-lg text-white/75 max-w-2xl">
               Filter by craving, check pricing, and add to cart. Every order leaves our cold room trimmed, labeled, and packed.
@@ -186,60 +183,6 @@ function MenuPage() {
               ))}
             </div>
           </div>
-          <div className="bg-white/95 text-[#0f0f1f] p-8 rounded-3xl shadow-[0_34px_90px_-48px_rgba(0,0,0,0.65)] border border-rose-100 space-y-6">
-            <div className="space-y-4">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="text-red-500 uppercase tracking-[0.24em] text-xs">Popular this week</p>
-                  <h3 className="text-2xl font-semibold">What customers reorder</h3>
-                  <p className="text-sm text-gray-600">Mark products as popular in the admin to feature them here.</p>
-                </div>
-                <span className="text-sm text-gray-500">{products.length} items</span>
-              </div>
-              <div className="space-y-3">
-                {featuredProducts.length ? (
-                  featuredProducts.map((product) => (
-                    <div
-                      key={product.id}
-                      className="flex items-center justify-between border-b last:border-b-0 border-gray-200 pb-3"
-                    >
-                      <div>
-                        <div className="font-semibold text-black">{product.name}</div>
-                        {product.category && <div className="text-xs text-gray-500">{product.category}</div>}
-                      </div>
-                      <div className="text-red-600 font-semibold">{formatPrice(product.price_cents)}</div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="text-sm text-gray-600 bg-gray-50 border border-dashed border-gray-200 rounded-lg p-4">
-                    Mark products as popular in the admin to feature them here.
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className="bg-gradient-to-r from-black via-[#120c0c] to-[#0d1b1c] text-white rounded-2xl p-5 border border-red-800/50 flex flex-col gap-3">
-              <div className="flex items-center gap-3">
-                <Snowflake className="text-red-300" size={18} />
-                <div>
-                  <div className="font-semibold">Cold chain intact</div>
-                  <p className="text-sm text-white/70">
-                    Packed with liners and ice packs. Choose pickup or delivery during checkout.
-                  </p>
-                </div>
-              </div>
-              <div className="flex flex-wrap gap-2 text-xs text-white/80">
-                <span className="px-3 py-1 rounded-full border border-white/20">Cold-packed shipping</span>
-                <span className="px-3 py-1 rounded-full border border-white/20">Local delivery & pickup</span>
-              </div>
-              <button
-                type="button"
-                onClick={scrollToCatalog}
-                className="self-start bg-white text-black px-4 py-2 rounded-lg hover:bg-red-50 transition-colors"
-              >
-                Shop the case
-              </button>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -264,23 +207,9 @@ function MenuPage() {
 
           <div className="grid xl:grid-cols-[320px_1fr] gap-6 items-start">
             <aside className="bg-gradient-to-b from-[#0c0c14] via-[#12070c] to-[#0c1718] text-white rounded-3xl p-5 lg:p-6 border border-red-900/50 shadow-[0_28px_90px_-48px_rgba(0,0,0,0.55)] lg:sticky lg:top-6 space-y-5">
-              <div className="flex items-start gap-4">
-                <div className="hidden xl:flex items-center justify-center rounded-2xl bg-white/5 h-32 w-12">
-                  <span
-                    className="text-[10px] tracking-[0.3em] uppercase text-white/70"
-                    style={{ writingMode: "vertical-rl" }}
-                  >
-                    Filter
-                  </span>
-                </div>
-                <div className="space-y-2 flex-1">
-                  <p className="text-xs uppercase tracking-[0.3em] text-rose-200">Filter by craving</p>
-                  <p className="text-white/70 text-sm">Use search or category to narrow the case.</p>
-                  <div className="flex flex-wrap gap-2 text-xs">
-                    <span className="px-3 py-1 rounded-full bg-white/10 text-white/90">{products.length} live items</span>
-                    <span className="px-3 py-1 rounded-full bg-rose-100 text-rose-800">{categoryLabel}</span>
-                  </div>
-                </div>
+              <div className="flex items-center justify-between">
+                <p className="text-xs uppercase tracking-[0.3em] text-rose-200">Filters</p>
+                <span className="text-[11px] text-white/70">{products.length} items</span>
               </div>
 
               <div className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-2xl px-4 py-3 focus-within:border-red-500 focus-within:ring-2 focus-within:ring-red-200/40">
@@ -342,109 +271,9 @@ function MenuPage() {
                 </div>
               </div>
 
-              <div className="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-3">
-                <div className="text-sm font-semibold text-white">Quick facts</div>
-                <div className="grid grid-cols-2 gap-3 text-white/80 text-xs">
-                  <div className="bg-white/10 rounded-xl p-3 border border-white/10">
-                    <div className="text-[11px] uppercase tracking-[0.2em] text-rose-200">Live items</div>
-                    <div className="text-lg font-semibold text-white">{products.length}</div>
-                  </div>
-                  <div className="bg-white/10 rounded-xl p-3 border border-white/10">
-                    <div className="text-[11px] uppercase tracking-[0.2em] text-rose-200">Square categories</div>
-                    <div className="text-lg font-semibold text-white">{categories.length || "-"}</div>
-                  </div>
-                  <div className="bg-white/10 rounded-xl p-3 border border-white/10">
-                    <div className="text-[11px] uppercase tracking-[0.2em] text-rose-200">Per page</div>
-                    <div className="text-lg font-semibold text-white">{pageSize}</div>
-                  </div>
-                  <div className="bg-white/10 rounded-xl p-3 border border-white/10">
-                    <div className="text-[11px] uppercase tracking-[0.2em] text-rose-200">Pages</div>
-                    <div className="text-lg font-semibold text-white">{totalPages}</div>
-                  </div>
-                </div>
-              </div>
             </aside>
 
             <div className="space-y-6">
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="bg-white rounded-3xl border border-red-100 shadow-lg p-6">
-                  <p className="text-red-500 uppercase tracking-[0.24em] text-xs mb-2">Popular this week</p>
-                  <div className="flex items-center justify-between gap-3">
-                    <h3 className="text-xl font-semibold text-black">What customers reorder</h3>
-                    <span className="text-sm text-gray-500">{products.length} items</span>
-                  </div>
-                  <div className="mt-3 space-y-3">
-                    {featuredProducts.length ? (
-                      featuredProducts.map((product) => (
-                        <div
-                          key={product.id}
-                          className="flex items-center justify-between border-b last:border-b-0 border-gray-200 pb-3"
-                        >
-                          <div>
-                            <div className="font-semibold text-black">{product.name}</div>
-                            {product.category && <div className="text-xs text-gray-500">{product.category}</div>}
-                          </div>
-                          <div className="text-red-600 font-semibold">{formatPrice(product.price_cents)}</div>
-                        </div>
-                      ))
-                    ) : (
-                      <div className="text-sm text-gray-600 bg-gray-50 border border-dashed border-gray-200 rounded-lg p-4">
-                        Mark products as popular in the admin to feature them here.
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <div className="bg-gradient-to-br from-black via-[#0e0e12] to-[#16181d] text-white rounded-3xl border border-red-800/50 shadow-lg p-6 space-y-4">
-                  <p className="text-red-300 uppercase tracking-[0.24em] text-xs">How we pack</p>
-                  <h3 className="text-2xl font-semibold leading-tight">Butcher-cut, cold, and ready to cook.</h3>
-                  <div className="space-y-3 text-white/80 text-sm">
-                    {[
-                      {
-                        title: "Choose your section",
-                        detail: "Jump straight to beef, sausages, seafood, or imports.",
-                      },
-                      { title: "Add exact cuts", detail: "See pricing first, then add to cart with one click." },
-                      { title: "Delivery or pickup", detail: "Insulated liners, ice packs, next-day local delivery." },
-                    ].map((step, index) => (
-                      <div key={step.title} className="flex gap-3">
-                        <span className="h-7 w-7 rounded-full bg-white text-black flex items-center justify-center font-bold text-sm">
-                          {index + 1}
-                        </span>
-                        <div>
-                          <div className="font-semibold">{step.title}</div>
-                          <p className="text-white/70 text-sm">{step.detail}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="grid sm:grid-cols-2 gap-3">
-                    <button
-                      type="button"
-                      className="bg-white text-black px-4 py-2 rounded-xl hover:bg-red-50 transition-colors"
-                      onClick={() => handleCategorySelect("sausages")}
-                    >
-                      Shop sausages
-                    </button>
-                    <button
-                      type="button"
-                      className="border border-white/70 text-white px-4 py-2 rounded-xl hover:bg-white hover:text-black transition-colors"
-                      onClick={() => handleCategorySelect("smoked fish")}
-                    >
-                      Smoked fish
-                    </button>
-                  </div>
-                  <div className="flex flex-wrap gap-3 text-sm text-white/80">
-                    <span className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-red-700/70">
-                      <Truck size={16} /> Next-day local delivery
-                    </span>
-                    <span className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-red-700/70">
-                      <Snowflake size={16} /> Cold-packed shipping
-                    </span>
-                  </div>
-                </div>
-              </div>
-
               <div className="bg-white rounded-3xl border border-red-100 shadow-xl p-6 space-y-5">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div className="space-y-1">
