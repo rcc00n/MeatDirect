@@ -15,6 +15,7 @@ import {
 import { Link } from "react-router-dom";
 
 import { getProducts } from "../api/products";
+import largeCutsHero from "../assets/hero-large-cuts.jpg";
 import ProductGrid from "../components/products/ProductGrid";
 import type { Product } from "../types";
 
@@ -195,15 +196,15 @@ function LargeCutsPage() {
   return (
     <div className="landing-page bg-black text-white">
       <section className="landing-section bg-gradient-to-br from-black via-[#120a10] to-[#04070b] py-16 md:py-20 border-b border-red-900/50">
-        <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-14 grid gap-10 items-center">
+        <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-14 grid lg:grid-cols-[1.05fr_0.95fr] gap-12 items-center">
           <div className="space-y-6">
             <p className="text-red-400 uppercase tracking-[0.22em] text-xs">Large Cuts • Smoker & Roast Ready</p>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold leading-tight">
               Whole briskets, ribs, and centerpieces sized for gatherings.
             </h1>
             <p className="text-gray-200 max-w-2xl">
-              This is the dedicated lane for big-format proteins—packers for the pit, roasts for slow Sundays, and whole
-              loins ready for carving boards. We keep fat on where it matters and label everything clearly.
+              Big-format briskets, ribs, and roasts trimmed for pits and slow ovens. We leave fat where it matters and
+              keep labels readable so prep is easy.
             </p>
             <div className="flex flex-wrap gap-3">
               <button
@@ -219,17 +220,11 @@ function LargeCutsPage() {
               >
                 Ask for a custom trim
               </Link>
-              <Link
-                to="/menu#shop"
-                className="inline-flex items-center gap-2 text-red-300 font-semibold hover:text-red-200"
-              >
-                View full shop <ArrowRight size={18} />
-              </Link>
             </div>
             <div className="flex flex-wrap gap-2 text-sm text-white/85">
-              <span className="border border-white/20 px-4 py-2 rounded-full">{heroStatLine}</span>
-              <span className="border border-white/20 px-4 py-2 rounded-full">Vac-seal optional</span>
-              <span className="border border-white/20 px-4 py-2 rounded-full">Cold-packed delivery</span>
+              <span className="border border-white/20 px-4 py-2 rounded-full">Smoker & roaster formats</span>
+              <span className="border border-white/20 px-4 py-2 rounded-full">0–4°C cold-packed</span>
+              <span className="border border-white/20 px-4 py-2 rounded-full">Delivery or pickup</span>
             </div>
             <div className="grid sm:grid-cols-3 gap-4 pt-2">
               {featureTiles.map((tile) => {
@@ -249,6 +244,36 @@ function LargeCutsPage() {
                   </div>
                 );
               })}
+            </div>
+          </div>
+
+          <div className="relative">
+            <div className="absolute -left-6 -top-10 h-28 w-28 bg-red-600/10 blur-3xl rounded-full" />
+            <div className="absolute -right-10 bottom-0 h-32 w-32 bg-rose-500/10 blur-3xl rounded-full" />
+            <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-white/5 shadow-[0_30px_90px_-50px_rgba(0,0,0,0.8)]">
+              <img
+                src={largeCutsHero}
+                alt="Whole briskets, ribs, and roasts ready for the pit"
+                className="w-full h-full object-cover aspect-[4/3] lg:aspect-[5/4]"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-tr from-black/55 via-black/10 to-transparent" />
+              <div className="absolute top-4 left-4 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/60 border border-white/10 text-xs font-semibold">
+                <Flame size={14} className="text-red-200" />
+                Smoker ready
+              </div>
+              <div className="absolute bottom-4 left-4 right-4 flex flex-wrap gap-3">
+                <div className="flex-1 min-w-[180px] rounded-2xl bg-black/65 border border-white/10 px-4 py-3">
+                  <div className="text-xs uppercase tracking-[0.18em] text-white/70">Large format lane</div>
+                  <div className="text-lg font-semibold text-white">{heroStatLine}</div>
+                  <div className="text-xs text-white/70">Trim left on where it matters.</div>
+                </div>
+                <div className="flex-1 min-w-[180px] rounded-2xl bg-white/10 border border-white/20 px-4 py-3 text-white">
+                  <div className="text-xs uppercase tracking-[0.18em] text-white/80">Cold chain</div>
+                  <div className="text-lg font-semibold">Insulated liners + ice</div>
+                  <div className="text-xs text-white/80">Delivery and pickup windows.</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

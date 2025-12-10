@@ -3,6 +3,7 @@ import { Drumstick, Fish, Flame, Search } from "lucide-react";
 import { Link, useSearchParams } from "react-router-dom";
 
 import { getProducts } from "../api/products";
+import menuHero from "../assets/hero-menu.jpg";
 import { ProductCard as HighlightProductCard } from "../components/ProductCard";
 import ProductGrid from "../components/products/ProductGrid";
 import type { Product } from "../types";
@@ -185,15 +186,15 @@ function MenuPage() {
   return (
     <div className="landing-page space-y-0 bg-black text-white">
       <section className="landing-section bg-gradient-to-br from-[#0b0b12] via-[#1b0a10] to-[#0c1718] py-16 md:py-20 border-b border-red-900/50">
-        <div className="w-full max-w-[1200px] mx-auto px-4 md:px-8 lg:px-14 space-y-6">
-          <div className="flex items-center gap-3 text-xs uppercase tracking-[0.3em] text-rose-200">
-            <span className="hidden sm:block h-px w-10 bg-rose-200/60" />
-            <span>Shop • Butcher Case</span>
-          </div>
-          <div className="space-y-5 max-w-4xl">
+        <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-14 grid lg:grid-cols-[1.05fr_0.95fr] gap-12 items-center">
+          <div className="space-y-5 max-w-3xl">
+            <div className="flex items-center gap-3 text-xs uppercase tracking-[0.3em] text-rose-200">
+              <span className="hidden sm:block h-px w-10 bg-rose-200/60" />
+              <span>Shop • Butcher Case</span>
+            </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold leading-tight">Shop the full MeatDirect lineup.</h1>
             <p className="text-lg text-white/75 max-w-2xl">
-              Filter by craving, check pricing, and add to cart. Every order leaves our cold room trimmed, labeled, and packed.
+              Filter by craving, check pricing, and add to cart. Every order leaves our cold room trimmed, labeled, and packed cold.
             </p>
             <div className="flex flex-wrap gap-3 pt-1">
               <button
@@ -211,22 +212,51 @@ function MenuPage() {
               </Link>
             </div>
             <div className="flex flex-wrap gap-2 text-sm text-white/80">
-              <span className="border border-white/20 px-4 py-2 rounded-full">Hormone-free</span>
+              <span className="border border-white/20 px-4 py-2 rounded-full">Live inventory synced</span>
               <span className="border border-white/20 px-4 py-2 rounded-full">Cold-packed shipping</span>
               <span className="border border-white/20 px-4 py-2 rounded-full">Local delivery & pickup</span>
               <span className="bg-red-600 px-4 py-2 rounded-full text-white">Add-to-cart ready</span>
             </div>
-            <div className="grid sm:grid-cols-3 gap-4 pt-4">
+            <div className="grid sm:grid-cols-2 gap-4 pt-3">
               {[
-                { label: "Live items", value: productCount ? `${productCount}+` : "Ready" },
-                { label: "Cold-packed shipping", value: "Nationwide" },
-                { label: "Local delivery", value: "Next-day" },
+                { label: "Live items", value: productCount ? `${productCount}+` : "Updating", note: "Pulled straight from inventory" },
+                { label: "Delivery windows", value: "Next-day local", note: "Cold-packed shipping nationwide" },
               ].map((stat) => (
-                <div key={stat.label} className="border border-white/10 bg-white/5 rounded-2xl p-4">
+                <div key={stat.label} className="border border-white/10 bg-white/5 rounded-2xl p-4 space-y-1">
                   <div className="text-sm text-white/70">{stat.label}</div>
                   <div className="text-2xl font-semibold text-white">{stat.value}</div>
+                  <div className="text-xs text-white/60">{stat.note}</div>
                 </div>
               ))}
+            </div>
+          </div>
+
+          <div className="relative">
+            <div className="absolute -left-6 -top-10 h-28 w-28 bg-rose-500/10 blur-3xl rounded-full" />
+            <div className="absolute -right-10 bottom-0 h-32 w-32 bg-red-500/10 blur-3xl rounded-full" />
+            <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-white/5 shadow-[0_30px_90px_-50px_rgba(0,0,0,0.8)]">
+              <img
+                src={menuHero}
+                alt="Cold-packed meats and sausages ready to order"
+                className="w-full h-full object-cover aspect-[4/3] lg:aspect-[5/4]"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-tr from-black/55 via-black/15 to-transparent" />
+              <div className="absolute top-4 left-4 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/60 border border-white/10 text-xs font-semibold">
+                Packed cold
+              </div>
+              <div className="absolute bottom-4 left-4 right-4 flex flex-wrap gap-3">
+                <div className="flex-1 min-w-[180px] rounded-2xl bg-black/65 border border-white/10 px-4 py-3">
+                  <div className="text-xs uppercase tracking-[0.18em] text-white/70">Add-to-cart ready</div>
+                  <div className="text-lg font-semibold text-white">Trimmed, labeled, sealed</div>
+                  <div className="text-xs text-white/70">Filters for beef, poultry, sausage, and fish.</div>
+                </div>
+                <div className="flex-1 min-w-[180px] rounded-2xl bg-white/10 border border-white/20 px-4 py-3 text-white">
+                  <div className="text-xs uppercase tracking-[0.18em] text-white/80">Pickup or ship</div>
+                  <div className="text-lg font-semibold text-white">Next-day delivery</div>
+                  <div className="text-xs text-white/80">Cold-packed shipping available nationwide.</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

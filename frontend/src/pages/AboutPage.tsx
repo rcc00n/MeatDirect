@@ -23,7 +23,7 @@ const pillars = [
 const processSteps = [
   {
     title: "Sourcing without shortcuts",
-    detail: "Mike walks herds, reviews feed plans, and aligns genetics before booking space in the plant.",
+    detail: "Our sourcing team walks herds, reviews feed plans, and aligns genetics before booking space in the plant.",
   },
   {
     title: "Cut, age, and label",
@@ -39,25 +39,32 @@ const processSteps = [
   },
 ];
 
-const founders = [
+const operationsTeam = [
   {
-    name: "Mike",
-    role: "Co-founder • Sourcing & fabrication",
-    summary: "Farm kid turned butcher who still walks pastures before signing partners.",
+    title: "Cut & fabrication",
+    summary: "Small-batch cutting, consistent specs, and trim that protects flavor.",
     bullets: [
-      "Sets specs, aging windows, and marbling targets.",
-      "Keeps fabrication room aligned with inspectors daily.",
-      "Teaches customers how to cook undervalued cuts.",
+      "Set specs, aging windows, and marbling targets with partners.",
+      "Keep the fabrication room aligned with inspectors daily.",
+      "Prep labels that match paperwork for every batch.",
     ],
   },
   {
-    name: "Natalia",
-    role: "Co-founder • Food safety & logistics",
-    summary: "Supply-chain pro who runs the cold room, labels, and delivery routes.",
+    title: "Cold chain & logistics",
+    summary: "Routes, liners, and temperature logs built for 0–4°C delivery.",
     bullets: [
       "Builds delivery windows that protect the cold chain.",
       "Translates inspection language into simple guides.",
-      "Owns community programs and subscription boxes.",
+      "Run local pickup, next-day delivery, and insulated shipping.",
+    ],
+  },
+  {
+    title: "Customer & education",
+    summary: "Guides, FAQ, and support so families and chefs know what arrives.",
+    bullets: [
+      "Teach customers how to work with undervalued cuts.",
+      "Publish clear FAQ and lot tracking for every program.",
+      "Support wholesale, family bundles, and community drops.",
     ],
   },
 ];
@@ -263,7 +270,7 @@ function AboutPage() {
               <div className="flex flex-wrap gap-2 text-sm">
                 <span className="px-3 py-1 rounded-full bg-red-50 text-red-700 border border-red-100">Tracked vans</span>
                 <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-800">Insulated shipping boxes</span>
-                <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-800">Route planning by Natalia</span>
+                <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-800">Routes planned in-house</span>
               </div>
             </div>
           </div>
@@ -274,17 +281,17 @@ function AboutPage() {
         <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-14 space-y-8">
           <div className="flex flex-col md:flex-row justify-between items-start gap-6">
             <div className="space-y-3 max-w-2xl">
-              <p className="text-red-600 uppercase tracking-wider text-sm">Founders</p>
+              <p className="text-red-600 uppercase tracking-wider text-sm">Operations team</p>
               <h2 className="text-4xl font-semibold leading-tight">
-                Hands-on owners who still pack boxes and sign every label.
+                Hands-on crew that still packs boxes and signs every label.
               </h2>
               <p className="text-gray-700">
-                MeatDirect is still run by its founders—no brokers or distant partners. We stay close to the cut room,
+                MeatDirect is run by an in-house crew—no brokers or distant partners. We stay close to the cut room,
                 delivery routes, and paperwork.
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
-              <span className="bg-black text-white px-3 py-1 rounded-full text-xs font-semibold">Family-owned</span>
+              <span className="bg-black text-white px-3 py-1 rounded-full text-xs font-semibold">In-house crew</span>
               <span className="border border-red-200 text-red-700 px-3 py-1 rounded-full text-xs font-semibold">
                 On-site daily
               </span>
@@ -294,24 +301,24 @@ function AboutPage() {
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6">
-            {founders.map((founder) => (
+          <div className="grid md:grid-cols-3 gap-6">
+            {operationsTeam.map((team) => (
               <div
-                key={founder.name}
+                key={team.title}
                 className="rounded-2xl bg-black text-white p-6 border border-red-700/60 shadow-xl space-y-4"
               >
-                <div className="flex items-center gap-3">
-                  <div className="h-12 w-12 rounded-xl bg-white text-black flex items-center justify-center font-bold text-lg">
-                    {founder.name[0]}
-                  </div>
+                <div className="flex items-start justify-between gap-3">
                   <div>
-                    <div className="text-lg font-semibold">{founder.name}</div>
-                    <div className="text-sm text-white/70">{founder.role}</div>
+                    <div className="text-lg font-semibold">{team.title}</div>
+                    <div className="text-sm text-white/70">In-house leads</div>
+                  </div>
+                  <div className="h-12 w-12 rounded-xl bg-white text-black flex items-center justify-center">
+                    <CheckCircle2 size={22} />
                   </div>
                 </div>
-                <p className="text-white/85">{founder.summary}</p>
+                <p className="text-white/85">{team.summary}</p>
                 <div className="space-y-2">
-                  {founder.bullets.map((bullet) => (
+                  {team.bullets.map((bullet) => (
                     <div key={bullet} className="flex items-start gap-2 text-sm text-white/90">
                       <ArrowRight className="text-red-300" size={14} />
                       <span>{bullet}</span>
