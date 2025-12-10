@@ -54,6 +54,7 @@ function MenuPage() {
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [inStockOnly, setInStockOnly] = useState(false);
   const [pageSize, setPageSize] = useState<number>(50);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const catalogRef = useRef<HTMLElement | null>(null);
@@ -104,14 +105,27 @@ function MenuPage() {
     return () => controller.abort();
   }, [debouncedSearch, selectedCategory]);
 
+  const filteredProducts = useMemo(() => {
+    if (!inStockOnly) return products;
+
+    return products.filter((product) => {
+      const isInactive = product.is_active === false;
+      const quantityRemaining = typeof product.square_quantity === "number" ? product.square_quantity : null;
+      const isOutOfStock = isInactive || (quantityRemaining !== null && quantityRemaining <= 0);
+      return !isOutOfStock;
+    });
+  }, [products, inStockOnly]);
+
+  const productCount = filteredProducts.length;
+
   const totalPages = useMemo(
-    () => Math.max(1, Math.ceil(Math.max(products.length, 1) / pageSize)),
-    [products.length, pageSize],
+    () => Math.max(1, Math.ceil(Math.max(productCount, 1) / pageSize)),
+    [productCount, pageSize],
   );
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [debouncedSearch, selectedCategory, pageSize]);
+  }, [debouncedSearch, selectedCategory, inStockOnly, pageSize]);
 
   useEffect(() => {
     setCurrentPage((page) => Math.min(page, totalPages));
@@ -119,11 +133,11 @@ function MenuPage() {
 
   const paginatedProducts = useMemo(() => {
     const start = (currentPage - 1) * pageSize;
-    return products.slice(start, start + pageSize);
-  }, [products, currentPage, pageSize]);
+    return filteredProducts.slice(start, start + pageSize);
+  }, [filteredProducts, currentPage, pageSize]);
 
-  const showingStart = products.length ? (currentPage - 1) * pageSize + 1 : 0;
-  const showingEnd = Math.min(products.length, currentPage * pageSize);
+  const showingStart = productCount ? (currentPage - 1) * pageSize + 1 : 0;
+  const showingEnd = Math.min(productCount, currentPage * pageSize);
 
   const categoryLabel = selectedCategory || "All categories";
 
@@ -134,7 +148,12 @@ function MenuPage() {
     scrollToCatalog();
   };
 
-  const resultLabel = selectedCategory ? `${categoryLabel} ready to ship` : "All categories available";
+  const resultLabel = useMemo(() => {
+    if (selectedCategory) {
+      return inStockOnly ? `${categoryLabel} in stock` : `${categoryLabel} ready to ship`;
+    }
+    return inStockOnly ? "In stock only" : "All categories available";
+  }, [selectedCategory, categoryLabel, inStockOnly]);
 
   return (
     <div className="landing-page space-y-0 bg-black text-white">
@@ -172,7 +191,7 @@ function MenuPage() {
             </div>
             <div className="grid sm:grid-cols-3 gap-4 pt-4">
               {[
-                { label: "Live items", value: products.length ? `${products.length}+` : "Ready" },
+                { label: "Live items", value: productCount ? `${productCount}+` : "Ready" },
                 { label: "Cold-packed shipping", value: "Nationwide" },
                 { label: "Local delivery", value: "Next-day" },
               ].map((stat) => (
@@ -188,19 +207,19 @@ function MenuPage() {
 
       <section className="landing-section bg-[#f8f4ed] text-[#0f0f1f] py-14 md:py-18" ref={catalogRef} id="shop">
         <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-14 space-y-8 md:space-y-10">
-          <div className="flex flex-col md:flex-row justify-between items-start gap-4">
-            <div className="space-y-2">
-              <p className="text-red-600 uppercase tracking-[0.25em] text-xs">Shop</p>
-              <h2 className="text-4xl font-semibold">Browse the catalog by craving.</h2>
-              <p className="text-gray-600">Search a cut, pick a region, and drop items straight into the cart.</p>
-            </div>
-            <div className="flex flex-wrap gap-2 text-sm">
-              <span className="px-3 py-1 rounded-full bg-black text-white">{products.length} items</span>
-              <span className="px-3 py-1 rounded-full bg-red-50 text-red-700 border border-red-100">{resultLabel}</span>
-              {debouncedSearch && (
-                <span className="px-3 py-1 rounded-full bg-gray-100 border border-gray-200">
-                  Search: {debouncedSearch}
-                </span>
+            <div className="flex flex-col md:flex-row justify-between items-start gap-4">
+              <div className="space-y-2">
+                <p className="text-red-600 uppercase tracking-[0.25em] text-xs">Shop</p>
+                <h2 className="text-4xl font-semibold">Browse the catalog by craving.</h2>
+                <p className="text-gray-600">Search a cut, pick a region, and drop items straight into the cart.</p>
+              </div>
+              <div className="flex flex-wrap gap-2 text-sm">
+                <span className="px-3 py-1 rounded-full bg-black text-white">{productCount} items</span>
+                <span className="px-3 py-1 rounded-full bg-red-50 text-red-700 border border-red-100">{resultLabel}</span>
+                {debouncedSearch && (
+                  <span className="px-3 py-1 rounded-full bg-gray-100 border border-gray-200">
+                    Search: {debouncedSearch}
+                  </span>
               )}
             </div>
           </div>
@@ -209,7 +228,7 @@ function MenuPage() {
             <aside className="bg-gradient-to-b from-[#0c0c14] via-[#12070c] to-[#0c1718] text-white rounded-3xl p-5 lg:p-6 border border-red-900/50 shadow-[0_28px_90px_-48px_rgba(0,0,0,0.55)] lg:sticky lg:top-6 space-y-5">
               <div className="flex items-center justify-between">
                 <p className="text-xs uppercase tracking-[0.3em] text-rose-200">Filters</p>
-                <span className="text-[11px] text-white/70">{products.length} items</span>
+                <span className="text-[11px] text-white/70">{productCount} items</span>
               </div>
 
               <div className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-2xl px-4 py-3 focus-within:border-red-500 focus-within:ring-2 focus-within:ring-red-200/40">
@@ -221,6 +240,24 @@ function MenuPage() {
                   placeholder="Search for cuts, farms, or tags"
                   className="flex-1 bg-transparent outline-none text-white placeholder:text-white/50"
                 />
+              </div>
+
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-4 flex items-center justify-between gap-3">
+                <div>
+                  <div className="text-sm font-semibold text-white">In stock only</div>
+                  <p className="text-xs text-white/60">Hide sold out or inactive items.</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setInStockOnly((value) => !value)}
+                  className={`px-3 py-2 rounded-xl border font-semibold text-sm transition ${
+                    inStockOnly
+                      ? "bg-white text-black border-white"
+                      : "bg-white/5 text-white border-white/20 hover:bg-white/10"
+                  }`}
+                >
+                  {inStockOnly ? "On" : "Off"}
+                </button>
               </div>
 
               <div className="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-3">
@@ -280,7 +317,7 @@ function MenuPage() {
                     <div className="text-xs uppercase tracking-[0.22em] text-red-600">Catalog</div>
                     <div className="flex flex-wrap gap-2 text-sm text-gray-600">
                       <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-800">{categoryLabel}</span>
-                      <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-800">{products.length} products</span>
+                      <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-800">{productCount} products</span>
                       {categories.length > 0 && (
                         <span className="px-3 py-1 rounded-full bg-gray-100 border border-gray-200">
                           {categories.length} categories
@@ -313,8 +350,8 @@ function MenuPage() {
 
                 <div className="flex flex-wrap items-center justify-between gap-3 text-sm">
                   <div className="text-gray-600">
-                    {products.length
-                      ? `Showing ${showingStart}-${showingEnd} of ${products.length}`
+                    {productCount
+                      ? `Showing ${showingStart}-${showingEnd} of ${productCount}`
                       : "No products match your filters yet."}
                   </div>
                   <div className="flex items-center gap-2">
