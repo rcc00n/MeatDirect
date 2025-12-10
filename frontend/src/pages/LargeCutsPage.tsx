@@ -25,15 +25,13 @@ const categoryFilters: {
   key: LargeCutCategory;
   label: string;
   icon: typeof Package;
-  tone: string;
-  accent: string;
 }[] = [
-  { key: "all", label: "All large cuts", icon: Package, tone: "from-red-500 to-rose-500", accent: "bg-white/10" },
-  { key: "beef", label: "Beef", icon: Beef, tone: "from-amber-500 to-red-600", accent: "bg-amber-600/10" },
-  { key: "poultry", label: "Poultry", icon: Drumstick, tone: "from-orange-500 to-red-500", accent: "bg-orange-500/10" },
-  { key: "lamb", label: "Lamb", icon: Sprout, tone: "from-emerald-500 to-lime-500", accent: "bg-emerald-500/10" },
-  { key: "pork", label: "Pork", icon: PiggyBank, tone: "from-pink-500 to-red-500", accent: "bg-pink-500/10" },
-  { key: "fish", label: "Fish", icon: Fish, tone: "from-blue-500 to-sky-500", accent: "bg-blue-500/10" },
+  { key: "all", label: "All large cuts", icon: Package },
+  { key: "beef", label: "Beef", icon: Beef },
+  { key: "poultry", label: "Poultry", icon: Drumstick },
+  { key: "lamb", label: "Lamb", icon: Sprout },
+  { key: "pork", label: "Pork", icon: PiggyBank },
+  { key: "fish", label: "Fish", icon: Fish },
 ];
 
 const largeCutPatterns = [
@@ -132,6 +130,17 @@ const isLargeFormat = (product: Product) => {
 
   return largeCutPatterns.some((pattern) => pattern.test(haystack));
 };
+
+const AnimalBadge = ({ icon: Icon, active }: { icon: typeof Package; active: boolean }) => (
+  <div
+    className={`relative h-12 w-12 rounded-full flex items-center justify-center shadow-[0_14px_30px_-18px_rgba(239,68,68,0.8)] ${
+      active ? "bg-gradient-to-br from-red-500 via-red-600 to-red-700" : "bg-gradient-to-br from-red-400 to-red-600"
+    }`}
+  >
+    <div className="absolute inset-0 rounded-full border border-white/30" />
+    <Icon size={22} className="text-white drop-shadow" strokeWidth={2.2} />
+  </div>
+);
 
 function LargeCutsPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -315,28 +324,28 @@ function LargeCutsPage() {
                   key={filter.key}
                   type="button"
                   onClick={() => setSelectedCategory(filter.key)}
-                  className={`relative overflow-hidden rounded-2xl border p-4 flex flex-col gap-3 transition ${
+                  className={`relative overflow-hidden rounded-2xl border p-4 flex flex-col gap-3 transition shadow-sm ${
                     isActive
-                      ? "border-black bg-black text-white shadow-xl"
-                      : "border-gray-200 bg-white text-gray-900 hover:-translate-y-1 shadow-md hover:shadow-xl"
+                      ? "border-black bg-gradient-to-br from-black to-[#1b1b22] text-white shadow-xl shadow-red-900/30"
+                      : "border-[#e8e1d8] bg-white text-gray-900 hover:-translate-y-1 hover:shadow-xl"
                   }`}
                 >
-                  <div
-                    className={`absolute inset-x-0 -top-6 h-20 rounded-[999px] blur-3xl opacity-70 ${filter.accent}`}
-                  />
+                  <div className="absolute inset-x-0 -top-8 h-20 bg-gradient-to-r from-white/30 via-white/20 to-white/10 rounded-[999px] blur-3xl opacity-60" />
                   <div className="flex items-center justify-between gap-2">
-                    <div
-                      className={`h-12 w-12 rounded-xl bg-gradient-to-br ${filter.tone} text-white flex items-center justify-center shadow-lg`}
+                    <AnimalBadge icon={Icon} active={isActive} />
+                    <span
+                      className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${
+                        isActive
+                          ? "bg-white/10 text-white border-white/20"
+                          : "bg-gray-100 text-gray-700 border-gray-200"
+                      }`}
                     >
-                      <Icon size={22} />
-                    </div>
-                    <span className="text-xs font-semibold px-2 py-1 rounded-full bg-gray-100 text-gray-700">
                       {count}
                     </span>
                   </div>
                   <div className="text-left">
                     <div className="text-base font-semibold leading-tight">{filter.label}</div>
-                    <p className="text-xs text-gray-500">
+                    <p className={`text-xs ${isActive ? "text-white/70" : "text-gray-500"}`}>
                       {filter.key === "all" ? "Everything big" : "Filter by animal"}
                     </p>
                   </div>
