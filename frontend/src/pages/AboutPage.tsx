@@ -1,16 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  ArrowLeft,
   ArrowRight,
   BadgeCheck,
   CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
   Drumstick,
   Leaf,
   ShieldCheck,
   Snowflake,
   Truck,
 } from "lucide-react";
+import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import aboutImage1 from "../assets/about_1.jpg";
 import aboutImage2 from "../assets/about_2.jpg";
 import aboutImage3 from "../assets/about_3.jpg";
@@ -34,11 +36,11 @@ const proofPoints = [
 ];
 
 const gallerySlides = [
-  { src: aboutImage1, alt: "About gallery image 1" },
-  { src: aboutImage2, alt: "About gallery image 2" },
-  { src: aboutImage3, alt: "About gallery image 3" },
-  { src: aboutImage4, alt: "About gallery image 4" },
-  { src: aboutImage5, alt: "About gallery image 5" },
+  { src: aboutImage1, alt: "MeatDirect gallery photo 1", title: "Gallery photo 1", description: "Scenes from our shop and cold chain." },
+  { src: aboutImage2, alt: "MeatDirect gallery photo 2", title: "Gallery photo 2", description: "Scenes from our shop and cold chain." },
+  { src: aboutImage3, alt: "MeatDirect gallery photo 3", title: "Gallery photo 3", description: "Scenes from our shop and cold chain." },
+  { src: aboutImage4, alt: "MeatDirect gallery photo 4", title: "Gallery photo 4", description: "Scenes from our shop and cold chain." },
+  { src: aboutImage5, alt: "MeatDirect gallery photo 5", title: "Gallery photo 5", description: "Scenes from our shop and cold chain." },
 ];
 
 const highlightPillars = [
@@ -90,14 +92,38 @@ const coldChain = [
 ];
 
 function AboutPage() {
-  const [slide, setSlide] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
-  const handlePrev = () => {
-    setSlide((prev) => (prev === 0 ? gallerySlides.length - 1 : prev - 1));
+  const nextSlide = () => {
+    setCurrentIndex((prev) => (prev + 1) % gallerySlides.length);
   };
 
-  const handleNext = () => {
-    setSlide((prev) => (prev === gallerySlides.length - 1 ? 0 : prev + 1));
+  const prevSlide = () => {
+    setCurrentIndex((prev) => (prev - 1 + gallerySlides.length) % gallerySlides.length);
+  };
+
+  const goToSlide = (index: number) => {
+    setCurrentIndex(index);
+  };
+
+  useEffect(() => {
+    if (!isAutoPlaying) return;
+
+    const interval = setInterval(() => {
+      nextSlide();
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [currentIndex, isAutoPlaying]);
+
+  const getVisibleSlides = () => {
+    const slides: (typeof gallerySlides[number] & { originalIndex: number })[] = [];
+    for (let i = 0; i < 3; i++) {
+      const index = (currentIndex + i) % gallerySlides.length;
+      slides.push({ ...gallerySlides[index], originalIndex: index });
+    }
+    return slides;
   };
 
   return (
@@ -192,58 +218,76 @@ function AboutPage() {
         </div>
       </section>
 
-      <section className="landing-section bg-white text-[#111827] py-12">
-        <div className="w-full max-w-6xl mx-auto space-y-8">
-          <div className="text-center space-y-2">
-            <span className="inline-flex px-4 py-2 rounded-full bg-[#f7e8eb] text-[#c22030] text-xs font-semibold tracking-wide">
+      <section className="landing-section py-16 px-4 sm:px-6 bg-gradient-to-br from-[#f5eee7] via-white to-[#f5eee7] text-[#111827]">
+        <div className="w-full max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <div className="inline-block bg-[#c22030] text-white px-4 py-1 rounded-full mb-4 uppercase tracking-[0.2em] text-xs font-semibold">
               Our gallery
-            </span>
-            <h2 className="text-3xl md:text-4xl font-extrabold leading-tight">See the difference quality makes</h2>
-            <p className="text-[#4b5563] max-w-2xl mx-auto text-sm md:text-base">
+            </div>
+            <h2 className="text-3xl md:text-4xl font-extrabold leading-tight text-[#1f2937]">
+              See the difference quality makes
+            </h2>
+            <p className="text-lg text-[#4b5563] max-w-2xl mx-auto">
               From farm to table, every step is crafted with care and expertise.
             </p>
           </div>
 
-          <div className="relative">
-            <button
-              type="button"
-              onClick={handlePrev}
-              className="hidden sm:flex absolute -left-3 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-white shadow-lg border border-[#ece4d9] items-center justify-center text-[#c22030] hover:-translate-x-0.5 transition-transform"
-              aria-label="Previous slide"
-            >
-              <ArrowLeft size={20} />
-            </button>
-            <button
-              type="button"
-              onClick={handleNext}
-              className="hidden sm:flex absolute -right-3 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-white shadow-lg border border-[#ece4d9] items-center justify-center text-[#c22030] hover:translate-x-0.5 transition-transform"
-              aria-label="Next slide"
-            >
-              <ArrowRight size={20} />
-            </button>
-
-            <div className="overflow-hidden rounded-[26px] border border-[#efe4d6] shadow-[0_24px_50px_-32px_rgba(15,23,42,0.28)]">
-              <div
-                className="flex transition-transform duration-500 ease-in-out"
-                style={{ transform: `translateX(-${slide * 100}%)` }}
-              >
-                {gallerySlides.map((item) => (
-                  <div key={item.src} className="w-full shrink-0 px-2 sm:px-4 py-4 bg-white">
-                    <div className="rounded-2xl overflow-hidden shadow-lg">
-                      <img src={item.src} alt={item.alt} className="w-full h-[260px] md:h-[360px] object-cover" />
+          <div
+            className="relative"
+            onMouseEnter={() => setIsAutoPlaying(false)}
+            onMouseLeave={() => setIsAutoPlaying(true)}
+          >
+            <div className="overflow-hidden">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {getVisibleSlides().map((image, idx) => (
+                  <div key={`${image.originalIndex}-${idx}`} className="transition-all duration-700 ease-in-out">
+                    <div className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500">
+                      <div className="aspect-[4/3] overflow-hidden bg-[#f3ece2]">
+                        <ImageWithFallback
+                          src={image.src}
+                          alt={image.alt}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                        />
+                      </div>
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                        <div className="absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                          <h3 className="mb-2 text-lg font-semibold">{image.title}</h3>
+                          <p className="text-sm text-white/90">{image.description}</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="flex justify-center gap-2 pt-4">
+            <button
+              type="button"
+              onClick={prevSlide}
+              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-6 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center text-[#c22030] hover:bg-[#c22030] hover:text-white transition-all duration-300 z-10"
+              aria-label="Previous slide"
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+
+            <button
+              type="button"
+              onClick={nextSlide}
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-6 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center text-[#c22030] hover:bg-[#c22030] hover:text-white transition-all duration-300 z-10"
+              aria-label="Next slide"
+            >
+              <ChevronRight className="w-6 h-6" />
+            </button>
+
+            <div className="flex justify-center gap-2 mt-12">
               {gallerySlides.map((_, index) => (
                 <button
                   key={index}
-                  onClick={() => setSlide(index)}
-                  className={`h-2.5 rounded-full transition-all ${
-                    slide === index ? "w-6 bg-[#c22030]" : "w-2.5 bg-[#d6cec3]"
+                  onClick={() => goToSlide(index)}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    index === currentIndex
+                      ? "bg-[#c22030] w-8"
+                      : "bg-[#6b7280]/30 hover:bg-[#6b7280]/50"
                   }`}
                   aria-label={`Go to slide ${index + 1}`}
                 />
