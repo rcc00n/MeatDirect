@@ -3,7 +3,7 @@ import { ArrowRight, ChefHat, Flame, Package, Snowflake, Truck } from "lucide-re
 import { Link } from "react-router-dom";
 
 import { getProducts } from "../api/products";
-import largeCutsHero from "../assets/hero-large-cuts.jpg";
+import largeCutsHero from "../assets/large cuts.jpg";
 import largeCutsBeef from "../assets/large-cuts-beef.png";
 import largeCutsFish from "../assets/large-cuts-fish.png";
 import largeCutsLamb from "../assets/large-cuts-lamb.png";
@@ -20,13 +20,14 @@ const categoryFilters: {
   label: string;
   icon: CategoryIcon;
 }[] = [
-  { key: "all", label: "All large cuts", icon: Package },
   { key: "beef", label: "Beef", icon: largeCutsBeef },
   { key: "poultry", label: "Poultry", icon: largeCutsPoultry },
   { key: "lamb", label: "Lamb", icon: largeCutsLamb },
   { key: "pork", label: "Pork", icon: largeCutsPork },
   { key: "fish", label: "Fish", icon: largeCutsFish },
 ];
+
+const animalFilters = categoryFilters.filter((filter) => filter.key !== "all");
 
 const largeCutPatterns = [
   /brisket/i,
@@ -123,26 +124,6 @@ const isLargeFormat = (product: Product) => {
   if (steakOnly) return false;
 
   return largeCutPatterns.some((pattern) => pattern.test(haystack));
-};
-
-const AnimalBadge = ({ icon, active, label }: { icon: CategoryIcon; active: boolean; label: string }) => {
-  const isImage = typeof icon === "string";
-  const IconComponent = icon as typeof Package;
-
-  return (
-    <div
-      className={`relative h-12 w-12 rounded-full flex items-center justify-center shadow-[0_14px_30px_-18px_rgba(239,68,68,0.8)] ${
-        active ? "bg-gradient-to-br from-red-500 via-red-600 to-red-700" : "bg-gradient-to-br from-red-400 to-red-600"
-      }`}
-    >
-      <div className="absolute inset-0 rounded-full border border-white/30" />
-      {isImage ? (
-        <img src={icon} alt={`${label} icon`} className="h-[28px] w-[28px] object-contain drop-shadow" />
-      ) : (
-        <IconComponent size={22} className="text-white drop-shadow" strokeWidth={2.2} />
-      )}
-    </div>
-  );
 };
 
 function LargeCutsPage() {
@@ -296,7 +277,7 @@ function LargeCutsPage() {
           <div className="flex flex-col lg:flex-row justify-between items-start gap-4">
             <div className="space-y-2">
               <p className="text-red-600 uppercase tracking-[0.25em] text-xs">Shop</p>
-              <h2 className="text-4xl font-semibold">Large cuts by animal.</h2>
+              <h2 className="text-4xl font-semibold">Large cuts</h2>
               <p className="text-gray-600 max-w-2xl">
                 Tap a category to filter. Inventory is live—when a roast or packer sells out it disappears here. If you
                 need something not listed, hit contact and we will hold it.
@@ -317,41 +298,45 @@ function LargeCutsPage() {
             </div>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-6 gap-3">
-            {categoryFilters.map((filter) => {
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 justify-items-center">
+            {animalFilters.map((filter) => {
               const icon = filter.icon;
               const isActive = selectedCategory === filter.key;
-              const count = countsByCategory.get(filter.key) ?? 0;
+              const isImage = typeof icon === "string";
+              const IconComponent = icon as typeof Package;
+
               return (
                 <button
                   key={filter.key}
                   type="button"
-                  onClick={() => setSelectedCategory(filter.key)}
-                  className={`relative overflow-hidden rounded-2xl border p-4 flex flex-col gap-3 transition shadow-sm ${
-                    isActive
-                      ? "border-black bg-gradient-to-br from-black to-[#1b1b22] text-white shadow-xl shadow-red-900/30"
-                      : "border-[#e8e1d8] bg-white text-gray-900 hover:-translate-y-1 hover:shadow-xl"
-                  }`}
+                  onClick={() => setSelectedCategory(isActive ? "all" : filter.key)}
+                  className="flex flex-col items-center gap-2 focus:outline-none"
                 >
-                  <div className="absolute inset-x-0 -top-8 h-20 bg-gradient-to-r from-white/30 via-white/20 to-white/10 rounded-[999px] blur-3xl opacity-60" />
-                  <div className="flex items-center justify-between gap-2">
-                    <AnimalBadge icon={icon} label={filter.label} active={isActive} />
-                    <span
-                      className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${
-                        isActive
-                          ? "bg-white/10 text-white border-white/20"
-                          : "bg-gray-100 text-gray-700 border-gray-200"
-                      }`}
-                    >
-                      {count}
-                    </span>
+                  <div
+                    className={`h-24 w-24 rounded-xl flex items-center justify-center transition ${
+                      isActive
+                        ? ""
+                        : "hover:-translate-y-1"
+                    }`}
+                  >
+                    {isImage ? (
+                      <img
+                        src={icon}
+                        alt={`${filter.label} icon`}
+                        className="h-full w-full object-contain"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <IconComponent size={42} className="text-red-600" />
+                    )}
                   </div>
-                  <div className="text-left">
-                    <div className="text-base font-semibold leading-tight">{filter.label}</div>
-                    <p className={`text-xs ${isActive ? "text-white/70" : "text-gray-500"}`}>
-                      {filter.key === "all" ? "Everything big" : "Filter by animal"}
-                    </p>
-                  </div>
+                  <span
+                    className={`text-sm font-semibold px-3 py-1 rounded ${
+                      isActive ? "bg-red-600 text-white border-red-500" : "text-gray-800"
+                    }`}
+                  >
+                    {filter.label}
+                  </span>
                 </button>
               );
             })}
