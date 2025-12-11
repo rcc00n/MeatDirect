@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowRight, Drumstick, Fish, Flame } from "lucide-react";
+import { ArrowRight, Drumstick, Fish, Flame, Leaf, ShoppingCart, Store, Truck } from "lucide-react";
 
 import { getProducts } from "../api/products";
 import heroBackdrop from "../assets/hero-large-cuts.jpg";
@@ -8,10 +8,6 @@ import quarterCowImage from "../assets/quarter-cow.jpg";
 import halfCowImage from "../assets/half-cow.jpg";
 import wholeCowImage from "../assets/full-cow.jpg";
 import homePageEuropean from "../assets/home_page_European.png";
-import ecommerceIcon from "../assets/icons/online-order.svg";
-import storefrontIcon from "../assets/icons/storefront.svg";
-import localSproutIcon from "../assets/icons/local-sprout.svg";
-import fastDeliveryIcon from "../assets/icons/fast-delivery.svg";
 import { CategoryCard } from "../components/CategoryCard";
 import { FeatureCard } from "../components/FeatureCard";
 import { ProductCard } from "../components/ProductCard";
@@ -67,22 +63,22 @@ const serviceIcons = [
   {
     title: "Order online",
     description: "Checkout in seconds with live inventory and transparent pricing.",
-    image: ecommerceIcon,
+    icon: ShoppingCart,
   },
   {
     title: "Visit the shop",
     description: "Pop into our market for butcher picks, Euro pantry finds, and advice.",
-    image: storefrontIcon,
+    icon: Store,
   },
   {
     title: "Local & clean",
     description: "Prairie farms, hormone-free meats, and thoughtfully sourced staples.",
-    image: localSproutIcon,
+    icon: Leaf,
   },
   {
     title: "Fast delivery",
     description: "Cold-packed vans running local routes so your box arrives chilled.",
-    image: fastDeliveryIcon,
+    icon: Truck,
   },
 ];
 
@@ -261,22 +257,17 @@ function HomePage() {
           </div>
 
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            {serviceIcons.map((item) => (
+            {serviceIcons.map(({ title, description, icon: Icon }) => (
               <div
-                key={item.title}
+                key={title}
                 className="flex items-center gap-4 bg-white/5 border border-white/10 rounded-2xl p-4 shadow-[0_18px_52px_-32px_rgba(0,0,0,0.75)] backdrop-blur-sm"
               >
-                <div className="w-[88px] h-[88px] flex items-center justify-center">
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="w-full h-full object-contain"
-                    loading="lazy"
-                  />
+                <div className="flex h-[76px] w-[76px] items-center justify-center rounded-full bg-red-600 text-white shadow-[0_18px_34px_-24px_rgba(239,68,68,0.9)]">
+                  <Icon aria-hidden className="h-9 w-9" strokeWidth={2.1} />
                 </div>
                 <div className="space-y-1">
-                  <h3 className="text-lg font-semibold">{item.title}</h3>
-                  <p className="text-sm text-gray-300 leading-relaxed">{item.description}</p>
+                  <h3 className="text-lg font-semibold">{title}</h3>
+                  <p className="text-sm text-gray-300 leading-relaxed">{description}</p>
                 </div>
               </div>
             ))}
