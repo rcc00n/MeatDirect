@@ -3,7 +3,7 @@ import { Drumstick, Fish, Flame, Search } from "lucide-react";
 import { Link, useSearchParams } from "react-router-dom";
 
 import { getProducts } from "../api/products";
-import menuHero from "../assets/hero-menu.jpg";
+import shopBanner from "../assets/shop-baner.jpg";
 import { ProductCard as HighlightProductCard } from "../components/ProductCard";
 import ProductGrid from "../components/products/ProductGrid";
 import type { Product } from "../types";
@@ -236,7 +236,7 @@ function MenuPage() {
             <div className="absolute -right-10 bottom-0 h-32 w-32 bg-red-500/10 blur-3xl rounded-full" />
             <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-white/5 shadow-[0_30px_90px_-50px_rgba(0,0,0,0.8)]">
               <img
-                src={menuHero}
+                src={shopBanner}
                 alt="Cold-packed meats and sausages ready to order"
                 className="w-full h-full object-cover aspect-[4/3] lg:aspect-[5/4]"
                 loading="lazy"

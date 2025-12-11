@@ -11,11 +11,14 @@ import {
   Snowflake,
   Truck,
 } from "lucide-react";
-import heroMain from "../assets/hero-large-cuts.jpg";
-import pastureImg from "../assets/full-cow.jpg";
-import boardImg from "../assets/hero-menu.jpg";
-import quarterImg from "../assets/quarter-cow.jpg";
-import halfImg from "../assets/half-cow.jpg";
+import aboutImage1 from "../assets/about_1.jpg";
+import aboutImage2 from "../assets/about_2.jpg";
+import aboutImage3 from "../assets/about_3.jpg";
+import aboutImage4 from "../assets/about_4.jpg";
+import aboutImage5 from "../assets/about_5.jpg";
+import aboutStore1 from "../assets/about_store_1.png";
+import aboutStore2 from "../assets/about_store_2.jpg";
+import aboutStore3 from "../assets/about_store_3.jpg";
 
 const featurePills = [
   { title: "European craft", icon: Drumstick },
@@ -31,11 +34,11 @@ const proofPoints = [
 ];
 
 const gallerySlides = [
-  { src: heroMain, alt: "Marbled steaks on butcher paper" },
-  { src: boardImg, alt: "Ready-to-cook cuts on a board" },
-  { src: pastureImg, alt: "Prairie cattle on open pasture" },
-  { src: quarterImg, alt: "Quartered beef with clean trim" },
-  { src: halfImg, alt: "Dry-aged sides prepared for cutting" },
+  { src: aboutImage1, alt: "About gallery image 1" },
+  { src: aboutImage2, alt: "About gallery image 2" },
+  { src: aboutImage3, alt: "About gallery image 3" },
+  { src: aboutImage4, alt: "About gallery image 4" },
+  { src: aboutImage5, alt: "About gallery image 5" },
 ];
 
 const highlightPillars = [
@@ -43,21 +46,21 @@ const highlightPillars = [
     title: "Farm-direct sourcing",
     description: "Grass-fed, hormone-free partners we visit in person and label on every pack.",
     icon: Leaf,
-    image: pastureImg,
+    image: aboutImage2,
     accent: "from-[#e7f2e9] to-[#f7fbf8]",
   },
   {
     title: "European craft",
     description: "Old-world smoke, spice, and aging layered onto prairie proteins.",
     icon: Drumstick,
-    image: boardImg,
+    image: aboutImage3,
     accent: "from-[#fbe9ec] to-[#fff6f8]",
   },
   {
     title: "Ready-to-trust packaging",
     description: "Pack dates, lot numbers, and temp logs printed so you can verify fast.",
     icon: ShieldCheck,
-    image: heroMain,
+    image: aboutImage4,
     accent: "from-[#e9f0f6] to-[#f7fbff]",
   },
 ];
@@ -171,17 +174,17 @@ function AboutPage() {
             <div className="space-y-4">
               <div className="rounded-[28px] overflow-hidden shadow-2xl border border-white/60 bg-white">
                 <img
-                  src={heroMain}
-                  alt="Hand-cut steaks on butcher paper"
+                  src={aboutStore1}
+                  alt="MeatDirect storefront and team"
                   className="w-full h-[260px] md:h-[320px] object-cover"
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="rounded-[22px] overflow-hidden shadow-xl border border-white/60 bg-white">
-                  <img src={pastureImg} alt="Cattle grazing on prairie grass" className="w-full h-44 object-cover" />
+                  <img src={aboutStore2} alt="Inside the MeatDirect shop" className="w-full h-44 object-cover" />
                 </div>
                 <div className="rounded-[22px] overflow-hidden shadow-xl border border-white/60 bg-white">
-                  <img src={boardImg} alt="Butchered steaks ready to cook" className="w-full h-44 object-cover" />
+                  <img src={aboutStore3} alt="Cold case and counter at MeatDirect" className="w-full h-44 object-cover" />
                 </div>
               </div>
             </div>

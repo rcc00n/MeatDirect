@@ -6,6 +6,7 @@ import { getProducts } from "../api/products";
 import quarterCowImage from "../assets/quarter-cow.jpg";
 import halfCowImage from "../assets/half-cow.jpg";
 import wholeCowImage from "../assets/full-cow.jpg";
+import homePageEuropean from "../assets/home_page_European.png";
 import { CategoryCard } from "../components/CategoryCard";
 import { FeatureCard } from "../components/FeatureCard";
 import { ProductCard } from "../components/ProductCard";
@@ -303,7 +304,7 @@ function HomePage() {
             <div className="absolute -inset-6 bg-red-200/60 blur-3xl rounded-full" aria-hidden />
             <div className="relative bg-white rounded-3xl border border-[#f1e6d8] shadow-[0_32px_80px_-48px_rgba(0,0,0,0.55)] overflow-hidden">
               <img
-                src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1400&q=80"
+                src={homePageEuropean}
                 alt="Imported European sweets and pantry staples"
                 className="w-full h-full object-cover"
                 loading="lazy"

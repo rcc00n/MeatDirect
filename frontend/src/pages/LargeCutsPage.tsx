@@ -1,37 +1,31 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  ArrowRight,
-  Beef,
-  ChefHat,
-  Drumstick,
-  Fish,
-  Flame,
-  Package,
-  PiggyBank,
-  Snowflake,
-  Sprout,
-  Truck,
-} from "lucide-react";
+import { ArrowRight, ChefHat, Flame, Package, Snowflake, Truck } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { getProducts } from "../api/products";
 import largeCutsHero from "../assets/hero-large-cuts.jpg";
+import largeCutsBeef from "../assets/large-cuts-beef.png";
+import largeCutsFish from "../assets/large-cuts-fish.png";
+import largeCutsLamb from "../assets/large-cuts-lamb.png";
+import largeCutsPork from "../assets/large-cuts-pork.png";
+import largeCutsPoultry from "../assets/large-cuts-Poultry.png";
 import ProductGrid from "../components/products/ProductGrid";
 import type { Product } from "../types";
 
 type LargeCutCategory = "all" | "beef" | "poultry" | "lamb" | "pork" | "fish";
+type CategoryIcon = typeof Package | string;
 
 const categoryFilters: {
   key: LargeCutCategory;
   label: string;
-  icon: typeof Package;
+  icon: CategoryIcon;
 }[] = [
   { key: "all", label: "All large cuts", icon: Package },
-  { key: "beef", label: "Beef", icon: Beef },
-  { key: "poultry", label: "Poultry", icon: Drumstick },
-  { key: "lamb", label: "Lamb", icon: Sprout },
-  { key: "pork", label: "Pork", icon: PiggyBank },
-  { key: "fish", label: "Fish", icon: Fish },
+  { key: "beef", label: "Beef", icon: largeCutsBeef },
+  { key: "poultry", label: "Poultry", icon: largeCutsPoultry },
+  { key: "lamb", label: "Lamb", icon: largeCutsLamb },
+  { key: "pork", label: "Pork", icon: largeCutsPork },
+  { key: "fish", label: "Fish", icon: largeCutsFish },
 ];
 
 const largeCutPatterns = [
@@ -131,16 +125,25 @@ const isLargeFormat = (product: Product) => {
   return largeCutPatterns.some((pattern) => pattern.test(haystack));
 };
 
-const AnimalBadge = ({ icon: Icon, active }: { icon: typeof Package; active: boolean }) => (
-  <div
-    className={`relative h-12 w-12 rounded-full flex items-center justify-center shadow-[0_14px_30px_-18px_rgba(239,68,68,0.8)] ${
-      active ? "bg-gradient-to-br from-red-500 via-red-600 to-red-700" : "bg-gradient-to-br from-red-400 to-red-600"
-    }`}
-  >
-    <div className="absolute inset-0 rounded-full border border-white/30" />
-    <Icon size={22} className="text-white drop-shadow" strokeWidth={2.2} />
-  </div>
-);
+const AnimalBadge = ({ icon, active, label }: { icon: CategoryIcon; active: boolean; label: string }) => {
+  const isImage = typeof icon === "string";
+  const IconComponent = icon as typeof Package;
+
+  return (
+    <div
+      className={`relative h-12 w-12 rounded-full flex items-center justify-center shadow-[0_14px_30px_-18px_rgba(239,68,68,0.8)] ${
+        active ? "bg-gradient-to-br from-red-500 via-red-600 to-red-700" : "bg-gradient-to-br from-red-400 to-red-600"
+      }`}
+    >
+      <div className="absolute inset-0 rounded-full border border-white/30" />
+      {isImage ? (
+        <img src={icon} alt={`${label} icon`} className="h-[28px] w-[28px] object-contain drop-shadow" />
+      ) : (
+        <IconComponent size={22} className="text-white drop-shadow" strokeWidth={2.2} />
+      )}
+    </div>
+  );
+};
 
 function LargeCutsPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -316,7 +319,7 @@ function LargeCutsPage() {
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-6 gap-3">
             {categoryFilters.map((filter) => {
-              const Icon = filter.icon;
+              const icon = filter.icon;
               const isActive = selectedCategory === filter.key;
               const count = countsByCategory.get(filter.key) ?? 0;
               return (
@@ -332,7 +335,7 @@ function LargeCutsPage() {
                 >
                   <div className="absolute inset-x-0 -top-8 h-20 bg-gradient-to-r from-white/30 via-white/20 to-white/10 rounded-[999px] blur-3xl opacity-60" />
                   <div className="flex items-center justify-between gap-2">
-                    <AnimalBadge icon={Icon} active={isActive} />
+                    <AnimalBadge icon={icon} label={filter.label} active={isActive} />
                     <span
                       className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${
                         isActive
