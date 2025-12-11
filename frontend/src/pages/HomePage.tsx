@@ -8,10 +8,6 @@ import quarterCowImage from "../assets/quarter-cow.jpg";
 import halfCowImage from "../assets/half-cow.jpg";
 import wholeCowImage from "../assets/full-cow.jpg";
 import homePageEuropean from "../assets/home_page_European.png";
-import fastDeliveryIcon from "../assets/icons/fast-delivery.svg";
-import localSproutIcon from "../assets/icons/local-sprout.svg";
-import onlineOrderIcon from "../assets/icons/online-order.svg";
-import storefrontIcon from "../assets/icons/storefront.svg";
 import { CategoryCard } from "../components/CategoryCard";
 import { FeatureCard } from "../components/FeatureCard";
 import { ProductCard } from "../components/ProductCard";
@@ -83,29 +79,6 @@ const serviceIcons = [
     title: "Fast delivery",
     description: "Cold-packed vans running local routes so your box arrives chilled.",
     icon: Truck,
-  },
-];
-
-const shoppingIconSpotlight = [
-  {
-    title: "Order online",
-    description: "Full digital catalog with live availability and transparent pricing.",
-    image: onlineOrderIcon,
-  },
-  {
-    title: "Local & clean",
-    description: "Prairie farms, clean labels, and traceable partners for every cut.",
-    image: localSproutIcon,
-  },
-  {
-    title: "Visit the shop",
-    description: "Pop into the market for deli favorites, pantry finds, and butcher picks.",
-    image: storefrontIcon,
-  },
-  {
-    title: "Fast delivery",
-    description: "Cold-packed vans running frequent routes so your box arrives chilled.",
-    image: fastDeliveryIcon,
   },
 ];
 
@@ -302,6 +275,7 @@ function HomePage() {
         </div>
       </section>
 
+<<<<<<< ours
       <section className="landing-section py-16 bg-gradient-to-br from-white via-[#fff7f5] to-[#ffe6e6] text-black border-t-2 border-red-600 border-b border-red-100">
         <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-14 space-y-10">
           <div className="text-center space-y-3 max-w-4xl mx-auto">
@@ -319,16 +293,14 @@ function HomePage() {
                 {shoppingIconSpotlight.map((item) => (
                   <div
                     key={item.title}
-                    className="flex flex-col items-center text-center gap-5 bg-white/90 border border-red-100 rounded-3xl p-6 shadow-[0_32px_68px_-46px_rgba(220,38,38,0.65)] backdrop-blur-sm shrink-0 w-[280px] md:w-[300px]"
+                    className="flex flex-col items-center text-center gap-4 bg-white/90 border border-red-100 rounded-3xl p-6 shadow-[0_32px_68px_-46px_rgba(220,38,38,0.65)] backdrop-blur-sm shrink-0"
                   >
-                    <div className="w-full aspect-square rounded-2xl bg-gradient-to-br from-white via-[#fff5f5] to-[#ffe2e2] border border-red-50 flex items-center justify-center">
-                      <img
-                        src={item.image}
-                        alt={item.title}
-                        className="w-full h-full object-contain"
-                        loading="lazy"
-                      />
-                    </div>
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="w-[210px] sm:w-[230px] md:w-[250px] lg:w-[260px] min-w-[210px] sm:min-w-[230px] md:min-w-[250px] lg:min-w-[260px]"
+                      loading="lazy"
+                    />
                     <div className="space-y-2 max-w-[280px]">
                       <h3 className="text-xl font-semibold text-[#1f150d]">{item.title}</h3>
                       <p className="text-sm text-gray-700 leading-relaxed">{item.description}</p>
@@ -341,6 +313,8 @@ function HomePage() {
         </div>
       </section>
 
+=======
+>>>>>>> theirs
       <section className="landing-section py-16 bg-white text-black border-t-2 border-red-600">
         <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-14">
           <div className="grid md:grid-cols-3 gap-8">
