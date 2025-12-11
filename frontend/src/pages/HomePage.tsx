@@ -314,20 +314,24 @@ function HomePage() {
           </div>
           <div className="relative">
             <div className="absolute inset-x-6 -top-10 h-40 bg-red-200/50 blur-3xl rounded-full" aria-hidden />
-            <div className="relative overflow-x-auto pb-3">
-              <div className="flex justify-center gap-6 md:gap-8 xl:gap-12">
+            <div className="relative">
+              <div className="grid justify-items-center gap-6 sm:gap-8 xl:gap-10 sm:grid-cols-2 xl:grid-cols-4">
                 {shoppingIconSpotlight.map((item) => (
                   <div
                     key={item.title}
-                    className="flex flex-col items-center text-center gap-5 bg-white/90 border border-red-100 rounded-3xl p-6 shadow-[0_32px_68px_-46px_rgba(220,38,38,0.65)] backdrop-blur-sm shrink-0 w-[280px] md:w-[300px]"
+                    className="flex flex-col items-center text-center gap-5 bg-white/90 border border-red-100 rounded-3xl p-6 shadow-[0_32px_68px_-46px_rgba(220,38,38,0.65)] backdrop-blur-sm w-full max-w-[320px]"
                   >
                     <div className="w-full aspect-square rounded-2xl bg-gradient-to-br from-white via-[#fff5f5] to-[#ffe2e2] border border-red-50 flex items-center justify-center overflow-hidden">
-                      <img
-                        src={item.image}
-                        alt={item.title}
-                        className="h-full w-full object-contain"
-                        loading="lazy"
-                      />
+                      <picture className="h-full w-full flex items-center justify-center">
+                        <source srcSet={item.image} type="image/png" />
+                        <img
+                          src={item.image}
+                          alt={item.title}
+                          className="h-full w-full object-contain"
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      </picture>
                     </div>
                     <div className="space-y-2 max-w-[280px]">
                       <h3 className="text-xl font-semibold text-[#1f150d]">{item.title}</h3>
