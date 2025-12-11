@@ -8,10 +8,10 @@ import quarterCowImage from "../assets/quarter-cow.jpg";
 import halfCowImage from "../assets/half-cow.jpg";
 import wholeCowImage from "../assets/full-cow.jpg";
 import homePageEuropean from "../assets/home_page_European.png";
-import fastDeliveryPng from "../assets/icons/fast-delivery.png";
-import localSproutPng from "../assets/icons/local-sprout.png";
-import onlineOrderPng from "../assets/icons/online-order.png";
-import storefrontPng from "../assets/icons/storefront.png";
+import orderOnlinePng from "../assets/icons/order-online.png";
+import shopLocalProductsPng from "../assets/icons/shop-local-products.png";
+import shopPickupPng from "../assets/icons/shop-pickup.png";
+import shopShippingPng from "../assets/icons/shop-shipping.png";
 import { CategoryCard } from "../components/CategoryCard";
 import { FeatureCard } from "../components/FeatureCard";
 import { ProductCard } from "../components/ProductCard";
@@ -90,22 +90,22 @@ const shoppingIconSpotlight = [
   {
     title: "Order online",
     description: "Full digital catalog with live availability and transparent pricing.",
-    image: onlineOrderPng,
+    image: orderOnlinePng,
   },
   {
     title: "Local & clean",
     description: "Prairie farms, clean labels, and traceable partners for every cut.",
-    image: localSproutPng,
+    image: shopLocalProductsPng,
   },
   {
     title: "Visit the shop",
     description: "Pop into the market for deli favorites, pantry finds, and butcher picks.",
-    image: storefrontPng,
+    image: shopPickupPng,
   },
   {
     title: "Fast delivery",
     description: "Cold-packed vans running frequent routes so your box arrives chilled.",
-    image: fastDeliveryPng,
+    image: shopShippingPng,
   },
 ];
 
