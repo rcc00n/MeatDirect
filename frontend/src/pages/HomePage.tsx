@@ -319,14 +319,16 @@ function HomePage() {
                 {shoppingIconSpotlight.map((item) => (
                   <div
                     key={item.title}
-                    className="flex flex-col items-center text-center gap-4 bg-white/90 border border-red-100 rounded-3xl p-6 shadow-[0_32px_68px_-46px_rgba(220,38,38,0.65)] backdrop-blur-sm shrink-0"
+                    className="flex flex-col items-center text-center gap-5 bg-white/90 border border-red-100 rounded-3xl p-6 shadow-[0_32px_68px_-46px_rgba(220,38,38,0.65)] backdrop-blur-sm shrink-0 w-[280px] md:w-[300px]"
                   >
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="w-[210px] sm:w-[230px] md:w-[250px] lg:w-[260px] min-w-[210px] sm:min-w-[230px] md:min-w-[250px] lg:min-w-[260px]"
-                      loading="lazy"
-                    />
+                    <div className="w-full aspect-square rounded-2xl bg-gradient-to-br from-white via-[#fff5f5] to-[#ffe2e2] border border-red-50 flex items-center justify-center">
+                      <img
+                        src={item.image}
+                        alt={item.title}
+                        className="w-full h-full object-contain"
+                        loading="lazy"
+                      />
+                    </div>
                     <div className="space-y-2 max-w-[280px]">
                       <h3 className="text-xl font-semibold text-[#1f150d]">{item.title}</h3>
                       <p className="text-sm text-gray-700 leading-relaxed">{item.description}</p>
