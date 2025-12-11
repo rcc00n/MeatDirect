@@ -8,6 +8,10 @@ import quarterCowImage from "../assets/quarter-cow.jpg";
 import halfCowImage from "../assets/half-cow.jpg";
 import wholeCowImage from "../assets/full-cow.jpg";
 import homePageEuropean from "../assets/home_page_European.png";
+import ecommerceIcon from "../assets/icons/online-order.svg";
+import storefrontIcon from "../assets/icons/storefront.svg";
+import localSproutIcon from "../assets/icons/local-sprout.svg";
+import fastDeliveryIcon from "../assets/icons/fast-delivery.svg";
 import { CategoryCard } from "../components/CategoryCard";
 import { FeatureCard } from "../components/FeatureCard";
 import { ProductCard } from "../components/ProductCard";
@@ -57,6 +61,29 @@ const featureHighlights = [
   { title: "Humanely Harvested", description: "Low-stress harvest in a clean plant" },
   { title: "Farm Inspected", description: "USDA inspected and hand-inspected on farm" },
   { title: "Slow Raised", description: "Raised slow to develop rich cuts" },
+];
+
+const serviceIcons = [
+  {
+    title: "Order online",
+    description: "Checkout in seconds with live inventory and transparent pricing.",
+    image: ecommerceIcon,
+  },
+  {
+    title: "Visit the shop",
+    description: "Pop into our market for butcher picks, Euro pantry finds, and advice.",
+    image: storefrontIcon,
+  },
+  {
+    title: "Local & clean",
+    description: "Prairie farms, hormone-free meats, and thoughtfully sourced staples.",
+    image: localSproutIcon,
+  },
+  {
+    title: "Fast delivery",
+    description: "Cold-packed vans running local routes so your box arrives chilled.",
+    image: fastDeliveryIcon,
+  },
 ];
 
 const cowPackages = [
@@ -211,6 +238,43 @@ function HomePage() {
             >
               Shop the lineup
             </button>
+          </div>
+        </div>
+      </section>
+
+      <section className="landing-section py-14 bg-black text-white border-t-2 border-red-600 border-b border-red-700/40">
+        <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-14 space-y-8">
+          <div className="flex flex-wrap justify-between gap-4 items-center">
+            <div className="space-y-3 max-w-3xl">
+              <p className="text-red-400 uppercase tracking-[0.22em] text-xs">Everything in one spot</p>
+              <h2 className="text-3xl md:text-4xl font-semibold">Order, visit, or get it delivered.</h2>
+              <p className="text-gray-300">
+                Four quick snapshots of how you can shop with us—online, in-store, local-first, and delivered chilled.
+              </p>
+            </div>
+            <Link
+              to="/menu"
+              className="inline-flex items-center gap-2 bg-red-600 text-white px-5 py-3 rounded-xl shadow-[0_18px_48px_-32px_rgba(239,68,68,0.9)] hover:bg-red-700 transition-colors"
+            >
+              Browse menu <ArrowRight size={16} />
+            </Link>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {serviceIcons.map((item) => (
+              <div
+                key={item.title}
+                className="flex items-center gap-4 bg-white/5 border border-white/10 rounded-2xl p-4 shadow-[0_18px_52px_-32px_rgba(0,0,0,0.75)] backdrop-blur-sm"
+              >
+                <div className="w-16 h-16 rounded-full bg-red-700/80 border border-white/20 shadow-inner overflow-hidden flex items-center justify-center">
+                  <img src={item.image} alt={item.title} className="w-full h-full object-cover" loading="lazy" />
+                </div>
+                <div className="space-y-1">
+                  <h3 className="text-lg font-semibold">{item.title}</h3>
+                  <p className="text-sm text-gray-300 leading-relaxed">{item.description}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
