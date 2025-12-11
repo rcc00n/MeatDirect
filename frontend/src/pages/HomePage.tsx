@@ -266,8 +266,8 @@ function HomePage() {
                 key={item.title}
                 className="flex items-center gap-4 bg-white/5 border border-white/10 rounded-2xl p-4 shadow-[0_18px_52px_-32px_rgba(0,0,0,0.75)] backdrop-blur-sm"
               >
-                <div className="w-16 h-16 rounded-full bg-red-700/80 border border-white/20 shadow-inner overflow-hidden flex items-center justify-center">
-                  <img src={item.image} alt={item.title} className="w-full h-full object-cover" loading="lazy" />
+                <div className="w-16 h-16 rounded-full bg-red-700/80 border border-white/20 shadow-inner flex items-center justify-center p-2">
+                  <img src={item.image} alt={item.title} className="w-full h-full object-contain" loading="lazy" />
                 </div>
                 <div className="space-y-1">
                   <h3 className="text-lg font-semibold">{item.title}</h3>
