@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight, Drumstick, Fish, Flame } from "lucide-react";
 
 import { getProducts } from "../api/products";
+import heroBackdrop from "../assets/hero-large-cuts.jpg";
 import quarterCowImage from "../assets/quarter-cow.jpg";
 import halfCowImage from "../assets/half-cow.jpg";
 import wholeCowImage from "../assets/full-cow.jpg";
@@ -141,16 +142,21 @@ function HomePage() {
 
   return (
     <div className="landing-page space-y-0 text-white">
-      <section className="landing-section bg-gradient-to-br from-black via-red-950 to-black py-16 border-b-2 border-red-600">
-        <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-14 grid md:grid-cols-2 gap-12 items-center">
-          <div className="space-y-4">
-            <p className="text-red-400 uppercase tracking-[0.2em] text-xs">Great Tasting Meats • Hormone Free</p>
+      <section className="landing-section hero-banner py-16 border-b-2 border-red-600">
+        <div
+          className="hero-banner__media"
+          style={{ backgroundImage: `url(${heroBackdrop})` }}
+          aria-hidden
+        />
+        <div className="hero-banner__content w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-14 grid md:grid-cols-2 gap-12 items-center">
+          <div className="space-y-5">
+            <p className="text-red-300 uppercase tracking-[0.2em] text-xs">Great Tasting Meats • Hormone Free</p>
             <h1 className="text-4xl md:text-5xl font-semibold leading-tight">We specialize in high quality, local meat.</h1>
-            <p className="text-gray-300 max-w-xl">
+            <p className="text-gray-200 max-w-xl">
               Beef, chicken, lamb, and pork—raised for the butcher and delivered to your door. No hormones or antibiotics
               for a healthier lifestyle.
             </p>
-            <div className="flex flex-wrap gap-3 pt-2">
+            <div className="flex flex-wrap gap-3 pt-1">
               <button
                 type="button"
                 onClick={scrollToShop}
@@ -167,21 +173,14 @@ function HomePage() {
             </div>
             <div className="flex flex-wrap gap-2">
               {categoryShowcase.slice(0, 3).map((item) => (
-                <span key={item.title} className="border border-gray-700 px-4 py-2 rounded-full text-sm">
+                <span key={item.title} className="border border-white/60 bg-black/30 px-4 py-2 rounded-full text-sm backdrop-blur-sm">
                   {item.title}
                 </span>
               ))}
-              <button
-                type="button"
-                onClick={scrollToShop}
-                className="bg-red-600 px-4 py-2 rounded-full text-sm hover:bg-red-700 transition-colors"
-              >
-                See more meats →
-              </button>
             </div>
           </div>
 
-          <div className="bg-white text-black p-8 rounded-xl shadow-2xl">
+          <div className="hero-banner__panel bg-white/90 backdrop-blur-lg text-black p-8 rounded-2xl shadow-2xl border border-white/70">
             <p className="text-red-600 uppercase tracking-wider mb-2 text-sm">Popular Right Now</p>
             <h3 className="text-2xl font-semibold mb-4">What locals are adding</h3>
             <div className="space-y-3">
@@ -189,7 +188,7 @@ function HomePage() {
                 popularProducts.map((product) => (
                   <div
                     key={product.id}
-                    className="flex items-center justify-between border-b last:border-b-0 border-gray-200 pb-3"
+                    className="flex items-center justify-between border-b last:border-b-0 border-gray-200/70 pb-3"
                   >
                     <div>
                       <div className="font-semibold text-black">{product.name}</div>
