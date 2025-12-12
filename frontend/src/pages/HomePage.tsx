@@ -260,8 +260,8 @@ function HomePage() {
                     key={item.title}
                     className="flex flex-col items-center text-center gap-4 bg-white border border-[#ebe4d9] rounded-3xl p-6 shadow-[0_20px_60px_-48px_rgba(15,23,42,0.55)] w-full max-w-[320px]"
                   >
-                    <div className="h-14 w-14 rounded-2xl bg-white border border-[#f1e9dd] flex items-center justify-center">
-                      <picture className="h-10 w-10 flex items-center justify-center">
+                    <div className="h-24 w-24 rounded-3xl bg-[#fff1f1] flex items-center justify-center shadow-[0_22px_52px_-32px_rgba(220,38,38,0.8)]">
+                      <picture className="h-20 w-20 flex items-center justify-center">
                         <source srcSet={item.image} type="image/png" />
                         <img
                           src={item.image}
