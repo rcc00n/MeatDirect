@@ -1,16 +1,5 @@
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
-import {
-  ArrowRight,
-  BadgeCheck,
-  Building2,
-  CheckCircle2,
-  KeyRound,
-  Lock,
-  Mail,
-  Phone,
-  Shield,
-  Sparkles,
-} from "lucide-react";
+import { ArrowRight, CheckCircle2, KeyRound, Lock, Mail, Phone, Shield, Sparkles } from "lucide-react";
 
 import {
   fetchWholesaleCatalog,
@@ -34,16 +23,10 @@ type RequestFormState = {
   message: string;
 };
 
-const assurances = [
-  { title: "Cold-chain intact", copy: "Insulated vans, temp logs on handoff, and dated case labels." },
-  { title: "Cut sheets on request", copy: "Trim specs, grind ratios, and COAs available for every invoice." },
-  { title: "Priority holds", copy: "Lock inventory for 24 hours while you finalize menus or headcounts." },
-];
-
 const guardrails = [
   "Codes are issued manually to vetted accounts.",
   "Keys can be rotated at any time; save the latest code when approved.",
-  "Do not forward pricing outside of your team without clearance.",
+  "Do not forward pricing outside your team.",
 ];
 
 function formatExpiry(expiresAt?: string | null) {
@@ -175,50 +158,34 @@ function WholesalePage() {
   const expiresReadable = formatExpiry(accessState.expiresAt);
 
   return (
-    <div className="landing-page bg-black text-white">
-      <section className="landing-section bg-gradient-to-br from-black via-slate-900 to-red-950 py-16 border-b border-red-900/40">
-        <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-14 grid lg:grid-cols-[1.05fr_0.95fr] gap-10 items-start">
-          <div className="space-y-6">
-            <div className="flex items-center gap-3">
-              <span className="text-xs uppercase tracking-[0.28em] text-red-200">Wholesale program</span>
-              <span className="bg-white/10 text-white px-3 py-1 rounded-full text-xs border border-white/15 flex items-center gap-2">
-                <Shield size={14} /> Code required
-              </span>
+    <div className="landing-page bg-white text-black">
+      <section className="landing-section bg-gradient-to-b from-white to-[#f6f6f6] py-14 border-b border-gray-200">
+        <div className="w-full max-w-[1200px] mx-auto px-4 md:px-8 grid lg:grid-cols-[1.05fr_0.95fr] gap-10 items-start">
+          <div className="space-y-4">
+            <div className="text-xs uppercase tracking-[0.2em] text-red-600 flex items-center gap-2">
+              <Shield size={14} /> Wholesale access
             </div>
-            <h1 className="text-4xl md:text-5xl font-semibold leading-tight">
-              Locked wholesale pricing for partners who need sharper numbers.
-            </h1>
-            <p className="text-lg text-gray-200 max-w-3xl">
-              Restaurants, caterers, teams, and serious home cooks get access to case pricing, consistent trim specs, and
-              a butcher who answers on the first ring. Request approval or enter your issued access code to unlock rates.
+            <h1 className="text-4xl md:text-5xl font-semibold leading-tight">Private wholesale pricing.</h1>
+            <p className="text-lg text-gray-700 max-w-2xl">
+              Enter your issued access code or submit a short request. Approved partners see locked pricing and current
+              case specs; everyone else sees a simple gate.
             </p>
-            <div className="flex flex-wrap gap-3">
-              <span className="px-3 py-2 rounded-full bg-red-600 text-white text-sm font-semibold flex items-center gap-2">
-                <BadgeCheck size={14} /> Vetted accounts only
-              </span>
-              <span className="px-3 py-2 rounded-full bg-white/10 text-white text-sm font-semibold flex items-center gap-2">
-                <Sparkles size={14} /> Menu-ready cuts
-              </span>
-              <span className="px-3 py-2 rounded-full bg-white/10 text-white text-sm font-semibold flex items-center gap-2">
-                <Building2 size={14} /> Cleveland & surrounding
-              </span>
-            </div>
-            <div className="grid sm:grid-cols-3 gap-4 pt-2">
-              {assurances.map((item) => (
-                <div key={item.title} className="border border-white/15 bg-white/5 rounded-2xl p-4 space-y-2 shadow-lg">
-                  <div className="flex items-center gap-2 text-sm uppercase tracking-[0.2em] text-red-200">{item.title}</div>
-                  <p className="text-gray-200 text-sm leading-relaxed">{item.copy}</p>
+            <div className="grid sm:grid-cols-3 gap-3">
+              {["Vetted accounts only", "Manual approval", "Fast callbacks"].map((item) => (
+                <div key={item} className="rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-semibold text-gray-800 flex items-center gap-2">
+                  <Sparkles size={14} className="text-red-600" />
+                  {item}
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="bg-white text-black rounded-2xl shadow-2xl border border-red-200 overflow-hidden">
-            <div className="p-6 border-b border-gray-200 flex items-start justify-between gap-3">
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+            <div className="p-6 border-b border-gray-100 flex items-start justify-between gap-3">
               <div>
-                <p className="text-red-600 uppercase tracking-[0.2em] text-xs">Access control</p>
-                <h3 className="text-2xl font-semibold">Enter your wholesale code</h3>
-                <p className="text-gray-600 text-sm">Codes are issued manually. Paste the latest one you received.</p>
+                <p className="text-red-600 uppercase tracking-[0.18em] text-xs">Access code</p>
+                <h3 className="text-2xl font-semibold">Unlock wholesale</h3>
+                <p className="text-gray-600 text-sm">Paste the latest code you received from the team.</p>
               </div>
               <div
                 className={`px-3 py-1 rounded-full text-xs font-semibold ${
@@ -226,7 +193,7 @@ function WholesalePage() {
                     ? "bg-emerald-100 text-emerald-800"
                     : accessState.status === "checking"
                       ? "bg-amber-100 text-amber-800"
-                      : "bg-gray-900 text-white"
+                      : "bg-gray-100 text-gray-700"
                 }`}
               >
                 {accessLabel}
@@ -241,7 +208,7 @@ function WholesalePage() {
                 type="text"
                 value={codeInput}
                 onChange={(event) => setCodeInput(event.target.value)}
-                placeholder="Paste the code you received"
+                placeholder="Paste code here"
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
                 disabled={verifying}
                 autoComplete="one-time-code"
@@ -262,183 +229,142 @@ function WholesalePage() {
                 <ArrowRight size={16} />
               </button>
               <div className="bg-gray-50 rounded-lg p-3 text-sm text-gray-700 border border-gray-200">
-                Lost your code? Submit a new request or contact us to rotate a key. Codes can be changed without notice to
-                protect existing partners.
+                Lost your code? Submit a request below and we will rotate or re-issue one.
               </div>
             </form>
           </div>
         </div>
       </section>
 
-      <section className="landing-section bg-white text-black py-16 border-b border-gray-200">
-        <div className="w-full max-w-[1200px] mx-auto px-4 md:px-8 space-y-10">
-          <div className="flex flex-col md:flex-row justify-between items-start gap-6">
-            <div className="space-y-3">
-              <p className="text-red-600 uppercase tracking-[0.2em] text-xs">Request access</p>
-              <h2 className="text-3xl font-semibold">Tell us about your program.</h2>
-              <p className="text-gray-600 max-w-2xl">
-                Share a quick profile so we can match you with the right pricing and delivery window. A team member will
-                review and issue a code once approved.
-              </p>
-              <div className="flex flex-wrap gap-2 text-sm">
-                <span className="px-3 py-1 rounded-full bg-black text-white flex items-center gap-2">
-                  <Lock size={14} /> Manual approval
-                </span>
-                <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-800 flex items-center gap-2">
-                  <Phone size={14} /> Same-day callbacks
-                </span>
-                <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-800 flex items-center gap-2">
-                  <Mail size={14} /> Email confirmation
-                </span>
-              </div>
-            </div>
-            <div className="bg-gray-900 text-white rounded-2xl p-4 border border-gray-800 space-y-2 max-w-sm">
-              <div className="flex items-center gap-3">
-                <Shield size={18} />
-                <div>
-                  <div className="text-sm font-semibold">Guardrails</div>
-                  <div className="text-gray-300 text-sm">Protecting partner pricing.</div>
-                </div>
-              </div>
-              <ul className="list-disc list-inside space-y-1 text-sm text-gray-300">
-                {guardrails.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </div>
+      <section className="landing-section bg-white text-black py-14 border-b border-gray-100">
+        <div className="w-full max-w-[1100px] mx-auto px-4 md:px-8 space-y-8">
+          <div className="space-y-2 text-center">
+            <p className="text-red-600 uppercase tracking-[0.18em] text-xs">Request access</p>
+            <h2 className="text-3xl font-semibold">Tell us who you are.</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              A short profile helps us approve you quickly and match you with the right delivery window.
+            </p>
           </div>
 
-          <div className="bg-gray-50 rounded-3xl p-6 md:p-8 border border-gray-200 shadow-lg grid lg:grid-cols-[1.1fr_0.9fr] gap-8">
-            <div className="space-y-3">
-              <div className="flex items-center gap-2 text-sm text-gray-700">
-                <Sparkles size={16} className="text-red-600" /> Faster approval when all fields are filled out.
-              </div>
-              <form className="space-y-4" onSubmit={handleRequestSubmit}>
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-sm font-semibold text-gray-800" htmlFor="request-name">
-                      Contact name
-                    </label>
-                    <input
-                      id="request-name"
-                      type="text"
-                      required
-                      value={requestValues.name}
-                      onChange={(event) => setRequestValues((prev) => ({ ...prev, name: event.target.value }))}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-sm font-semibold text-gray-800" htmlFor="request-email">
-                      Work email
-                    </label>
-                    <input
-                      id="request-email"
-                      type="email"
-                      required
-                      value={requestValues.email}
-                      onChange={(event) => setRequestValues((prev) => ({ ...prev, email: event.target.value }))}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                    />
-                  </div>
-                </div>
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-sm font-semibold text-gray-800" htmlFor="request-phone">
-                      Phone
-                    </label>
-                    <input
-                      id="request-phone"
-                      type="tel"
-                      value={requestValues.phone}
-                      onChange={(event) => setRequestValues((prev) => ({ ...prev, phone: event.target.value }))}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                      placeholder="Optional"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-sm font-semibold text-gray-800" htmlFor="request-company">
-                      Company or team name
-                    </label>
-                    <input
-                      id="request-company"
-                      type="text"
-                      value={requestValues.company}
-                      onChange={(event) => setRequestValues((prev) => ({ ...prev, company: event.target.value }))}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                      placeholder="Restaurant, catering team, etc."
-                    />
-                  </div>
-                </div>
+          <div className="bg-gray-50 rounded-2xl p-6 md:p-8 border border-gray-200 shadow-sm grid lg:grid-cols-[1fr_0.85fr] gap-8 items-start">
+            <form className="space-y-4" onSubmit={handleRequestSubmit}>
+              <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-sm font-semibold text-gray-800" htmlFor="request-message">
-                    Needs and volumes
+                  <label className="text-sm font-semibold text-gray-800" htmlFor="request-name">
+                    Contact name
                   </label>
-                  <textarea
-                    id="request-message"
-                    rows={4}
-                    value={requestValues.message}
-                    onChange={(event) => setRequestValues((prev) => ({ ...prev, message: event.target.value }))}
+                  <input
+                    id="request-name"
+                    type="text"
+                    required
+                    value={requestValues.name}
+                    onChange={(event) => setRequestValues((prev) => ({ ...prev, name: event.target.value }))}
                     className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                    placeholder="Cuts, weekly volume, delivery/pickup preference, timelines."
                   />
                 </div>
-                {requestError && <div className="text-sm text-red-600">{requestError}</div>}
-                {requestStatus === "success" && (
-                  <div className="text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg p-3 flex items-center gap-2">
-                    <CheckCircle2 size={16} /> Request received. We will respond with a code after approval.
-                  </div>
-                )}
-                <div className="flex flex-wrap items-center gap-3">
-                  <button
-                    type="submit"
-                    disabled={requestSubmitting}
-                    className="bg-red-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors flex items-center gap-2 disabled:opacity-60"
-                  >
-                    {requestSubmitting ? "Submitting..." : "Submit request"}
-                    <ArrowRight size={16} />
-                  </button>
-                  <span className="text-sm text-gray-600">Manual review. Expect a response within one business day.</span>
+                <div className="space-y-1">
+                  <label className="text-sm font-semibold text-gray-800" htmlFor="request-email">
+                    Work email
+                  </label>
+                  <input
+                    id="request-email"
+                    type="email"
+                    required
+                    value={requestValues.email}
+                    onChange={(event) => setRequestValues((prev) => ({ ...prev, email: event.target.value }))}
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  />
                 </div>
-              </form>
-            </div>
-
-            <div className="bg-white rounded-2xl p-5 border border-gray-200 shadow">
-              <div className="flex items-center gap-2 mb-3">
-                <CheckCircle2 size={18} className="text-emerald-600" />
-                <div className="text-lg font-semibold">What you unlock</div>
               </div>
-              <ul className="space-y-3">
-                {[
-                  "Case pricing on beef, pork, poultry, and smokehouse items.",
-                  "Standing orders with delivery windows and backup pickup slots.",
-                  "Direct line to the butcher who trims your orders.",
-                  "Priority notice when specials or overstock drop.",
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-3">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-sm font-semibold text-gray-800" htmlFor="request-phone">
+                    Phone
+                  </label>
+                  <input
+                    id="request-phone"
+                    type="tel"
+                    value={requestValues.phone}
+                    onChange={(event) => setRequestValues((prev) => ({ ...prev, phone: event.target.value }))}
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                    placeholder="Optional"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-sm font-semibold text-gray-800" htmlFor="request-company">
+                    Company or team name
+                  </label>
+                  <input
+                    id="request-company"
+                    type="text"
+                    value={requestValues.company}
+                    onChange={(event) => setRequestValues((prev) => ({ ...prev, company: event.target.value }))}
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                    placeholder="Restaurant, catering team, etc."
+                  />
+                </div>
+              </div>
+              <div className="space-y-1">
+                <label className="text-sm font-semibold text-gray-800" htmlFor="request-message">
+                  Needs and volumes
+                </label>
+                <textarea
+                  id="request-message"
+                  rows={4}
+                  value={requestValues.message}
+                  onChange={(event) => setRequestValues((prev) => ({ ...prev, message: event.target.value }))}
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  placeholder="Cuts, weekly volume, delivery/pickup preference, timelines."
+                />
+              </div>
+              {requestError && <div className="text-sm text-red-600">{requestError}</div>}
+              {requestStatus === "success" && (
+                <div className="text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg p-3 flex items-center gap-2">
+                  <CheckCircle2 size={16} /> Request received. We will respond with a code after approval.
+                </div>
+              )}
+              <div className="flex flex-wrap items-center gap-3">
+                <button
+                  type="submit"
+                  disabled={requestSubmitting}
+                  className="bg-red-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors flex items-center gap-2 disabled:opacity-60"
+                >
+                  {requestSubmitting ? "Submitting..." : "Submit request"}
+                  <ArrowRight size={16} />
+                </button>
+                <span className="text-sm text-gray-600">Manual review. Expect a response within one business day.</span>
+              </div>
+            </form>
+
+            <div className="bg-white rounded-2xl p-5 border border-gray-200 shadow-sm space-y-3">
+              <div className="flex items-center gap-2">
+                <Shield size={18} className="text-red-600" />
+                <div className="text-lg font-semibold">Guardrails</div>
+              </div>
+              <ul className="space-y-2">
+                {guardrails.map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-sm text-gray-700">
                     <span className="mt-1 h-2 w-2 rounded-full bg-red-600" />
-                    <span className="text-gray-700">{item}</span>
+                    <span>{item}</span>
                   </li>
                 ))}
               </ul>
-              <div className="mt-4 text-sm text-gray-600 bg-gray-50 border border-gray-200 rounded-lg p-3">
-                Already approved? Use the access code delivered by the team. Admins can rotate codes at any time for
-                security.
+              <div className="p-3 rounded-lg bg-gray-50 border border-gray-200 text-sm text-gray-700">
+                Approved partners receive codes that can be rotated anytime. Keep the latest code handy.
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="landing-section bg-slate-950 text-white py-14">
-        <div className="w-full max-w-[1300px] mx-auto px-4 md:px-8 space-y-8">
-          <div className="flex items-start justify-between gap-4 flex-col md:flex-row">
-            <div className="space-y-3">
-              <p className="text-red-200 uppercase tracking-[0.2em] text-xs">Wholesale vault</p>
-              <h2 className="text-3xl font-semibold">Exclusive pricing lives here.</h2>
+      <section className="landing-section bg-[#0f1a1c] text-white py-12">
+        <div className="w-full max-w-[1200px] mx-auto px-4 md:px-8 space-y-6">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div className="space-y-2">
+              <p className="text-red-200 uppercase tracking-[0.18em] text-xs">Wholesale vault</p>
+              <h2 className="text-3xl font-semibold">Pricing unlocks after approval.</h2>
               <p className="text-gray-200 max-w-2xl">
-                Access codes let us publish aggressive pricing without opening it to the public. Unlocking keeps inventory
-                honest and protects long-term partners.
+                Codes keep partner pricing private. Enter yours to see live catalog highlights.
               </p>
             </div>
             {accessState.status === "granted" ? (
@@ -449,22 +375,22 @@ function WholesalePage() {
               </div>
             ) : (
               <div className="px-4 py-2 rounded-full bg-white/10 border border-white/15 text-white flex items-center gap-2">
-                <Lock size={16} /> Locked · Submit a request or enter your code
+                <Lock size={16} /> Locked · enter code above
               </div>
             )}
           </div>
 
           {accessState.status === "granted" ? (
             catalogLoading ? (
-              <div className="border border-white/15 bg-black/40 rounded-2xl p-5 text-gray-200 flex items-center gap-3">
+              <div className="border border-white/15 bg-white/5 rounded-2xl p-5 text-gray-100 flex items-center gap-3">
                 <Sparkles size={18} className="text-red-300" />
                 <div>
                   <div className="text-lg font-semibold">Loading wholesale catalog…</div>
-                  <p className="text-sm text-gray-300">Sit tight while we fetch the locked pricing.</p>
+                  <p className="text-sm text-gray-200">Sit tight while we fetch the locked pricing.</p>
                 </div>
               </div>
             ) : catalogError ? (
-              <div className="border border-red-400/50 bg-red-900/30 rounded-2xl p-5 text-red-100 space-y-3">
+              <div className="border border-red-500/40 bg-red-900/30 rounded-2xl p-5 text-red-100 space-y-3">
                 <div className="flex items-center gap-2">
                   <Lock size={18} />
                   <div className="text-lg font-semibold">Could not load catalog</div>
@@ -488,34 +414,34 @@ function WholesalePage() {
                     <div className="flex items-start justify-between gap-3">
                       <div>
                         <div className="text-lg font-semibold text-white">{item.name}</div>
-                        <div className="text-sm text-gray-300">{item.pack}</div>
+                        <div className="text-sm text-gray-200">{item.pack}</div>
                       </div>
                       <div className="px-3 py-1 rounded-full bg-emerald-900/40 text-emerald-200 text-sm font-semibold">
                         {item.price}
                       </div>
                     </div>
-                    <p className="text-sm text-gray-300">{item.note}</p>
+                    <p className="text-sm text-gray-200">{item.note}</p>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="border border-white/15 bg-black/40 rounded-2xl p-5 text-gray-200 space-y-2">
+              <div className="border border-white/15 bg-white/5 rounded-2xl p-5 text-gray-100 space-y-2">
                 <div className="flex items-center gap-2 text-lg font-semibold">
                   <Sparkles size={18} className="text-red-300" /> Catalog will appear after approval
                 </div>
-                <p className="text-sm text-gray-300">
+                <p className="text-sm text-gray-200">
                   Your access is active, but no wholesale lines are published yet. We will populate this as soon as pricing
                   is cleared for your account.
                 </p>
               </div>
             )
           ) : (
-            <div className="border border-white/15 bg-black/40 rounded-2xl p-5 text-gray-200 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div className="border border-white/15 bg-white/5 rounded-2xl p-5 text-gray-100 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
               <div className="flex items-start gap-3">
                 <Lock size={22} className="mt-1 text-red-300" />
                 <div>
                   <div className="text-lg font-semibold">Pricing is locked.</div>
-                  <p className="text-sm text-gray-300">
+                  <p className="text-sm text-gray-200">
                     Enter the issued code above to reveal wholesale pricing and current inventory highlights.
                   </p>
                 </div>
