@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowRight, Drumstick, Fish, Flame, Leaf, ShoppingCart, Store, Truck } from "lucide-react";
+import { ArrowRight, Drumstick, Fish, Flame } from "lucide-react";
 
 import { getProducts } from "../api/products";
 import heroBackdrop from "../assets/hero-large-cuts.jpg";
@@ -61,29 +61,6 @@ const featureHighlights = [
   { title: "Humanely Harvested", description: "Low-stress harvest in a clean plant" },
   { title: "Farm Inspected", description: "USDA inspected and hand-inspected on farm" },
   { title: "Slow Raised", description: "Raised slow to develop rich cuts" },
-];
-
-const serviceIcons = [
-  {
-    title: "Order online",
-    description: "Checkout in seconds with live inventory and transparent pricing.",
-    icon: ShoppingCart,
-  },
-  {
-    title: "Visit the shop",
-    description: "Pop into our market for butcher picks, Euro pantry finds, and advice.",
-    icon: Store,
-  },
-  {
-    title: "Local & clean",
-    description: "Prairie farms, hormone-free meats, and thoughtfully sourced staples.",
-    icon: Leaf,
-  },
-  {
-    title: "Fast delivery",
-    description: "Cold-packed vans running local routes so your box arrives chilled.",
-    icon: Truck,
-  },
 ];
 
 const shoppingIconSpotlight = [
@@ -265,49 +242,12 @@ function HomePage() {
         </div>
       </section>
 
-      <section className="landing-section py-14 bg-black text-white border-t-2 border-red-600 border-b border-red-700/40">
-        <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-14 space-y-8">
-          <div className="flex flex-wrap justify-between gap-4 items-center">
-            <div className="space-y-3 max-w-3xl">
-              <p className="text-red-400 uppercase tracking-[0.22em] text-xs">Everything in one spot</p>
-              <h2 className="text-3xl md:text-4xl font-semibold">Order, visit, or get it delivered.</h2>
-              <p className="text-gray-300">
-                Four quick snapshots of how you can shop with us—online, in-store, local-first, and delivered chilled.
-              </p>
-            </div>
-            <Link
-              to="/menu"
-              className="inline-flex items-center gap-2 bg-red-600 text-white px-5 py-3 rounded-xl shadow-[0_18px_48px_-32px_rgba(239,68,68,0.9)] hover:bg-red-700 transition-colors"
-            >
-              Browse menu <ArrowRight size={16} />
-            </Link>
-          </div>
-
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            {serviceIcons.map(({ title, description, icon: Icon }) => (
-              <div
-                key={title}
-                className="flex items-center gap-4 bg-white/5 border border-white/10 rounded-2xl p-4 shadow-[0_18px_52px_-32px_rgba(0,0,0,0.75)] backdrop-blur-sm"
-              >
-                <div className="flex h-[76px] w-[76px] items-center justify-center rounded-full bg-red-600 text-white shadow-[0_18px_34px_-24px_rgba(239,68,68,0.9)]">
-                  <Icon aria-hidden className="h-9 w-9" strokeWidth={2.1} />
-                </div>
-                <div className="space-y-1">
-                  <h3 className="text-lg font-semibold">{title}</h3>
-                  <p className="text-sm text-gray-300 leading-relaxed">{description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="landing-section py-16 bg-gradient-to-br from-white via-[#fff7f5] to-[#ffe6e6] text-black border-t-2 border-red-600 border-b border-red-100">
+      <section className="landing-section hidden md:block py-16 bg-black text-white border-t-2 border-red-600 border-b border-red-700/40">
         <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-14 space-y-10">
           <div className="text-center space-y-3 max-w-4xl mx-auto">
-            <p className="text-red-600 uppercase tracking-[0.22em] text-xs">Pick your flow</p>
-            <h2 className="text-3xl md:text-4xl font-semibold">Choose how MeatDirect fits your day.</h2>
-            <p className="text-gray-700">
+            <p className="text-red-400 uppercase tracking-[0.22em] text-xs">Pick your flow</p>
+            <h2 className="text-3xl md:text-4xl font-semibold text-white">Choose how MeatDirect fits your day.</h2>
+            <p className="text-gray-200">
               Bold, full-size icons so you can quickly spot the way you like to shop—online, local-first, in-store, or
               delivered.
             </p>
