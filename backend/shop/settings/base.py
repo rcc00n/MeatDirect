@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     "notifications",
     "contacts",
     "blog",
+    "wholesale",
     "square_sync",
 ]
 
@@ -190,5 +191,8 @@ else:
     SQUARE_BASE_URL = "https://connect.squareup.com/v2"
 
 SQUARE_LOCATION_ID = os.environ.get("SQUARE_LOCATION_ID", "")
+
+WHOLESALE_ACCESS_COOKIE_NAME = "wholesale_access"
+WHOLESALE_ACCESS_TOKEN_DAYS = int(os.environ.get("WHOLESALE_ACCESS_TOKEN_DAYS", "14"))
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

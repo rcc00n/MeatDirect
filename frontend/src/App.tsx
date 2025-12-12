@@ -14,6 +14,7 @@ import BlogPostPage from "./pages/BlogPostPage";
 import ContactPage from "./pages/ContactPage";
 import GoodToKnowPage from "./pages/GoodToKnowPage";
 import LargeCutsPage from "./pages/LargeCutsPage";
+import WholesalePage from "./pages/WholesalePage";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
           <Route path="/blog" element={<BlogListPage />} />
           <Route path="/blog/:slug" element={<BlogPostPage />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/wholesale" element={<WholesalePage />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/success" element={<SuccessPage />} />

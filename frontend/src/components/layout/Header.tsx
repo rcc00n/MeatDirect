@@ -18,6 +18,7 @@ function Header({ onCartClick }: HeaderProps) {
     { label: "Home", to: "/" },
     { label: "Shop", to: "/menu" },
     { label: "Large Cuts", to: "/large-cuts" },
+    { label: "Wholesale", to: "/wholesale" },
     { label: "About", to: "/about-us" },
     { label: "Blog", to: "/blog" },
     { label: "Contact", to: "/contact" },

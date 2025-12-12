@@ -258,10 +258,10 @@ function HomePage() {
                 {shoppingIconSpotlight.map((item) => (
                   <div
                     key={item.title}
-                    className="flex flex-col items-center text-center gap-4 bg-white border border-[#ebe4d9] rounded-3xl p-6 shadow-[0_20px_60px_-48px_rgba(15,23,42,0.55)] w-full max-w-[320px]"
+                    className="flex flex-col items-center text-center gap-4 bg-black/80 border border-white/10 rounded-3xl p-6 shadow-[0_20px_60px_-48px_rgba(0,0,0,0.85)] w-full max-w-[320px] text-white transition-transform duration-200 hover:-translate-y-1"
                   >
-                    <div className="h-24 w-24 rounded-3xl bg-[#fff1f1] flex items-center justify-center shadow-[0_22px_52px_-32px_rgba(220,38,38,0.8)]">
-                      <picture className="h-20 w-20 flex items-center justify-center">
+                    <div className="h-24 w-24 rounded-full bg-gradient-to-br from-red-600 via-red-500 to-red-700 flex items-center justify-center shadow-[0_22px_52px_-32px_rgba(248,113,113,0.75)] ring-1 ring-red-500/50">
+                      <picture className="h-16 w-16 flex items-center justify-center drop-shadow-lg">
                         <source srcSet={item.image} type="image/png" />
                         <img
                           src={item.image}
@@ -273,8 +273,8 @@ function HomePage() {
                       </picture>
                     </div>
                     <div className="space-y-2 max-w-[260px]">
-                      <h3 className="text-lg font-semibold text-[#1f150d]">{item.title}</h3>
-                      <p className="text-sm text-gray-700 leading-relaxed">{item.description}</p>
+                      <h3 className="text-lg font-semibold text-white">{item.title}</h3>
+                      <p className="text-sm text-white/80 leading-relaxed">{item.description}</p>
                     </div>
                   </div>
                 ))}
