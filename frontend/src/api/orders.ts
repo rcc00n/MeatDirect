@@ -22,6 +22,10 @@ export interface OrderPayload {
   order_type: OrderType;
   address?: AddressPayload;
   notes?: string;
+  delivery_notes?: string;
+  delivery_service_area?: string;
+  delivery_fee_cents?: number;
+  delivery_eta_text?: string;
   pickup_location?: string;
   pickup_instructions?: string;
   items: OrderItemPayload[];

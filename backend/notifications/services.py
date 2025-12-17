@@ -57,6 +57,10 @@ def generate_order_receipt_pdf(order: Order) -> bytes:
             write_line(city_line)
         if order.delivery_notes:
             write_line(f"Delivery notes: {order.delivery_notes}")
+        if order.delivery_service_area:
+            write_line(f"Service area: {order.delivery_service_area}")
+        if order.delivery_eta_text:
+            write_line(f"ETA: {order.delivery_eta_text}")
     elif order.order_type == Order.OrderType.PICKUP:
         if order.pickup_location:
             write_line(f"Pickup location: {order.pickup_location}")
@@ -72,6 +76,8 @@ def generate_order_receipt_pdf(order: Order) -> bytes:
 
     write_line("")
     write_line(f"Subtotal: ${order.subtotal_cents / 100:.2f}")
+    if order.delivery_fee_cents:
+        write_line(f"Delivery: ${order.delivery_fee_cents / 100:.2f}")
     write_line(f"Tax: ${order.tax_cents / 100:.2f}")
     write_line(f"Total: ${order.total_cents / 100:.2f}")
 

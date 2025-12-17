@@ -67,7 +67,7 @@ class StripeWebhookReceiptEmailTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.order.refresh_from_db()
-        self.assertEqual(self.order.status, Order.Status.PAID)
+        self.assertEqual(self.order.status, Order.Status.PROCESSING)
         self.assertEqual(
             self.order.stripe_payment_intent_id, payload["data"]["object"]["id"]
         )

@@ -3,6 +3,7 @@ from rest_framework import serializers
 from products.models import Product
 
 from .models import Order, OrderItem
+from .utils import DeliveryZoneError, calculate_tax_cents, get_delivery_quote
 
 
 class OrderItemInputSerializer(serializers.Serializer):
@@ -41,6 +42,9 @@ class OrderCreateSerializer(serializers.ModelSerializer):
     pickup_location = serializers.CharField(required=False, allow_blank=True)
     pickup_instructions = serializers.CharField(required=False, allow_blank=True)
     delivery_notes = serializers.CharField(required=False, allow_blank=True)
+    delivery_service_area = serializers.CharField(required=False, allow_blank=True, read_only=True)
+    delivery_eta_text = serializers.CharField(required=False, allow_blank=True, read_only=True)
+    delivery_fee_cents = serializers.IntegerField(required=False, read_only=True)
 
     class Meta:
         model = Order
@@ -57,8 +61,17 @@ class OrderCreateSerializer(serializers.ModelSerializer):
             "pickup_location",
             "pickup_instructions",
             "delivery_notes",
+            "delivery_service_area",
+            "delivery_fee_cents",
+            "delivery_eta_text",
         ]
-        read_only_fields = ["id", "status"]
+        read_only_fields = [
+            "id",
+            "status",
+            "delivery_service_area",
+            "delivery_eta_text",
+            "delivery_fee_cents",
+        ]
 
     def validate_items(self, items):
         if not items:
@@ -75,6 +88,8 @@ class OrderCreateSerializer(serializers.ModelSerializer):
         address = attrs.get("address", {})
         required_delivery_fields = ["line1", "city", "postal_code"]
 
+        self.delivery_quote = None
+
         if order_type == Order.OrderType.DELIVERY:
             missing = [f for f in required_delivery_fields if not address.get(f)]
             if missing:
@@ -82,6 +97,14 @@ class OrderCreateSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(
                     f"Delivery requires: {missing_fields}."
                 )
+            try:
+                self.delivery_quote = get_delivery_quote(
+                    address_line1=address.get("line1", ""),
+                    city=address.get("city", ""),
+                    postal_code=address.get("postal_code", ""),
+                )
+            except DeliveryZoneError as exc:
+                raise serializers.ValidationError({"address": str(exc)})
         elif order_type == Order.OrderType.PICKUP:
             # For pickup we only require contact details which are already validated by fields.
             pass
@@ -106,8 +129,22 @@ class OrderCreateSerializer(serializers.ModelSerializer):
             product = product_map[item["product_id"]]
             subtotal += product.price_cents * item["quantity"]
 
-        tax_cents = 0
-        total_cents = subtotal + tax_cents
+        delivery_fee_cents = 0
+        delivery_service_area = ""
+        delivery_eta_text = ""
+        if validated_data.get("order_type") == Order.OrderType.DELIVERY:
+            if not self.delivery_quote:
+                self.delivery_quote = get_delivery_quote(
+                    address_line1=address_data.get("line1", ""),
+                    city=address_data.get("city", ""),
+                    postal_code=address_data.get("postal_code", ""),
+                )
+            delivery_fee_cents = self.delivery_quote.fee_cents
+            delivery_service_area = self.delivery_quote.service_area
+            delivery_eta_text = self.delivery_quote.eta_text
+
+        tax_cents = calculate_tax_cents(subtotal, delivery_fee_cents)
+        total_cents = subtotal + delivery_fee_cents + tax_cents
 
         order = Order.objects.create(
             address_line1=address_data.get("line1", ""),
@@ -115,10 +152,13 @@ class OrderCreateSerializer(serializers.ModelSerializer):
             city=address_data.get("city", ""),
             postal_code=address_data.get("postal_code", ""),
             delivery_notes=delivery_notes or address_data.get("notes", ""),
+            delivery_service_area=delivery_service_area,
+            delivery_fee_cents=delivery_fee_cents,
+            delivery_eta_text=delivery_eta_text,
             subtotal_cents=subtotal,
             tax_cents=tax_cents,
             total_cents=total_cents,
-            status=Order.Status.PENDING,
+            status=Order.Status.PLACED,
             **validated_data,
         )
 
@@ -156,6 +196,9 @@ class OrderDetailSerializer(serializers.ModelSerializer):
             "subtotal_cents",
             "tax_cents",
             "total_cents",
+            "delivery_fee_cents",
+            "delivery_service_area",
+            "delivery_eta_text",
             "address_line1",
             "address_line2",
             "city",

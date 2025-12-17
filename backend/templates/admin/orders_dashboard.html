@@ -11,20 +11,20 @@
       <div class="metric-value">{{ total_orders_today }}</div>
     </div>
     <div class="metric-card metric-yellow">
-      <div class="metric-label">Pending</div>
-      <div class="metric-value">{{ pending_orders }}</div>
+      <div class="metric-label">Placed</div>
+      <div class="metric-value">{{ placed_orders }}</div>
     </div>
-    <div class="metric-card metric-purple">
-      <div class="metric-label">In Progress</div>
-      <div class="metric-value">{{ in_progress_orders }}</div>
+    <div class="metric-card metric-blue">
+      <div class="metric-label">Processing</div>
+      <div class="metric-value">{{ processing_orders }}</div>
     </div>
     <div class="metric-card metric-orange">
-      <div class="metric-label">Ready</div>
-      <div class="metric-value">{{ ready_orders }}</div>
+      <div class="metric-label">Shipped / Out for delivery</div>
+      <div class="metric-value">{{ shipped_orders }}</div>
     </div>
     <div class="metric-card metric-green">
-      <div class="metric-label">Completed today</div>
-      <div class="metric-value">{{ completed_orders_today }}</div>
+      <div class="metric-label">Delivered today</div>
+      <div class="metric-value">{{ delivered_orders_today }}</div>
     </div>
     <div class="metric-card metric-blue">
       <div class="metric-label">Revenue today</div>
@@ -34,8 +34,9 @@
   </div>
 
   <div class="dashboard-actions">
-    <a href="{{ pending_url }}" class="action-btn action-yellow">View all pending</a>
-    <a href="{{ ready_url }}" class="action-btn action-orange">Ready for pickup</a>
+    <a href="{{ placed_url }}" class="action-btn action-yellow">View placed</a>
+    <a href="{{ processing_url }}" class="action-btn action-blue">Processing queue</a>
+    <a href="{{ shipped_url }}" class="action-btn action-orange">Shipped & delivery</a>
     <a href="{{ add_order_url }}" class="action-btn action-green">Create manual order</a>
   </div>
 </div>
@@ -93,6 +94,7 @@
     border: 1px solid #e5e7eb;
   }
   .action-yellow { background: #fef9c3; border-color: #fcd34d; }
+  .action-blue { background: #e0f2fe; border-color: #93c5fd; }
   .action-orange { background: #fff7ed; border-color: #fb923c; }
   .action-green { background: #ecfdf3; border-color: #86efac; }
   .action-btn:hover { box-shadow: 0 3px 10px rgba(0,0,0,0.06); }

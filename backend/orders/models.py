@@ -9,11 +9,10 @@ class Order(models.Model):
         DELIVERY = "delivery", "Delivery"
 
     class Status(models.TextChoices):
-        PENDING = "pending", "Pending"
-        PAID = "paid", "Paid"
-        IN_PROGRESS = "in_progress", "In Progress"
-        READY = "ready", "Ready"
-        COMPLETED = "completed", "Completed"
+        PLACED = "placed", "Placed"
+        PROCESSING = "processing", "Processing"
+        SHIPPED = "shipped", "Shipped"
+        DELIVERED = "delivered", "Delivered"
         CANCELLED = "cancelled", "Cancelled"
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -29,12 +28,15 @@ class Order(models.Model):
 
     order_type = models.CharField(max_length=20, choices=OrderType.choices)
     status = models.CharField(
-        max_length=20, choices=Status.choices, default=Status.PENDING
+        max_length=20, choices=Status.choices, default=Status.PLACED
     )
 
     subtotal_cents = models.PositiveIntegerField(default=0)
     tax_cents = models.PositiveIntegerField(default=0)
     total_cents = models.PositiveIntegerField(default=0)
+    delivery_fee_cents = models.PositiveIntegerField(default=0)
+    delivery_service_area = models.CharField(max_length=100, blank=True)
+    delivery_eta_text = models.CharField(max_length=255, blank=True)
 
     notes = models.TextField(blank=True)
     delivery_notes = models.TextField(blank=True)

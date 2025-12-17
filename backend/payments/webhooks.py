@@ -56,7 +56,7 @@ class StripeWebhookView(APIView):
 
             order = Order.objects.filter(id=order_id).first()
             if order:
-                order.status = Order.Status.PAID
+                order.status = Order.Status.PROCESSING
                 order.stripe_payment_intent_id = payment_intent_id or ""
                 order.save(update_fields=["status", "stripe_payment_intent_id", "updated_at"])
 
@@ -73,7 +73,7 @@ class StripeWebhookView(APIView):
 
                 record_stripe_payment_from_intent(order, intent_dict)
                 send_order_receipt_email_once(order)
-                if order and order.status == Order.Status.PAID:
+                if order and order.status == Order.Status.PROCESSING:
                     decrement_square_inventory_for_order(order)
                     sync_products_from_square()
 

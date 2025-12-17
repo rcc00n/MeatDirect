@@ -4372,6 +4372,37 @@ a {
   margin: 0;
 }
 
+.delivery-zones {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.delivery-zone {
+  border: 1px dashed #e2e8f0;
+  border-radius: 12px;
+  padding: 10px 12px;
+  background: #f8fafc;
+}
+
+.delivery-zone__label {
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.delivery-zone__price {
+  color: #15803d;
+  font-weight: 800;
+  margin-top: 2px;
+}
+
+.delivery-zone__meta {
+  color: #475569;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
 .checkout-row {
   display: grid;
   gap: 12px;

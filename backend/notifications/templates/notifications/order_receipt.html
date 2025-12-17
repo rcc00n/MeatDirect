@@ -14,6 +14,8 @@
     {% if order.order_type == "delivery" %}
         <p>Address: {{ order.address_line1 }}{% if order.address_line2 %}, {{ order.address_line2 }}{% endif %}</p>
         <p>{{ order.city }} {{ order.postal_code }}</p>
+        {% if order.delivery_service_area %}<p>Service area: {{ order.delivery_service_area }}</p>{% endif %}
+        {% if order.delivery_eta_text %}<p>Delivery window: {{ order.delivery_eta_text }}</p>{% endif %}
         {% if order.delivery_notes %}<p>Delivery notes: {{ order.delivery_notes }}</p>{% endif %}
     {% else %}
         {% if order.pickup_location %}<p>Pickup location: {{ order.pickup_location }}</p>{% endif %}
@@ -44,6 +46,7 @@
     </table>
 
     <p>Subtotal: ${{ order.subtotal_cents|cents_to_dollars }}</p>
+    {% if order.delivery_fee_cents %}<p>Delivery: ${{ order.delivery_fee_cents|cents_to_dollars }}</p>{% endif %}
     <p>Tax: ${{ order.tax_cents|cents_to_dollars }}</p>
     <p><strong>Total: ${{ order.total_cents|cents_to_dollars }}</strong></p>
 </body>

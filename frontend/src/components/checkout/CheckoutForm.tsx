@@ -2,6 +2,12 @@ import { useState, type FormEvent } from "react";
 import { CardElement } from "@stripe/react-stripe-js";
 
 import type { OrderType } from "../../api/orders";
+import {
+  DELIVERY_AREAS,
+  buildDeliveryQuote,
+  calculateTaxCents,
+  summarizeDeliveryAreas,
+} from "../../utils/delivery";
 
 export interface CheckoutFormValues {
   order_type: OrderType;
@@ -17,15 +23,21 @@ export interface CheckoutFormValues {
   pickup_instructions: string;
 }
 
-interface CheckoutFormProps {
-  subtotalCents: number;
-  taxCents: number;
-  totalCents: number;
-  submitting?: boolean;
-  onSubmit: (values: CheckoutFormValues) => void | Promise<void>;
+export interface CheckoutSubmitValues extends CheckoutFormValues {
+  delivery_fee_cents: number;
+  delivery_service_area?: string;
+  delivery_eta_text?: string;
+  tax_cents: number;
+  total_cents: number;
 }
 
-function CheckoutForm({ subtotalCents, taxCents, totalCents, submitting = false, onSubmit }: CheckoutFormProps) {
+interface CheckoutFormProps {
+  subtotalCents: number;
+  submitting?: boolean;
+  onSubmit: (values: CheckoutSubmitValues) => void | Promise<void>;
+}
+
+function CheckoutForm({ subtotalCents, submitting = false, onSubmit }: CheckoutFormProps) {
   const [values, setValues] = useState<CheckoutFormValues>({
     order_type: "pickup",
     full_name: "",
@@ -41,18 +53,44 @@ function CheckoutForm({ subtotalCents, taxCents, totalCents, submitting = false,
   });
   const [formError, setFormError] = useState<string | null>(null);
 
+  const isDelivery = values.order_type === "delivery";
+  const deliveryQuote = isDelivery
+    ? buildDeliveryQuote(values.address_line1, values.city, values.postal_code)
+    : null;
+  const deliveryFeeCents = deliveryQuote?.feeCents ?? 0;
+  const taxCents = calculateTaxCents(subtotalCents, deliveryFeeCents);
+  const totalCents = subtotalCents + deliveryFeeCents + taxCents;
+  const deliveryAreaSummary = summarizeDeliveryAreas();
+  const deliveryZoneError =
+    isDelivery && values.city && values.postal_code && !deliveryQuote
+      ? `Delivery is available to ${deliveryAreaSummary}.`
+      : null;
+
   const handleChange = (key: keyof CheckoutFormValues, value: string) => {
     setValues((prev) => ({ ...prev, [key]: value }));
   };
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
-    if (values.order_type === "delivery" && (!values.address_line1 || !values.city || !values.postal_code)) {
-    setFormError("Delivery requires address, city, and postal code.");
-    return;
-  }
-  setFormError(null);
-  onSubmit(values);
+    if (isDelivery && (!values.address_line1 || !values.city || !values.postal_code)) {
+      setFormError("Delivery requires address, city, and postal code.");
+      return;
+    }
+
+    if (isDelivery && !deliveryQuote) {
+      setFormError(`We currently deliver to ${deliveryAreaSummary}. Please verify your city/postal code.`);
+      return;
+    }
+
+    setFormError(null);
+    onSubmit({
+      ...values,
+      delivery_fee_cents: deliveryFeeCents,
+      delivery_service_area: deliveryQuote?.area.label,
+      delivery_eta_text: deliveryQuote?.etaText,
+      tax_cents: taxCents,
+      total_cents: totalCents,
+    });
   };
 
   return (
@@ -124,11 +162,13 @@ function CheckoutForm({ subtotalCents, taxCents, totalCents, submitting = false,
         </div>
       </div>
 
-      {values.order_type === "delivery" ? (
+      {isDelivery ? (
         <div className="checkout-card">
           <div className="checkout-card__header">
             <div className="checkout-card__title">Delivery address</div>
-            <p className="checkout-card__muted">Enter where we should deliver.</p>
+            <p className="checkout-card__muted">
+              Enter where we should deliver. We&apos;ll auto-match your zone and fee from your city/postal code.
+            </p>
           </div>
           <div className="checkout-row">
             <label className="checkout-label">
@@ -174,6 +214,17 @@ function CheckoutForm({ subtotalCents, taxCents, totalCents, submitting = false,
               </label>
             </div>
           </div>
+          <div className="checkout-alert checkout-alert--muted">
+            {deliveryQuote ? (
+              <>
+                Delivery zone: <strong>{deliveryQuote.area.label}</strong> (${(deliveryFeeCents / 100).toFixed(0)}) •{" "}
+                <span>{deliveryQuote.etaText}</span>
+              </>
+            ) : (
+              <>We deliver to {deliveryAreaSummary}. Please include your city and postal code to confirm.</>
+            )}
+          </div>
+          {deliveryZoneError && <div className="checkout-alert checkout-alert--error">{deliveryZoneError}</div>}
         </div>
       ) : (
         <div className="checkout-card">
@@ -206,13 +257,39 @@ function CheckoutForm({ subtotalCents, taxCents, totalCents, submitting = false,
         </div>
       )}
 
+      {isDelivery && (
+        <div className="checkout-card">
+          <div className="checkout-card__header">
+            <div className="checkout-card__title">Delivery window & pricing</div>
+            <p className="checkout-card__muted">
+              Orders placed before 12:00 arrive the same day between 4–5 PM. After noon, they arrive by 1 PM the next day.
+            </p>
+          </div>
+          <div className="delivery-zones">
+            {DELIVERY_AREAS.map((area) => (
+              <div key={area.key} className="delivery-zone">
+                <div className="delivery-zone__label">{area.label}</div>
+                <div className="delivery-zone__price">${(area.feeCents / 100).toFixed(0)}</div>
+                <div className="delivery-zone__meta">
+                  Auto-match by city name or postal: {area.postalPrefixes.join(", ")}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className="checkout-card">
-        <div className="checkout-card__title">Notes</div>
+        <div className="checkout-card__title">{isDelivery ? "Delivery notes" : "Notes"}</div>
         <textarea
           value={values.notes}
           onChange={(event) => handleChange("notes", event.target.value)}
           rows={3}
-          placeholder="Delivery window, doneness preference..."
+          placeholder={
+            isDelivery
+              ? "Gate code, buzzer details, safe drop instructions..."
+              : "Delivery window, doneness preference..."
+          }
           className="checkout-textarea"
         />
       </div>
@@ -242,11 +319,21 @@ function CheckoutForm({ subtotalCents, taxCents, totalCents, submitting = false,
 
       <div className="checkout-summary">
         <div className="checkout-summary__meta">
-          <div className="checkout-summary__muted">Due today</div>
+          <div className="checkout-summary__muted">
+            {isDelivery
+              ? deliveryQuote?.etaText || "Delivery ETA set once address is confirmed."
+              : "Due today"}
+          </div>
           <div className="checkout-summary__row">
             <span>Subtotal</span>
             <span>${(subtotalCents / 100).toFixed(2)}</span>
           </div>
+          {isDelivery && (
+            <div className="checkout-summary__row">
+              <span>Delivery{deliveryQuote?.area.label ? ` (${deliveryQuote.area.label})` : ""}</span>
+              <span>${(deliveryFeeCents / 100).toFixed(2)}</span>
+            </div>
+          )}
           <div className="checkout-summary__row">
             <span>GST (5%)</span>
             <span>${(taxCents / 100).toFixed(2)}</span>

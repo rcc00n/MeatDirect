@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { loadStripe, type Stripe } from "@stripe/stripe-js";
 
-import CheckoutForm, { type CheckoutFormValues } from "../components/checkout/CheckoutForm";
+import CheckoutForm, { type CheckoutSubmitValues } from "../components/checkout/CheckoutForm";
 import { type OrderPayload } from "../api/orders";
 import { createCheckout, fetchStripeConfig } from "../api/payments";
 import { useCart } from "../context/CartContext";
@@ -16,10 +16,8 @@ function CheckoutPageInner() {
 
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const taxCents = Math.round(subtotalCents * 0.05);
-  const totalCents = subtotalCents + taxCents;
 
-  const handleSubmit = async (values: CheckoutFormValues) => {
+  const handleSubmit = async (values: CheckoutSubmitValues) => {
     if (!items.length) return;
 
     if (!stripe || !elements) {
@@ -37,8 +35,11 @@ function CheckoutPageInner() {
       phone: values.phone,
       order_type: values.order_type,
       subtotal_cents: subtotalCents,
-      tax_cents: taxCents,
-      total_cents: totalCents,
+      tax_cents: values.tax_cents,
+      total_cents: values.total_cents,
+      delivery_fee_cents: values.delivery_fee_cents,
+      delivery_service_area: values.delivery_service_area,
+      delivery_eta_text: values.delivery_eta_text,
       address:
         values.order_type === "delivery"
           ? {
@@ -50,6 +51,7 @@ function CheckoutPageInner() {
             }
           : undefined,
       notes: values.notes,
+      delivery_notes: values.order_type === "delivery" ? values.notes : undefined,
       pickup_location: values.order_type === "pickup" ? values.pickup_location : undefined,
       pickup_instructions: values.order_type === "pickup" ? values.pickup_instructions : undefined,
     };
@@ -103,8 +105,6 @@ function CheckoutPageInner() {
       ) : (
         <CheckoutForm
           subtotalCents={subtotalCents}
-          taxCents={taxCents}
-          totalCents={totalCents}
           onSubmit={handleSubmit}
           submitting={submitting}
         />

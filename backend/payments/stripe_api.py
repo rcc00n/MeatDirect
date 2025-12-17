@@ -6,6 +6,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from orders.models import Order, OrderItem
+from orders.utils import DeliveryZoneError, calculate_tax_cents, get_delivery_quote
 from products.models import Product
 
 stripe.api_key = os.environ.get("STRIPE_SECRET_KEY", "sk_test_placeholder")
@@ -110,8 +111,9 @@ def create_checkout(request):
             }
         )
 
-    tax_cents = int(subtotal_cents * 0.05)
-    total_cents = subtotal_cents + tax_cents
+    delivery_fee_cents = 0
+    delivery_service_area = ""
+    delivery_eta_text = ""
 
     order_type = data.get("order_type") or Order.OrderType.PICKUP
     if order_type not in Order.OrderType.values:
@@ -126,6 +128,30 @@ def create_checkout(request):
 
     delivery_notes = address.get("notes") or data.get("delivery_notes", "")
 
+    if order_type == Order.OrderType.DELIVERY:
+        missing_fields = [
+            field for field in ("line1", "city", "postal_code") if not address.get(field)
+        ]
+        if missing_fields:
+            return Response(
+                {"detail": f"Delivery requires: {', '.join(missing_fields)}."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        try:
+            quote = get_delivery_quote(
+                address_line1=address.get("line1", ""),
+                city=address.get("city", ""),
+                postal_code=address.get("postal_code", ""),
+            )
+            delivery_fee_cents = quote.fee_cents
+            delivery_service_area = quote.service_area
+            delivery_eta_text = quote.eta_text
+        except DeliveryZoneError as exc:
+            return Response({"detail": str(exc)}, status=status.HTTP_400_BAD_REQUEST)
+
+    tax_cents = calculate_tax_cents(subtotal_cents, delivery_fee_cents)
+    total_cents = subtotal_cents + delivery_fee_cents + tax_cents
+
     order = Order.objects.create(
         full_name=data.get("full_name", ""),
         email=data.get("email", ""),
@@ -136,13 +162,16 @@ def create_checkout(request):
         city=address.get("city", ""),
         postal_code=address.get("postal_code", ""),
         delivery_notes=delivery_notes,
+        delivery_service_area=delivery_service_area,
+        delivery_fee_cents=delivery_fee_cents,
+        delivery_eta_text=delivery_eta_text,
         notes=data.get("notes", ""),
         pickup_location=data.get("pickup_location", ""),
         pickup_instructions=data.get("pickup_instructions", ""),
         subtotal_cents=subtotal_cents,
         tax_cents=tax_cents,
         total_cents=total_cents,
-        status=Order.Status.PENDING,
+        status=Order.Status.PLACED,
     )
 
     order_items = [

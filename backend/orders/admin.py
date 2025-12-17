@@ -11,13 +11,13 @@ from django.utils.html import format_html_join
 from notifications.models import EmailNotification
 
 from .models import Order, OrderItem
+from .utils import calculate_tax_cents
 
 STATUS_COLORS = {
-    Order.Status.PENDING: ("#fef9c3", "#854d0e"),  # yellow
-    Order.Status.PAID: ("#dbeafe", "#1d4ed8"),  # blue
-    Order.Status.IN_PROGRESS: ("#ede9fe", "#6b21a8"),  # purple
-    Order.Status.READY: ("#fff7ed", "#c2410c"),  # orange
-    Order.Status.COMPLETED: ("#ecfdf3", "#15803d"),  # green
+    Order.Status.PLACED: ("#fef9c3", "#854d0e"),  # yellow
+    Order.Status.PROCESSING: ("#dbeafe", "#1d4ed8"),  # blue
+    Order.Status.SHIPPED: ("#fff7ed", "#c2410c"),  # orange
+    Order.Status.DELIVERED: ("#ecfdf3", "#15803d"),  # green
     Order.Status.CANCELLED: ("#fef2f2", "#b91c1c"),  # red
 }
 
@@ -41,6 +41,7 @@ class OrderAdmin(admin.ModelAdmin):
         "id",
         "full_name",
         "order_type_badge",
+        "delivery_badge",
         "colored_status",
         "status_shortcuts",
         "display_total",
@@ -51,6 +52,7 @@ class OrderAdmin(admin.ModelAdmin):
     list_filter = (
         "status",
         "order_type",
+        "delivery_service_area",
         ("created_at", admin.DateFieldListFilter),
     )
     search_fields = ("full_name", "email", "id")
@@ -90,6 +92,8 @@ class OrderAdmin(admin.ModelAdmin):
                     "address_line2",
                     "city",
                     "postal_code",
+                    "delivery_service_area",
+                    "delivery_eta_text",
                     "delivery_notes",
                 )
             },
@@ -109,6 +113,7 @@ class OrderAdmin(admin.ModelAdmin):
                 "fields": (
                     "subtotal_cents",
                     "tax_cents",
+                    "delivery_fee_cents",
                     "total_cents",
                     "stripe_payment_intent_id",
                 )
@@ -118,9 +123,10 @@ class OrderAdmin(admin.ModelAdmin):
     )
     inlines = [OrderItemInline]
     actions = [
-        "mark_in_progress",
-        "mark_ready",
-        "mark_completed",
+        "mark_placed",
+        "mark_processing",
+        "mark_shipped",
+        "mark_delivered",
         "mark_cancelled",
     ]
 
@@ -137,6 +143,28 @@ class OrderAdmin(admin.ModelAdmin):
 
     order_type_badge.short_description = "Order Type"
     order_type_badge.admin_order_field = "order_type"
+
+    def delivery_badge(self, obj):
+        if obj.order_type != Order.OrderType.DELIVERY:
+            return "Pickup"
+
+        area = obj.delivery_service_area or obj.city or "Delivery"
+        fee = f"${obj.delivery_fee_cents / 100:.0f}" if obj.delivery_fee_cents else "$0"
+        eta = obj.delivery_eta_text or ""
+        return format_html(
+            '<div style="line-height:1.35;"><strong>{}</strong> <span style="color:#475569;">{}</span>'
+            '{}'
+            "</div>",
+            area,
+            fee,
+            format_html(
+                '<div style="color:#475569;font-size:12px;">{}</div>', eta
+            )
+            if eta
+            else "",
+        )
+
+    delivery_badge.short_description = "Delivery"
 
     def colored_status(self, obj):
         bg, color = STATUS_COLORS.get(obj.status, ("#e5e7eb", "#1f2937"))
@@ -174,36 +202,48 @@ class OrderAdmin(admin.ModelAdmin):
 
     def _recalculate_totals(self, order):
         subtotal = sum(item.total_cents for item in order.items.all())
+        delivery_fee = order.delivery_fee_cents or 0
+        tax_cents = calculate_tax_cents(subtotal, delivery_fee)
         order.subtotal_cents = subtotal
-        order.total_cents = subtotal + (order.tax_cents or 0)
+        order.tax_cents = tax_cents
+        order.total_cents = subtotal + delivery_fee + tax_cents
         order.save(
             update_fields=[
                 "subtotal_cents",
+                "tax_cents",
+                "delivery_fee_cents",
                 "total_cents",
                 "updated_at",
             ]
         )
 
-    @admin.action(description="Mark as In Progress")
-    def mark_in_progress(self, request, queryset):
+    @admin.action(description="Mark as Placed")
+    def mark_placed(self, request, queryset):
         updated = queryset.update(
-            status=Order.Status.IN_PROGRESS, updated_at=timezone.now()
+            status=Order.Status.PLACED, updated_at=timezone.now()
         )
-        self.message_user(request, f"{updated} order(s) marked In Progress.")
+        self.message_user(request, f"{updated} order(s) marked Placed.")
 
-    @admin.action(description="Mark as Ready")
-    def mark_ready(self, request, queryset):
+    @admin.action(description="Mark as Processing")
+    def mark_processing(self, request, queryset):
         updated = queryset.update(
-            status=Order.Status.READY, updated_at=timezone.now()
+            status=Order.Status.PROCESSING, updated_at=timezone.now()
         )
-        self.message_user(request, f"{updated} order(s) marked Ready.")
+        self.message_user(request, f"{updated} order(s) marked Processing.")
 
-    @admin.action(description="Mark as Completed")
-    def mark_completed(self, request, queryset):
+    @admin.action(description="Mark as Shipped/Out for delivery")
+    def mark_shipped(self, request, queryset):
         updated = queryset.update(
-            status=Order.Status.COMPLETED, updated_at=timezone.now()
+            status=Order.Status.SHIPPED, updated_at=timezone.now()
         )
-        self.message_user(request, f"{updated} order(s) marked Completed.")
+        self.message_user(request, f"{updated} order(s) marked Shipped.")
+
+    @admin.action(description="Mark as Delivered")
+    def mark_delivered(self, request, queryset):
+        updated = queryset.update(
+            status=Order.Status.DELIVERED, updated_at=timezone.now()
+        )
+        self.message_user(request, f"{updated} order(s) marked Delivered.")
 
     @admin.action(description="Mark as Cancelled")
     def mark_cancelled(self, request, queryset):
@@ -217,11 +257,12 @@ class OrderAdmin(admin.ModelAdmin):
         options = [
             format_html('<option value="">{}</option>', "Change status…"),
         ]
-        for status_value, label, _, _ in [
-            (Order.Status.IN_PROGRESS, "In Progress", "#ede9fe", "#6b21a8"),
-            (Order.Status.READY, "Ready", "#fff7ed", "#c2410c"),
-            (Order.Status.COMPLETED, "Completed", "#ecfdf3", "#15803d"),
-            (Order.Status.CANCELLED, "Cancelled", "#fef2f2", "#b91c1c"),
+        for status_value, label in [
+            (Order.Status.PLACED, "Placed"),
+            (Order.Status.PROCESSING, "Processing"),
+            (Order.Status.SHIPPED, "Shipped"),
+            (Order.Status.DELIVERED, "Delivered"),
+            (Order.Status.CANCELLED, "Cancelled"),
         ]:
             if obj.status == status_value:
                 continue
@@ -302,18 +343,19 @@ def orders_dashboard(request):
         **admin.site.each_context(request),
         "title": "Orders Dashboard",
         "total_orders_today": todays_orders.count(),
-        "pending_orders": Order.objects.filter(status=Order.Status.PENDING).count(),
-        "in_progress_orders": Order.objects.filter(
-            status=Order.Status.IN_PROGRESS
+        "placed_orders": Order.objects.filter(status=Order.Status.PLACED).count(),
+        "processing_orders": Order.objects.filter(
+            status=Order.Status.PROCESSING
         ).count(),
-        "ready_orders": Order.objects.filter(status=Order.Status.READY).count(),
-        "completed_orders_today": todays_orders.filter(
-            status=Order.Status.COMPLETED
+        "shipped_orders": Order.objects.filter(status=Order.Status.SHIPPED).count(),
+        "delivered_orders_today": todays_orders.filter(
+            status=Order.Status.DELIVERED
         ).count(),
         "revenue_today": revenue_today_cents,
         "revenue_today_display": revenue_today_cents / 100,
-        "pending_url": reverse("admin:orders_order_changelist") + "?status=pending",
-        "ready_url": reverse("admin:orders_order_changelist") + "?status=ready",
+        "placed_url": reverse("admin:orders_order_changelist") + "?status=placed",
+        "processing_url": reverse("admin:orders_order_changelist") + "?status=processing",
+        "shipped_url": reverse("admin:orders_order_changelist") + "?status=shipped",
         "add_order_url": reverse("admin:orders_order_add"),
     }
     return TemplateResponse(request, "admin/orders_dashboard.html", context)

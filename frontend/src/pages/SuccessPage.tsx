@@ -24,6 +24,10 @@ function SuccessPage() {
       <p style={{ marginBottom: 16, color: "#475569" }}>
         You&apos;ll receive an email with pickup or delivery details shortly.
       </p>
+      <p style={{ marginBottom: 16, color: "#0f172a" }}>
+        Delivery heads-up: orders before 12 PM arrive the same day between 4–5 PM. After noon, expect delivery by 1 PM
+        tomorrow. You can reply to your confirmation email with any gate codes or extra notes.
+      </p>
 
       <p style={{ marginBottom: 24, color: "#0f172a" }}>
         For pickup orders, please bring your confirmation email and a photo ID to the store.

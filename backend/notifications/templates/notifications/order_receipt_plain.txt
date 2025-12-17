@@ -6,6 +6,8 @@ Fulfillment: {{ order.get_order_type_display }}
 {% if order.order_type == "delivery" %}
 Address: {{ order.address_line1 }}{% if order.address_line2 %}, {{ order.address_line2 }}{% endif %}
 City/Postal: {{ order.city }} {{ order.postal_code }}
+{% if order.delivery_service_area %}Service area: {{ order.delivery_service_area }}{% endif %}
+{% if order.delivery_eta_text %}Delivery window: {{ order.delivery_eta_text }}{% endif %}
 {% if order.delivery_notes %}Delivery notes: {{ order.delivery_notes }}{% endif %}
 {% else %}
 {% if order.pickup_location %}Pickup location: {{ order.pickup_location }}{% endif %}
@@ -20,5 +22,6 @@ Items:
 {% endfor %}
 
 Subtotal: ${{ order.subtotal_cents|cents_to_dollars }}
+{% if order.delivery_fee_cents %}Delivery: ${{ order.delivery_fee_cents|cents_to_dollars }}{% endif %}
 Tax: ${{ order.tax_cents|cents_to_dollars }}
 Total: ${{ order.total_cents|cents_to_dollars }}
