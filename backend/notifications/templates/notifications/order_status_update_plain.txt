@@ -1,0 +1,7 @@
+Order #{{ order.id }} status update
+Hi {{ order.full_name }},
+
+Your order status is now: {{ new_status_display }}.
+{% if previous_status_display %}Previous status: {{ previous_status_display }}.{% endif %}
+
+Thank you for shopping with Meat Direct.

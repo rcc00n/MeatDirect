@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import timedelta
 from typing import Any, Dict, Iterable, Optional
 
 from django.utils import timezone
@@ -100,6 +101,19 @@ def determine_delivery_eta(now=None) -> str:
     if current.hour < 12:
         return "Arrives today between 4–5 PM"
     return "Arrives by 1 PM tomorrow"
+
+
+def estimate_delivery_date(now=None):
+    """
+    Date-only estimate that matches determine_delivery_eta().
+
+    - Orders before noon: today
+    - Orders after noon: tomorrow
+    """
+    current = timezone.localtime(now or timezone.now())
+    if current.hour < 12:
+        return current.date()
+    return (current + timedelta(days=1)).date()
 
 
 def get_delivery_quote(address_line1: str, city: str, postal_code: str, now=None) -> DeliveryQuote:

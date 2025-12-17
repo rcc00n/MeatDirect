@@ -76,7 +76,7 @@ def generate_order_receipt_pdf(order: Order) -> bytes:
 
     write_line("")
     write_line(f"Subtotal: ${order.subtotal_cents / 100:.2f}")
-    if order.delivery_fee_cents:
+    if order.order_type == Order.OrderType.DELIVERY:
         write_line(f"Delivery: ${order.delivery_fee_cents / 100:.2f}")
     write_line(f"Tax: ${order.tax_cents / 100:.2f}")
     write_line(f"Total: ${order.total_cents / 100:.2f}")

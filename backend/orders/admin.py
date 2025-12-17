@@ -219,37 +219,57 @@ class OrderAdmin(admin.ModelAdmin):
 
     @admin.action(description="Mark as Placed")
     def mark_placed(self, request, queryset):
-        updated = queryset.update(
-            status=Order.Status.PLACED, updated_at=timezone.now()
-        )
+        updated = 0
+        now = timezone.now()
+        for order in queryset.exclude(status=Order.Status.PLACED):
+            order.status = Order.Status.PLACED
+            order.updated_at = now
+            order.save(update_fields=["status", "updated_at"])
+            updated += 1
         self.message_user(request, f"{updated} order(s) marked Placed.")
 
     @admin.action(description="Mark as Processing")
     def mark_processing(self, request, queryset):
-        updated = queryset.update(
-            status=Order.Status.PROCESSING, updated_at=timezone.now()
-        )
+        updated = 0
+        now = timezone.now()
+        for order in queryset.exclude(status=Order.Status.PROCESSING):
+            order.status = Order.Status.PROCESSING
+            order.updated_at = now
+            order.save(update_fields=["status", "updated_at"])
+            updated += 1
         self.message_user(request, f"{updated} order(s) marked Processing.")
 
     @admin.action(description="Mark as Shipped/Out for delivery")
     def mark_shipped(self, request, queryset):
-        updated = queryset.update(
-            status=Order.Status.SHIPPED, updated_at=timezone.now()
-        )
+        updated = 0
+        now = timezone.now()
+        for order in queryset.exclude(status=Order.Status.SHIPPED):
+            order.status = Order.Status.SHIPPED
+            order.updated_at = now
+            order.save(update_fields=["status", "updated_at"])
+            updated += 1
         self.message_user(request, f"{updated} order(s) marked Shipped.")
 
     @admin.action(description="Mark as Delivered")
     def mark_delivered(self, request, queryset):
-        updated = queryset.update(
-            status=Order.Status.DELIVERED, updated_at=timezone.now()
-        )
+        updated = 0
+        now = timezone.now()
+        for order in queryset.exclude(status=Order.Status.DELIVERED):
+            order.status = Order.Status.DELIVERED
+            order.updated_at = now
+            order.save(update_fields=["status", "updated_at"])
+            updated += 1
         self.message_user(request, f"{updated} order(s) marked Delivered.")
 
     @admin.action(description="Mark as Cancelled")
     def mark_cancelled(self, request, queryset):
-        updated = queryset.update(
-            status=Order.Status.CANCELLED, updated_at=timezone.now()
-        )
+        updated = 0
+        now = timezone.now()
+        for order in queryset.exclude(status=Order.Status.CANCELLED):
+            order.status = Order.Status.CANCELLED
+            order.updated_at = now
+            order.save(update_fields=["status", "updated_at"])
+            updated += 1
         self.message_user(request, f"{updated} order(s) marked Cancelled.")
 
     def status_shortcuts(self, obj):

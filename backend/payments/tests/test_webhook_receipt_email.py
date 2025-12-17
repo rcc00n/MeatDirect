@@ -1,3 +1,5 @@
+from unittest import mock
+
 from django.core import mail
 from django.test import TestCase, override_settings
 from django.urls import reverse
@@ -47,7 +49,12 @@ class StripeWebhookReceiptEmailTests(TestCase):
             total_cents=self.product.price_cents,
         )
 
-    def test_payment_intent_succeeded_records_payment_and_sends_receipt(self):
+    @mock.patch("payments.webhooks.sync_products_from_square")
+    @mock.patch("payments.webhooks.decrement_square_inventory_for_order")
+    @mock.patch("payments.webhooks.STRIPE_WEBHOOK_SECRET", new="")
+    def test_payment_intent_succeeded_records_payment_and_sends_receipt(
+        self, mock_decrement, mock_sync
+    ):
         payload = {
             "type": "payment_intent.succeeded",
             "data": {
@@ -61,9 +68,10 @@ class StripeWebhookReceiptEmailTests(TestCase):
             },
         }
 
-        response = self.client.post(
-            reverse("stripe-webhook"), payload, format="json"
-        )
+        with self.captureOnCommitCallbacks(execute=True):
+            response = self.client.post(
+                reverse("stripe-webhook"), payload, format="json"
+            )
 
         self.assertEqual(response.status_code, 200)
         self.order.refresh_from_db()
@@ -80,17 +88,24 @@ class StripeWebhookReceiptEmailTests(TestCase):
         self.assertEqual(payment.currency, payload["data"]["object"]["currency"])
         self.assertEqual(payment.status, payload["data"]["object"]["status"])
 
-        notifications = EmailNotification.objects.filter(
+        receipt_notifications = EmailNotification.objects.filter(
             order=self.order, kind="order_receipt"
         )
-        self.assertEqual(notifications.count(), 1)
-        self.assertEqual(notifications.first().status, "sent")
+        self.assertEqual(receipt_notifications.count(), 1)
+        self.assertEqual(receipt_notifications.first().status, "sent")
 
-        self.assertEqual(len(mail.outbox), 1)
-        message = mail.outbox[0]
-        self.assertEqual(message.to, [self.order.email])
-        self.assertTrue(message.attachments)
-        filename, content, mimetype = message.attachments[0]
+        status_notifications = EmailNotification.objects.filter(
+            order=self.order, kind="order_status_update"
+        )
+        self.assertEqual(status_notifications.count(), 1)
+        self.assertEqual(status_notifications.first().status, "sent")
+
+        self.assertEqual(len(mail.outbox), 2)
+
+        receipt_message = mail.outbox[0]
+        self.assertEqual(receipt_message.to, [self.order.email])
+        self.assertTrue(receipt_message.attachments)
+        filename, content, mimetype = receipt_message.attachments[0]
         self.assertEqual(filename, "order_receipt.pdf")
         self.assertEqual(mimetype, "application/pdf")
         self.assertTrue(content)
