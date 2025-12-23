@@ -55,3 +55,30 @@ class ProductImage(models.Model):
 
     class Meta:
         ordering = ["sort_order", "id"]
+
+
+class StorefrontSettings(models.Model):
+    large_cuts_category = models.CharField(
+        "Large cuts category",
+        max_length=100,
+        blank=True,
+        default="",
+        help_text=(
+            "Product category to show on the Large Cuts page. "
+            "Leave blank to use automatic large-cut detection."
+        ),
+    )
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Storefront setting"
+        verbose_name_plural = "Storefront settings"
+
+    def __str__(self):
+        category = self.large_cuts_category.strip()
+        label = category or "Automatic"
+        return f"Large cuts category: {label}"
+
+    def save(self, *args, **kwargs):
+        self.large_cuts_category = (self.large_cuts_category or "").strip()
+        super().save(*args, **kwargs)

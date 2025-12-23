@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Product, ProductImage
+from .models import Product, ProductImage, StorefrontSettings
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
@@ -45,3 +45,9 @@ class ProductSerializer(serializers.ModelSerializer):
         if request:
             return request.build_absolute_uri(url)
         return url
+
+
+class StorefrontSettingsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StorefrontSettings
+        fields = ["large_cuts_category"]

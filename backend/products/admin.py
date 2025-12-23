@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib import admin, messages
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect
@@ -6,7 +7,36 @@ from django.utils.html import format_html
 
 from square_sync.services import sync_products_from_square
 
-from .models import Product, ProductImage
+from .models import Product, ProductImage, StorefrontSettings
+
+
+class StorefrontSettingsForm(forms.ModelForm):
+    class Meta:
+        model = StorefrontSettings
+        fields = ("large_cuts_category",)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        categories = (
+            Product.objects.exclude(category__isnull=True)
+            .exclude(category__exact="")
+            .values_list("category", flat=True)
+            .distinct()
+        )
+        normalized = []
+        for category in categories:
+            value = (category or "").strip()
+            if value:
+                normalized.append(value)
+        current_value = (self.instance.large_cuts_category or "").strip()
+        if current_value:
+            normalized.append(current_value)
+        choices = [("", "Use automatic large-cut detection")]
+        choices.extend((value, value) for value in sorted(set(normalized), key=str.casefold))
+        field = self.fields["large_cuts_category"]
+        field.required = False
+        field.widget = forms.Select(choices=choices)
+        field.choices = choices
 
 
 class ProductImageInline(admin.TabularInline):
@@ -71,3 +101,18 @@ class ProductAdmin(admin.ModelAdmin):
         return "No image"
 
     image_preview.short_description = "Preview"
+
+
+@admin.register(StorefrontSettings)
+class StorefrontSettingsAdmin(admin.ModelAdmin):
+    form = StorefrontSettingsForm
+    list_display = ("large_cuts_category", "updated_at")
+    fields = ("large_cuts_category",)
+
+    def has_add_permission(self, request):
+        if StorefrontSettings.objects.exists():
+            return False
+        return super().has_add_permission(request)
+
+    def has_delete_permission(self, request, obj=None):
+        return False

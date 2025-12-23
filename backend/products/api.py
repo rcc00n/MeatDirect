@@ -1,7 +1,7 @@
-from rest_framework import filters, viewsets
+from rest_framework import filters, permissions, response, views, viewsets
 
-from .models import Product
-from .serializers import ProductSerializer
+from .models import Product, StorefrontSettings
+from .serializers import ProductSerializer, StorefrontSettingsSerializer
 
 
 class ProductViewSet(viewsets.ReadOnlyModelViewSet):
@@ -19,3 +19,14 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
             queryset = queryset.filter(category__iexact=category)
 
         return queryset
+
+
+class StorefrontSettingsView(views.APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request):
+        settings = StorefrontSettings.objects.first()
+        if not settings:
+            settings = StorefrontSettings(large_cuts_category="")
+        serializer = StorefrontSettingsSerializer(settings)
+        return response.Response(serializer.data)

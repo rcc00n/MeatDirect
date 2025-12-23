@@ -3,6 +3,7 @@ import { ArrowRight, ChefHat, Flame, Package, Snowflake, Truck } from "lucide-re
 import { Link } from "react-router-dom";
 
 import { getProducts } from "../api/products";
+import { getStorefrontSettings } from "../api/storefront";
 import largeCutsHero from "../assets/large cuts.jpg";
 import largeCutsBeef from "../assets/large-cuts-beef.png";
 import largeCutsFish from "../assets/large-cuts-fish.png";
@@ -130,15 +131,35 @@ function LargeCutsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [catalogCategory, setCatalogCategory] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<LargeCutCategory>("all");
   const catalogRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     const controller = new AbortController();
+
+    getStorefrontSettings(controller.signal)
+      .then((settings) => {
+        const nextCategory = settings.large_cuts_category?.trim() || "";
+        setCatalogCategory(nextCategory);
+      })
+      .catch((fetchError) => {
+        if (controller.signal.aborted) return;
+        console.error("Failed to load storefront settings", fetchError);
+        setCatalogCategory("");
+      });
+
+    return () => controller.abort();
+  }, []);
+
+  useEffect(() => {
+    if (catalogCategory === null) return;
+    const controller = new AbortController();
     setLoading(true);
     setError(null);
 
-    getProducts(undefined, controller.signal)
+    const query = catalogCategory ? { category: catalogCategory } : undefined;
+    getProducts(query, controller.signal)
       .then((result) => setProducts(result))
       .catch((fetchError) => {
         if (controller.signal.aborted) return;
@@ -150,13 +171,14 @@ function LargeCutsPage() {
       });
 
     return () => controller.abort();
-  }, []);
+  }, [catalogCategory]);
 
   const largeCutPool = useMemo(() => {
+    if (catalogCategory) return products;
     const flagged = products.filter(isLargeFormat);
     if (flagged.length) return flagged;
     return products;
-  }, [products]);
+  }, [products, catalogCategory]);
 
   const visibleProducts = useMemo(() => {
     if (selectedCategory === "all") {
@@ -178,11 +200,14 @@ function LargeCutsPage() {
     return counts;
   }, [largeCutPool]);
 
+  const isLoading = loading || catalogCategory === null;
+  const showFullCatalogNotice =
+    !catalogCategory && largeCutPool.length === products.length && products.length > 0;
   const scrollToCatalog = () => catalogRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
 
   const heroStatLine = largeCutPool.length
     ? `${largeCutPool.length}+ large-format options`
-    : loading
+    : isLoading
       ? "Loading inventory"
       : "Large cuts sell fast—ask to reserve";
 
@@ -290,7 +315,7 @@ function LargeCutsPage() {
               <span className="px-3 py-1 rounded-full bg-red-50 text-red-700 border border-red-100">
                 {selectedCategory === "all" ? "All large cuts" : `Filtered: ${selectedCategory}`}
               </span>
-              {largeCutPool.length === products.length && (
+              {showFullCatalogNotice && (
                 <span className="px-3 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-100">
                   Showing full catalog until more large cuts load
                 </span>
@@ -370,7 +395,7 @@ function LargeCutsPage() {
               </div>
             </div>
 
-            <ProductGrid products={visibleProducts} loading={loading} />
+            <ProductGrid products={visibleProducts} loading={isLoading} />
 
             <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-gray-600">
               <div>
