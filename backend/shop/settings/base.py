@@ -160,18 +160,17 @@ else:
     MEDIA_URL = "/media/"
     MEDIA_ROOT = BASE_DIR / "media"
 
-CORS_ALLOWED_ORIGINS = (
-    os.environ.get("DJANGO_CORS_ALLOWED_ORIGINS", "").split(",")
-    if os.environ.get("DJANGO_CORS_ALLOWED_ORIGINS")
-    else []
-)
+def _split_env_list(name: str) -> list[str]:
+    raw = (os.environ.get(name) or "").strip()
+    if not raw:
+        return []
+    return [item for item in raw.replace(",", " ").split() if item]
+
+
+CORS_ALLOWED_ORIGINS = _split_env_list("DJANGO_CORS_ALLOWED_ORIGINS")
 CORS_ALLOW_ALL_ORIGINS = DEBUG
 CORS_ALLOW_CREDENTIALS = True
-CSRF_TRUSTED_ORIGINS = (
-    os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",")
-    if os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS")
-    else []
-)
+CSRF_TRUSTED_ORIGINS = _split_env_list("DJANGO_CSRF_TRUSTED_ORIGINS")
 
 # Allow overriding cookie settings for cross-site frontend/backend setups.
 CSRF_COOKIE_DOMAIN = ".meatdirect.duckdns.org"
