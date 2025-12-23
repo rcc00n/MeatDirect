@@ -9,8 +9,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # regardless of how Django is started (manage.py, gunicorn, or other entrypoints).
 load_dotenv(BASE_DIR / ".env")
 
+def _get_env_bool(name: str, default: bool = False) -> bool:
+    raw = os.environ.get(name)
+    if raw is None:
+        return default
+    return raw.strip().lower() in {"1", "true", "yes", "y", "on"}
+
+
+def _get_env_optional(name: str) -> str | None:
+    raw = os.environ.get(name)
+    if raw is None:
+        return None
+    value = raw.strip()
+    return value or None
+
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "dev-secret-key")
-DEBUG = os.environ.get("DJANGO_DEBUG", "True") == "True"
+DEBUG = _get_env_bool("DJANGO_DEBUG", default=True)
 
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(",") if os.environ.get("DJANGO_ALLOWED_HOSTS") else []
 
@@ -173,12 +187,13 @@ CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = _split_env_list("DJANGO_CSRF_TRUSTED_ORIGINS")
 
 # Allow overriding cookie settings for cross-site frontend/backend setups.
-CSRF_COOKIE_DOMAIN = ".meatdirect.duckdns.org"
-SESSION_COOKIE_DOMAIN = ".meatdirect.duckdns.org"
+DEFAULT_COOKIE_DOMAIN = _get_env_optional("DJANGO_COOKIE_DOMAIN")
+CSRF_COOKIE_DOMAIN = _get_env_optional("DJANGO_CSRF_COOKIE_DOMAIN") or DEFAULT_COOKIE_DOMAIN
+SESSION_COOKIE_DOMAIN = _get_env_optional("DJANGO_SESSION_COOKIE_DOMAIN") or DEFAULT_COOKIE_DOMAIN
 CSRF_COOKIE_SAMESITE = os.environ.get("DJANGO_CSRF_COOKIE_SAMESITE", "Lax")
-CSRF_COOKIE_SECURE = os.environ.get("DJANGO_CSRF_COOKIE_SECURE", "False") == "True"
+CSRF_COOKIE_SECURE = _get_env_bool("DJANGO_CSRF_COOKIE_SECURE", default=False)
 SESSION_COOKIE_SAMESITE = os.environ.get("DJANGO_SESSION_COOKIE_SAMESITE", "Lax")
-SESSION_COOKIE_SECURE = os.environ.get("DJANGO_SESSION_COOKIE_SECURE", "False") == "True"
+SESSION_COOKIE_SECURE = _get_env_bool("DJANGO_SESSION_COOKIE_SECURE", default=False)
 
 SQUARE_ACCESS_TOKEN = os.environ.get("SQUARE_ACCESS_TOKEN", "")
 SQUARE_ENVIRONMENT = os.environ.get("SQUARE_ENVIRONMENT", "sandbox")
