@@ -293,13 +293,12 @@ function HomePage() {
                 </div>
                 <h3 className="text-2xl font-semibold mb-2">{pkg.title}</h3>
                 <p className="text-red-600 font-semibold mb-4">{pkg.price}</p>
-                <button
-                  type="button"
-                  onClick={scrollToShop}
-                  className="bg-black text-white px-6 py-2 rounded-full hover:bg-red-600 transition-colors text-sm"
+                <Link
+                  to="/large-cuts"
+                  className="inline-flex items-center justify-center bg-black text-white px-6 py-2 rounded-full hover:bg-red-600 transition-colors text-sm"
                 >
-                  Add to cart
-                </button>
+                  Get now
+                </Link>
               </div>
             ))}
           </div>
