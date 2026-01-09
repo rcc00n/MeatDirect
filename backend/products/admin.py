@@ -1,11 +1,10 @@
 from django import forms
 from django.contrib import admin, messages
 from django.core.exceptions import PermissionDenied
+from django.core.management import call_command
 from django.shortcuts import redirect
 from django.urls import path
 from django.utils.html import format_html
-
-from square_sync.services import sync_products_from_square
 
 from .models import Product, ProductImage, StorefrontSettings
 
@@ -82,13 +81,25 @@ class ProductAdmin(admin.ModelAdmin):
             raise PermissionDenied
 
         try:
-            sync_products_from_square()
+            call_command("sync_square_products")
         except Exception as exc:  # pragma: no cover - defensive for admin trigger
             self.message_user(
-                request, f"Square sync failed: {exc}", level=messages.ERROR
+                request,
+                f"Square product sync failed: {exc}",
+                level=messages.ERROR,
+            )
+            return redirect("admin:products_product_changelist")
+
+        try:
+            call_command("sync_square_inventory")
+        except Exception as exc:  # pragma: no cover - defensive for admin trigger
+            self.message_user(
+                request,
+                f"Square inventory sync failed: {exc}",
+                level=messages.ERROR,
             )
         else:
-            self.message_user(request, "Products synced with Square.")
+            self.message_user(request, "Products and inventory synced with Square.")
 
         return redirect("admin:products_product_changelist")
 
