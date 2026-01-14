@@ -87,7 +87,7 @@ function ContactPage() {
               </a>
               <a
                 className="border-2 border-white text-white px-6 py-3 rounded-lg hover:bg-white hover:text-black transition-colors"
-                href="tel:555-123-4567"
+                href="tel:+15874056328"
               >
                 Call the shop
               </a>
@@ -123,8 +123,8 @@ function ContactPage() {
                   </div>
                   <div>
                     <p className="text-xs uppercase tracking-[0.2em] text-gray-500">Call or text</p>
-                    <a className="text-xl font-semibold text-black block" href="tel:555-123-4567">
-                      (555) 123-4567
+                    <a className="text-xl font-semibold text-black block" href="tel:+15874056328">
+                      (587) 405-6328
                     </a>
                     <p className="text-sm text-gray-600">Live help during shop hours.</p>
                   </div>
@@ -139,8 +139,8 @@ function ContactPage() {
                   </div>
                   <div>
                     <p className="text-xs uppercase tracking-[0.2em] text-gray-500">Email</p>
-                    <a className="text-lg font-semibold text-black block" href="mailto:hello@meatdirect.com">
-                      hello@meatdirect.com
+                    <a className="text-lg font-semibold text-black block" href="mailto:info@meatdirectinc.ca">
+                      info@meatdirectinc.ca
                     </a>
                     <p className="text-sm text-gray-600">Paperwork, invoices, and cut sheets welcomed.</p>
                   </div>
@@ -164,7 +164,7 @@ function ContactPage() {
             </div>
             <div className="p-6 bg-gray-50 flex flex-wrap items-center justify-between gap-3">
               <div className="text-sm text-gray-600">Need wholesale or paperwork? Email the team and we will route it.</div>
-              <a className="text-red-600 font-semibold flex items-center gap-2 hover:text-red-700" href="mailto:hello@meatdirect.com">
+              <a className="text-red-600 font-semibold flex items-center gap-2 hover:text-red-700" href="mailto:info@meatdirectinc.ca">
                 Send email <ArrowRight size={16} />
               </a>
             </div>
@@ -208,8 +208,8 @@ function ContactPage() {
                   </div>
                   <div>
                     <p className="text-xs uppercase tracking-[0.2em] text-gray-500">Phone</p>
-                    <a className="text-lg font-semibold text-black block" href="tel:555-123-4567">
-                      (555) 123-4567
+                    <a className="text-lg font-semibold text-black block" href="tel:+15874056328">
+                      (587) 405-6328
                     </a>
                     <p className="text-gray-600">Call ahead for special trims.</p>
                   </div>
@@ -220,8 +220,8 @@ function ContactPage() {
                   </div>
                   <div>
                     <p className="text-xs uppercase tracking-[0.2em] text-gray-500">Email</p>
-                    <a className="text-lg font-semibold text-black block" href="mailto:hello@meatdirect.com">
-                      hello@meatdirect.com
+                    <a className="text-lg font-semibold text-black block" href="mailto:info@meatdirectinc.ca">
+                      info@meatdirectinc.ca
                     </a>
                     <p className="text-gray-600">Invoices, COAs, ingredient lists, and delivery paperwork.</p>
                   </div>
@@ -430,8 +430,8 @@ function ContactPage() {
               </button>
               <p className="text-sm text-gray-500">
                 Prefer to talk? Call{" "}
-                <a className="text-red-600 font-semibold" href="tel:555-123-4567">
-                  (555) 123-4567
+                <a className="text-red-600 font-semibold" href="tel:+15874056328">
+                  (587) 405-6328
                 </a>{" "}
                 during business hours.
               </p>

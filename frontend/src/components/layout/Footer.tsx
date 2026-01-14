@@ -13,9 +13,9 @@ function Footer() {
         <div>
           <h4 className="footer__heading">Contact</h4>
           <div className="footer__text">
-            <a href="tel:555-123-4567">(555) 123-4567</a>
+            <a href="tel:+15874056328">(587) 405-6328</a>
             <br />
-            <a href="mailto:hello@meatdirect.com">hello@meatdirect.com</a>
+            <a href="mailto:info@meatdirectinc.ca">info@meatdirectinc.ca</a>
             <br />
             <Link to="/contact">Contact page</Link>
           </div>

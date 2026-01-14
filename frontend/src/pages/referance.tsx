@@ -330,10 +330,10 @@ export default function App() {
               <h4 className="text-red-500 mb-4">Contact</h4>
               <div className="space-y-2 text-sm text-gray-400">
                 <p className="flex items-center gap-2">
-                  <Phone size={16} /> (555) 123-4567
+                  <Phone size={16} /> (587) 405-6328
                 </p>
                 <p className="flex items-center gap-2">
-                  <Mail size={16} /> hello@meatdirect.com
+                  <Mail size={16} /> info@meatdirectinc.ca
                 </p>
                 <p className="flex items-center gap-2">
                   <MapPin size={16} /> Contact page
