@@ -82,7 +82,9 @@ function CheckoutPageInner() {
         setError(result.error.message || "Payment failed. Please try again.");
       } else if (result.paymentIntent?.status === "succeeded") {
         clear();
-        navigate("/success", { state: { orderId: order_id } });
+        navigate("/success", {
+          state: { orderId: order_id, orderTotalCents: order.total_cents, currency: "USD" },
+        });
       } else {
         setError("Payment did not complete. Please try again.");
       }

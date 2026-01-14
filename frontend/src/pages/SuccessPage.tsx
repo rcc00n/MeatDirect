@@ -1,12 +1,40 @@
+import { useEffect, useRef } from "react";
 import { useLocation, Link } from "react-router-dom";
 
 interface SuccessLocationState {
   orderId?: number;
+  orderTotalCents?: number;
+  currency?: string;
 }
 
 function SuccessPage() {
   const location = useLocation();
   const state = (location.state || {}) as SuccessLocationState;
+  const hasTrackedRef = useRef(false);
+
+  useEffect(() => {
+    if (hasTrackedRef.current) return;
+    if (typeof window === "undefined" || typeof window.fbq !== "function") {
+      return;
+    }
+
+    const hasOrderContext =
+      typeof state.orderId === "number" || typeof state.orderTotalCents === "number";
+    if (!hasOrderContext) {
+      return;
+    }
+
+    const currency = state.currency ?? "USD";
+
+    if (typeof state.orderTotalCents === "number") {
+      const value = Number((state.orderTotalCents / 100).toFixed(2));
+      window.fbq("track", "Purchase", { value, currency });
+    } else {
+      window.fbq("track", "Purchase");
+    }
+
+    hasTrackedRef.current = true;
+  }, [state.currency, state.orderId, state.orderTotalCents]);
 
   return (
     <div style={{ maxWidth: 600, margin: "40px auto", textAlign: "center" }}>

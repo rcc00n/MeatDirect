@@ -294,7 +294,7 @@ function HomePage() {
                 <h3 className="text-2xl font-semibold mb-2">{pkg.title}</h3>
                 <p className="text-red-600 font-semibold mb-4">{pkg.price}</p>
                 <Link
-                  to="/large-cuts"
+                  to="/large-cuts#large-cuts"
                   className="inline-flex items-center justify-center bg-black text-white px-6 py-2 rounded-full hover:bg-red-600 transition-colors text-sm"
                 >
                   Get now
@@ -304,7 +304,7 @@ function HomePage() {
           </div>
           <div className="text-center mt-12">
             <Link
-              to="/large-cuts"
+              to="/large-cuts#large-cuts"
               className="inline-block border-2 border-black text-black px-8 py-3 rounded hover:bg-black hover:text-white transition-colors"
             >
               View Large Cuts →
