@@ -98,7 +98,7 @@ function ContactPage() {
             <div className="grid sm:grid-cols-3 gap-3 pt-4">
               {[
                 { label: "Response time", value: "Same business day" },
-                { label: "Pickup", value: "Cleveland, OH" },
+                { label: "Pickup", value: "Edmonton, AB" },
                 { label: "Delivery", value: "Next-day local" },
               ].map((stat) => (
                 <div key={stat.label} className="border border-red-900 bg-white/5 rounded-xl p-3">
@@ -155,8 +155,8 @@ function ContactPage() {
                   </div>
                   <div>
                     <p className="text-xs uppercase tracking-[0.2em] text-gray-500">Visit</p>
-                    <div className="text-lg font-semibold text-black">1420 Meadow Lane, Suite B</div>
-                    <p className="text-sm text-gray-600">Cleveland, OH 44113 · East side pickup door</p>
+                    <div className="text-lg font-semibold text-black">13050 St Albert Trail NW</div>
+                    <p className="text-sm text-gray-600">Edmonton, AB T5L 4Y6 · Pickup door</p>
                   </div>
                 </div>
                 <span className="px-3 py-1 rounded-full bg-red-600 text-white text-sm font-semibold">Easy pickup</span>
@@ -183,7 +183,7 @@ function ContactPage() {
               </p>
             </div>
             <div className="flex flex-wrap gap-2 text-sm">
-              <span className="px-3 py-1 rounded-full bg-black text-white">Cleveland, OH</span>
+              <span className="px-3 py-1 rounded-full bg-black text-white">Edmonton, AB</span>
               <span className="px-3 py-1 rounded-full bg-red-50 text-red-700 border border-red-100">Pickup friendly</span>
               <span className="px-3 py-1 rounded-full bg-gray-100 border border-gray-200">Insulated vans</span>
             </div>
@@ -198,8 +198,8 @@ function ContactPage() {
                   </div>
                   <div>
                     <p className="text-xs uppercase tracking-[0.2em] text-gray-500">Address</p>
-                    <p className="text-lg font-semibold text-black">1420 Meadow Lane, Suite B</p>
-                    <p className="text-gray-600">Cleveland, OH 44113</p>
+                    <p className="text-lg font-semibold text-black">13050 St Albert Trail NW</p>
+                    <p className="text-gray-600">Edmonton, AB T5L 4Y6</p>
                   </div>
                 </div>
                 <div className="rounded-2xl border border-gray-200 bg-white p-4 flex gap-3">
@@ -263,8 +263,8 @@ function ContactPage() {
                 <p className="text-red-400 uppercase tracking-[0.2em] text-xs">Map</p>
                 <h3 className="text-2xl font-semibold text-white">Easy parking and loading.</h3>
                 <p className="text-gray-300">
-                  Located just off Meadow Lane with parking by the east door. Call when you arrive and we will bring
-                  orders out for quick pickup.
+                  Located on St Albert Trail NW with easy parking. Call when you arrive and we will bring orders out
+                  for quick pickup.
                 </p>
                 <div className="flex flex-wrap gap-2">
                   <span className="px-3 py-1 rounded-full bg-red-600 text-white text-sm">Call on arrival</span>
@@ -275,7 +275,7 @@ function ContactPage() {
               <div className="aspect-[4/3] bg-black">
                 <iframe
                   title="Meat Direct location"
-                  src="https://www.google.com/maps?q=1420+Meadow+Lane,+Cleveland,+OH+44113&output=embed"
+                  src="https://www.google.com/maps?q=13050+St+Albert+Trail+NW,+Edmonton,+AB+T5L+4Y6&output=embed"
                   allowFullScreen
                   loading="lazy"
                   className="w-full h-full border-0"
