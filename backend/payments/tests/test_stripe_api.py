@@ -82,6 +82,26 @@ class CreateCheckoutTests(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json()["detail"], "Items are required.")
 
+    def test_create_checkout_rejects_invalid_product_id(self):
+        response = self.client.post(
+            reverse("checkout"),
+            {"items": [{"product_id": "bad-id", "quantity": 1}]},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("Invalid product_id", response.json()["detail"])
+
+    def test_create_checkout_rejects_non_positive_quantity(self):
+        response = self.client.post(
+            reverse("checkout"),
+            {"items": [{"product_id": self.product.id, "quantity": 0}]},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json()["detail"], "Quantity must be at least 1.")
+
     @mock.patch("payments.stripe_api.stripe.PaymentIntent.create")
     def test_create_checkout_creates_intent_and_order(self, mock_intent_create):
         mock_intent_create.return_value = {
