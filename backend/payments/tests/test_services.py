@@ -34,3 +34,28 @@ class RecordStripePaymentFromIntentTests(TestCase):
         self.assertEqual(payment.amount_cents, 1050)
         self.assertEqual(payment.currency, "cad")
         self.assertEqual(payment.status, "succeeded")
+
+    def test_updates_existing_payment_by_intent_id(self):
+        existing = Payment.objects.create(
+            order=self.order,
+            amount_cents=500,
+            currency="usd",
+            status="processing",
+            stripe_payment_intent_id="pi_service_2",
+        )
+
+        updated = record_stripe_payment_from_intent(
+            self.order,
+            {
+                "id": "pi_service_2",
+                "amount": 2150,
+                "currency": "cad",
+                "status": "succeeded",
+            },
+        )
+
+        self.assertEqual(Payment.objects.count(), 1)
+        self.assertEqual(updated.id, existing.id)
+        self.assertEqual(updated.amount_cents, 2150)
+        self.assertEqual(updated.currency, "cad")
+        self.assertEqual(updated.status, "succeeded")
