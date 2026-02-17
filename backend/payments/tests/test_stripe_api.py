@@ -102,6 +102,29 @@ class CreateCheckoutTests(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json()["detail"], "Quantity must be at least 1.")
 
+    def test_create_checkout_rejects_missing_product(self):
+        response = self.client.post(
+            reverse("checkout"),
+            {"items": [{"product_id": 999999, "quantity": 1}]},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("Products not found", response.json()["detail"])
+
+    def test_create_checkout_rejects_invalid_order_type(self):
+        response = self.client.post(
+            reverse("checkout"),
+            {
+                "items": [{"product_id": self.product.id, "quantity": 1}],
+                "order_type": "drone",
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json()["detail"], "Invalid order type.")
+
     @mock.patch("payments.stripe_api.stripe.PaymentIntent.create")
     def test_create_checkout_creates_intent_and_order(self, mock_intent_create):
         mock_intent_create.return_value = {
