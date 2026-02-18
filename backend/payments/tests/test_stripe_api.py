@@ -125,6 +125,20 @@ class CreateCheckoutTests(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json()["detail"], "Invalid order type.")
 
+    def test_create_checkout_delivery_requires_address_fields(self):
+        response = self.client.post(
+            reverse("checkout"),
+            {
+                "items": [{"product_id": self.product.id, "quantity": 1}],
+                "order_type": "delivery",
+                "address": {"line1": "123 Main St"},
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("Delivery requires", response.json()["detail"])
+
     @mock.patch("payments.stripe_api.stripe.PaymentIntent.create")
     def test_create_checkout_creates_intent_and_order(self, mock_intent_create):
         mock_intent_create.return_value = {
