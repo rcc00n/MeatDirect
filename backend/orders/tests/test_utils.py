@@ -26,3 +26,14 @@ class DeliveryQuoteTests(TestCase):
                 city="Calgary",
                 postal_code="T2P1J9",
             )
+
+    def test_get_delivery_quote_matches_by_postal_prefix(self):
+        quote = get_delivery_quote(
+            address_line1="88 Sample Ave",
+            city="",
+            postal_code="T8A 3C1",
+            now=timezone.make_aware(datetime(2026, 2, 1, 9, 0, 0)),
+        )
+
+        self.assertEqual(quote.service_area, "Sherwood Park")
+        self.assertEqual(quote.fee_cents, 2500)
