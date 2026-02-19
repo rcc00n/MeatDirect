@@ -173,3 +173,21 @@ class CreateCheckoutTests(TestCase):
             receipt_email="john@example.com",
             metadata={"order_id": str(order.id)},
         )
+
+    @mock.patch("payments.stripe_api.stripe.PaymentIntent.create")
+    def test_create_checkout_returns_502_when_stripe_fails(self, mock_intent_create):
+        mock_intent_create.side_effect = RuntimeError("stripe unavailable")
+        payload = {
+            "items": [{"product_id": self.product.id, "quantity": 1}],
+            "full_name": "John Buyer",
+            "email": "john@example.com",
+            "phone": "5555551234",
+            "order_type": "pickup",
+        }
+
+        response = self.client.post(reverse("checkout"), payload, format="json")
+
+        self.assertEqual(response.status_code, 502)
+        body = response.json()
+        self.assertEqual(body["detail"], "Unable to create payment intent.")
+        self.assertIn("stripe unavailable", body["error"])
