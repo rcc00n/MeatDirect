@@ -3,7 +3,12 @@ from datetime import datetime
 from django.test import TestCase
 from django.utils import timezone
 
-from orders.utils import DeliveryZoneError, get_delivery_quote
+from orders.utils import (
+    DeliveryZoneError,
+    determine_delivery_eta,
+    estimate_delivery_date,
+    get_delivery_quote,
+)
 
 
 class DeliveryQuoteTests(TestCase):
@@ -37,3 +42,23 @@ class DeliveryQuoteTests(TestCase):
 
         self.assertEqual(quote.service_area, "Sherwood Park")
         self.assertEqual(quote.fee_cents, 2500)
+
+
+class DeliveryEtaTests(TestCase):
+    def test_determine_delivery_eta_before_noon(self):
+        eta = determine_delivery_eta(
+            now=timezone.make_aware(datetime(2026, 2, 1, 11, 59, 0))
+        )
+        self.assertEqual(eta, "Arrives today between 4–5 PM")
+
+    def test_determine_delivery_eta_after_noon(self):
+        eta = determine_delivery_eta(
+            now=timezone.make_aware(datetime(2026, 2, 1, 12, 1, 0))
+        )
+        self.assertEqual(eta, "Arrives by 1 PM tomorrow")
+
+    def test_estimate_delivery_date_after_noon_rolls_to_next_day(self):
+        estimated_date = estimate_delivery_date(
+            now=timezone.make_aware(datetime(2026, 2, 1, 12, 30, 0))
+        )
+        self.assertEqual(estimated_date.isoformat(), "2026-02-02")
