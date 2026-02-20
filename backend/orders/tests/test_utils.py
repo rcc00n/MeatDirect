@@ -4,6 +4,8 @@ from django.test import TestCase
 from django.utils import timezone
 
 from orders.utils import (
+    calculate_tax_cents,
+    describe_supported_areas,
     DeliveryZoneError,
     determine_delivery_eta,
     estimate_delivery_date,
@@ -62,3 +64,13 @@ class DeliveryEtaTests(TestCase):
             now=timezone.make_aware(datetime(2026, 2, 1, 12, 30, 0))
         )
         self.assertEqual(estimated_date.isoformat(), "2026-02-02")
+
+
+class PricingHelperTests(TestCase):
+    def test_calculate_tax_cents_includes_delivery_fee(self):
+        self.assertEqual(calculate_tax_cents(4000, 2000), 300)
+
+    def test_describe_supported_areas_contains_named_zones(self):
+        areas = describe_supported_areas()
+        self.assertIn("St. Albert", areas)
+        self.assertIn("Sherwood Park", areas)
