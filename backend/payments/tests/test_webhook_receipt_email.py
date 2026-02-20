@@ -109,3 +109,41 @@ class StripeWebhookReceiptEmailTests(TestCase):
         self.assertEqual(filename, "order_receipt.pdf")
         self.assertEqual(mimetype, "application/pdf")
         self.assertTrue(content)
+
+    @mock.patch("payments.webhooks.STRIPE_WEBHOOK_SECRET", new="")
+    def test_webhook_ignores_event_without_order_id_metadata(self):
+        payload = {
+            "type": "payment_intent.succeeded",
+            "data": {
+                "object": {
+                    "id": "pi_missing_metadata",
+                    "amount": self.order.total_cents,
+                    "currency": "cad",
+                    "status": "succeeded",
+                    "metadata": {},
+                }
+            },
+        }
+
+        response = self.client.post(reverse("stripe-webhook"), payload, format="json")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["detail"], "No order_id in metadata")
+        self.order.refresh_from_db()
+        self.assertEqual(self.order.status, Order.Status.PLACED)
+        self.assertEqual(self.order.stripe_payment_intent_id, "")
+        self.assertEqual(Payment.objects.count(), 0)
+
+    @mock.patch("payments.webhooks.STRIPE_WEBHOOK_SECRET", new="whsec_test_secret")
+    @mock.patch("payments.webhooks.stripe.Webhook.construct_event")
+    def test_webhook_returns_400_on_invalid_signature(self, mock_construct_event):
+        mock_construct_event.side_effect = ValueError("bad payload")
+
+        response = self.client.post(
+            reverse("stripe-webhook"),
+            {"type": "payment_intent.succeeded"},
+            format="json",
+            HTTP_STRIPE_SIGNATURE="t=123,v1=invalid",
+        )
+
+        self.assertEqual(response.status_code, 400)
