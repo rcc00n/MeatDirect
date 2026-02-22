@@ -112,6 +112,16 @@ class CreateCheckoutTests(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json()["detail"], "Quantity must be at least 1.")
 
+    def test_create_checkout_rejects_non_numeric_quantity(self):
+        response = self.client.post(
+            reverse("checkout"),
+            {"items": [{"product_id": self.product.id, "quantity": "abc"}]},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("Invalid quantity", response.json()["detail"])
+
     def test_create_checkout_rejects_missing_product(self):
         response = self.client.post(
             reverse("checkout"),
