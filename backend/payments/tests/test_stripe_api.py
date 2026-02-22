@@ -92,6 +92,16 @@ class CreateCheckoutTests(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertIn("Invalid product_id", response.json()["detail"])
 
+    def test_create_checkout_rejects_non_object_item(self):
+        response = self.client.post(
+            reverse("checkout"),
+            {"items": ["not-an-object"]},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json()["detail"], "Item 1 is invalid.")
+
     def test_create_checkout_rejects_non_positive_quantity(self):
         response = self.client.post(
             reverse("checkout"),
