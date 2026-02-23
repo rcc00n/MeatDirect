@@ -59,6 +59,20 @@ class StripeConfigTests(TestCase):
         self.assertEqual(payload["publishable_key"], "pk_test_from_vite")
         self.assertFalse(payload["livemode"])
 
+    def test_config_prefers_server_key_over_vite_key(self):
+        with mock.patch.dict(
+            os.environ,
+            {
+                "STRIPE_PUBLISHABLE_KEY": "pk_test_server",
+                "VITE_STRIPE_PUBLISHABLE_KEY": "pk_test_vite",
+            },
+            clear=False,
+        ):
+            response = self.client.get(reverse("stripe-config"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["publishable_key"], "pk_test_server")
+
 
 class CreateCheckoutTests(TestCase):
     def setUp(self):
