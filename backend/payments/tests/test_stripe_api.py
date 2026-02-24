@@ -192,6 +192,36 @@ class CreateCheckoutTests(TestCase):
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.json()["client_secret"], "pi_pickup_address_secret")
 
+    @mock.patch("payments.stripe_api.get_delivery_quote")
+    @mock.patch("payments.stripe_api.stripe.PaymentIntent.create")
+    def test_create_checkout_delivery_uses_quote_in_total(self, mock_intent_create, mock_get_quote):
+        mock_get_quote.return_value = mock.Mock(
+            fee_cents=3500,
+            service_area="Spruce Grove",
+            eta_text="Arrives by 1 PM tomorrow",
+        )
+        mock_intent_create.return_value = {
+            "id": "pi_delivery_quote",
+            "client_secret": "pi_delivery_quote_secret",
+        }
+
+        response = self.client.post(
+            reverse("checkout"),
+            {
+                "items": [{"product_id": self.product.id, "quantity": 1}],
+                "order_type": "delivery",
+                "address": {
+                    "line1": "1 Test Way",
+                    "city": "Spruce Grove",
+                    "postal_code": "T7X 2V2",
+                },
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.json()["amount"], 4725)
+
     @mock.patch("payments.stripe_api.stripe.PaymentIntent.create")
     def test_create_checkout_creates_intent_and_order(self, mock_intent_create):
         mock_intent_create.return_value = {
