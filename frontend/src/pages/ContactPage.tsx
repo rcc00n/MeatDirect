@@ -11,13 +11,14 @@ type ContactFormState = {
 };
 
 const hours = [
-  { day: "Monday", time: "9a–6p" },
-  { day: "Tuesday", time: "9a–6p" },
-  { day: "Wednesday", time: "9a–6p" },
-  { day: "Thursday", time: "9a–6p" },
-  { day: "Friday", time: "9a–6p" },
-  { day: "Saturday", time: "8a–4p" },
+  { day: "Monday", time: "Closed" },
+  { day: "Tuesday", time: "11:00 AM–6:00 PM" },
+  { day: "Wednesday", time: "11:00 AM–6:00 PM" },
+  { day: "Thursday", time: "11:00 AM–6:00 PM" },
+  { day: "Friday", time: "11:00 AM–6:00 PM" },
+  { day: "Saturday", time: "10:00 AM–6:00 PM" },
   { day: "Sunday", time: "Closed" },
+  { day: "* Holidays", time: "Closed" },
 ];
 
 function ContactPage() {
@@ -254,7 +255,7 @@ function ContactPage() {
                     </li>
                   ))}
                 </ul>
-                <p className="text-gray-300 text-sm">Closed most long weekends—call ahead before heading over.</p>
+                <p className="text-gray-300 text-sm">Holidays are closed. Call ahead during long weekends.</p>
               </div>
             </div>
 

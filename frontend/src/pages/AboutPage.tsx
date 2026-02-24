@@ -75,7 +75,7 @@ const shippingOptions = [
   },
   {
     title: "In-store pickup",
-    detail: "Same-day pickup at our inspection-ready counter, Mon–Sat.",
+    detail: "Same-day pickup at our inspection-ready counter, Tue–Sat.",
     icon: ShieldCheck,
   },
   {

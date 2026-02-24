@@ -342,8 +342,11 @@ export default function App() {
             </div>
             <div>
               <h4 className="text-red-500 mb-4">Hours</h4>
-              <p className="text-sm text-gray-400">Open 24/7 online</p>
-              <p className="text-sm text-gray-400">Shop anytime</p>
+              <p className="text-sm text-gray-400">Monday: Closed</p>
+              <p className="text-sm text-gray-400">Tuesday–Friday: 11:00 AM–6:00 PM</p>
+              <p className="text-sm text-gray-400">Saturday: 10:00 AM–6:00 PM</p>
+              <p className="text-sm text-gray-400">Sunday: Closed</p>
+              <p className="text-sm text-gray-400">Holidays: Closed</p>
             </div>
             <div>
               <h4 className="text-red-500 mb-4">Follow</h4>

@@ -22,8 +22,11 @@ function Footer() {
         </div>
         <div>
           <h4 className="footer__heading">Hours</h4>
-          <div className="footer__text">Open 24/7 online</div>
-          <div className="footer__text">Shop anytime</div>
+          <div className="footer__text">Monday: Closed</div>
+          <div className="footer__text">Tuesday–Friday: 11:00 AM–6:00 PM</div>
+          <div className="footer__text">Saturday: 10:00 AM–6:00 PM</div>
+          <div className="footer__text">Sunday: Closed</div>
+          <div className="footer__text">Holidays: Closed</div>
         </div>
         <div>
           <h4 className="footer__heading">Follow</h4>
