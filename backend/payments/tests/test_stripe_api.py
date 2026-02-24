@@ -174,6 +174,25 @@ class CreateCheckoutTests(TestCase):
         self.assertIn("Delivery requires", response.json()["detail"])
 
     @mock.patch("payments.stripe_api.stripe.PaymentIntent.create")
+    def test_create_checkout_pickup_tolerates_non_object_address(self, mock_intent_create):
+        mock_intent_create.return_value = {
+            "id": "pi_pickup_address",
+            "client_secret": "pi_pickup_address_secret",
+        }
+        response = self.client.post(
+            reverse("checkout"),
+            {
+                "items": [{"product_id": self.product.id, "quantity": 1}],
+                "order_type": "pickup",
+                "address": "not-an-object",
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.json()["client_secret"], "pi_pickup_address_secret")
+
+    @mock.patch("payments.stripe_api.stripe.PaymentIntent.create")
     def test_create_checkout_creates_intent_and_order(self, mock_intent_create):
         mock_intent_create.return_value = {
             "id": "pi_test_123",
