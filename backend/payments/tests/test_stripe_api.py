@@ -6,6 +6,7 @@ from django.urls import reverse
 from rest_framework.test import APIClient
 
 from orders.models import Order
+from orders.utils import DeliveryZoneError
 from products.models import Product
 
 
@@ -221,6 +222,29 @@ class CreateCheckoutTests(TestCase):
 
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.json()["amount"], 4725)
+
+    @mock.patch("payments.stripe_api.get_delivery_quote")
+    def test_create_checkout_returns_400_for_unsupported_delivery_zone(self, mock_get_quote):
+        mock_get_quote.side_effect = DeliveryZoneError(
+            "Delivery is available to: St. Albert ($20)."
+        )
+
+        response = self.client.post(
+            reverse("checkout"),
+            {
+                "items": [{"product_id": self.product.id, "quantity": 1}],
+                "order_type": "delivery",
+                "address": {
+                    "line1": "500 Far Road",
+                    "city": "Calgary",
+                    "postal_code": "T2P1J9",
+                },
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("Delivery is available to:", response.json()["detail"])
 
     @mock.patch("payments.stripe_api.stripe.PaymentIntent.create")
     def test_create_checkout_creates_intent_and_order(self, mock_intent_create):
