@@ -168,3 +168,25 @@ class StripeWebhookReceiptEmailTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 400)
+
+    @mock.patch("payments.webhooks.STRIPE_WEBHOOK_SECRET", new="")
+    def test_webhook_ignores_non_success_payment_events(self):
+        payload = {
+            "type": "payment_intent.payment_failed",
+            "data": {
+                "object": {
+                    "id": "pi_failed_1",
+                    "amount": self.order.total_cents,
+                    "currency": "cad",
+                    "status": "requires_payment_method",
+                    "metadata": {"order_id": str(self.order.id)},
+                }
+            },
+        }
+
+        response = self.client.post(reverse("stripe-webhook"), payload, format="json")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["received"], True)
+        self.order.refresh_from_db()
+        self.assertEqual(self.order.status, Order.Status.PLACED)
