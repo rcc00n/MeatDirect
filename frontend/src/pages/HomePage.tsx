@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowRight, Drumstick, Fish, Flame } from "lucide-react";
+import { AlertTriangle, ArrowRight, Drumstick, Fish, Flame, X } from "lucide-react";
 
 import { getProducts } from "../api/products";
 import heroBackdrop from "../assets/hero-large-cuts.jpg";
@@ -132,6 +132,7 @@ function HomePage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showFraudBanner, setShowFraudBanner] = useState(true);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -169,6 +170,46 @@ function HomePage() {
 
   return (
     <div className="landing-page space-y-0 text-white">
+      {showFraudBanner && (
+        <section className="landing-section bg-black py-4 border-b border-red-700/30">
+          <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-14">
+            <div className="overflow-hidden rounded-2xl border border-red-700/60 shadow-[0_24px_60px_-48px_rgba(239,68,68,0.9)] bg-black">
+              <div className="bg-gradient-to-r from-red-700 via-red-600 to-red-700 px-4 py-2.5 flex items-center gap-2 text-white uppercase tracking-[0.2em] text-xs font-semibold">
+                <AlertTriangle size={16} />
+                <span>Fraud Alert</span>
+              </div>
+              <div className="bg-white text-black p-4 md:p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div className="space-y-1">
+                  <p className="text-base md:text-lg font-semibold">We NEVER request payment via personal accounts.</p>
+                  <p className="text-sm md:text-base text-gray-700">
+                    Only order through our official website or by store phone{" "}
+                    <a href="tel:+15874056328" className="font-semibold text-red-700 hover:text-red-800">
+                      (587) 405-6328
+                    </a>
+                    .
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <a
+                    href="https://meatdirectinc.ca"
+                    className="inline-flex items-center justify-center bg-red-600 text-white px-4 py-2 rounded-xl font-semibold uppercase tracking-[0.08em] text-sm hover:bg-red-700 transition-colors"
+                  >
+                    Visit MeatDirect.ca
+                  </a>
+                  <button
+                    type="button"
+                    onClick={() => setShowFraudBanner(false)}
+                    className="h-10 w-10 inline-flex items-center justify-center rounded-xl border border-gray-300 text-gray-600 hover:text-black hover:border-gray-400 transition-colors"
+                    aria-label="Close fraud alert banner"
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
       <section className="landing-section hero-banner py-16 border-b-2 border-red-600">
         <div
           className="hero-banner__media"
