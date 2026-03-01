@@ -1,5 +1,5 @@
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
-import { ArrowRight, CheckCircle2, KeyRound, Lock, Mail, Phone, Shield, Sparkles } from "lucide-react";
+import { ArrowRight, CheckCircle2, KeyRound, Lock, Phone, Shield, Sparkles } from "lucide-react";
 
 import {
   fetchWholesaleCatalog,

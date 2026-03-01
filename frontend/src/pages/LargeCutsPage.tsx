@@ -29,38 +29,17 @@ const categoryFilters: {
 ];
 
 const animalFilters = categoryFilters.filter((filter) => filter.key !== "all");
+const curatedLargeCutsCategory = "large cuts";
 
 const largeCutPatterns = [
-  /brisket/i,
-  /prime\s*rib/i,
-  /short\s*rib/i,
-  /back\s*rib/i,
-  /rib\s*roast/i,
-  /\broast\b/i,
-  /\bsirloin tip\b/i,
-  /\bblade\b/i,
-  /\bchuck\b/i,
-  /\bshoulder\b/i,
-  /\bbutt\b/i,
-  /\bham\b/i,
-  /\bbelly\b/i,
-  /\brack\b/i,
-  /\bleg\b/i,
-  /\bloin\b/i,
-  /\bpicanha\b/i,
-  /\btri-?tip\b/i,
-  /\bshank\b/i,
-  /\bwhole\b/i,
-  /\bhalf\b/i,
-  /\bquarter\b/i,
-  /\bside\b/i,
-  /\bfamily\b/i,
+  /\bwhole\s+(?:cow|beef|bison|pig|hog|lamb|chicken|turkey)\b/i,
+  /\b(?:half|quarter|eighth|side)\s+(?:cow|beef|bison|pig|hog|lamb|chicken|turkey)\b/i,
+  /\b(?:1\/2|1\/4|1\/8)\s*(?:cow|beef|bison|pig|hog|lamb|chicken|turkey)\b/i,
+  /\b(?:freezer|family|bulk)\s+pack\b/i,
+  /\bcamp\s+pack\b/i,
   /\bbulk\b/i,
-  /\bcase\b/i,
-  /\bpacker\b/i,
-  /\bturkey\b/i,
-  /\bduck\b/i,
-  /\bgoose\b/i,
+  /\bbundle\b/i,
+  /\bdeposit\b/i,
 ];
 
 const speciesMatchers: Record<Exclude<LargeCutCategory, "all">, RegExp[]> = {
@@ -73,13 +52,13 @@ const speciesMatchers: Record<Exclude<LargeCutCategory, "all">, RegExp[]> = {
 
 const featureTiles = [
   {
-    title: "Smoker & roaster ready",
-    detail: "Packers, whole loins, racks, and shoulders trimmed for long cooks.",
+    title: "Freezer-fill ready",
+    detail: "Quarter, half, and whole shares plus curated packs for larger stock-ups.",
     icon: Flame,
   },
   {
     title: "Cold chain intact",
-    detail: "Frozen core with insulated liners and ice—no warm corners in transit.",
+    detail: "Frozen core with insulated liners and ice packs for pickup or delivery.",
     icon: Snowflake,
   },
   {
@@ -91,16 +70,16 @@ const featureTiles = [
 
 const prepNotes = [
   {
-    title: "Family-sized formats",
-    description: "Whole briskets, crown roasts, and racks sized for gatherings and smokers.",
+    title: "Animal shares",
+    description: "Quarter, half, and whole deposits stay grouped together so ordering stays straightforward.",
   },
   {
-    title: "Pack for your pit",
-    description: "Leave fat on for rendering, or ask for a tidy trim if you want simple oven work.",
+    title: "Freezer packs",
+    description: "Curated beef, bison, and chicken packs cover bulk buying without committing to a full side.",
   },
   {
-    title: "Season or brine ready",
-    description: "Labelled in clear bags so you can go straight from fridge to smoke or roast.",
+    title: "Reservation friendly",
+    description: "If you need a weight window or a later pickup date, contact us and we will hold the order.",
   },
 ];
 
@@ -118,12 +97,6 @@ const getSpecies = (product: Product): LargeCutCategory | null => {
 
 const isLargeFormat = (product: Product) => {
   const haystack = `${product.name} ${product.description ?? ""} ${product.category ?? ""}`.toLowerCase();
-  const steakOnly =
-    haystack.includes("steak") &&
-    !/(whole|half|roast|rib|brisket|striploin|sirloin|family|bulk|case|loin roast|picanha)/i.test(haystack);
-
-  if (steakOnly) return false;
-
   return largeCutPatterns.some((pattern) => pattern.test(haystack));
 };
 
@@ -175,9 +148,11 @@ function LargeCutsPage() {
 
   const largeCutPool = useMemo(() => {
     if (catalogCategory) return products;
-    const flagged = products.filter(isLargeFormat);
-    if (flagged.length) return flagged;
-    return products;
+    const curated = products.filter(
+      (product) => (product.category ?? "").trim().toLowerCase() === curatedLargeCutsCategory,
+    );
+    if (curated.length) return curated;
+    return products.filter(isLargeFormat);
   }, [products, catalogCategory]);
 
   const visibleProducts = useMemo(() => {
@@ -201,28 +176,26 @@ function LargeCutsPage() {
   }, [largeCutPool]);
 
   const isLoading = loading || catalogCategory === null;
-  const showFullCatalogNotice =
-    !catalogCategory && largeCutPool.length === products.length && products.length > 0;
   const scrollToCatalog = () => catalogRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
 
   const heroStatLine = largeCutPool.length
-    ? `${largeCutPool.length}+ large-format options`
+    ? `${largeCutPool.length} bulk-order options`
     : isLoading
       ? "Loading inventory"
-      : "Large cuts sell fast—ask to reserve";
+      : "Bulk orders sell fast - ask to reserve";
 
   return (
     <div className="landing-page bg-black text-white">
       <section className="landing-section bg-gradient-to-br from-black via-[#120a10] to-[#04070b] py-16 md:py-20 border-b border-red-900/50">
         <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-14 grid lg:grid-cols-[1.05fr_0.95fr] gap-12 items-center">
           <div className="space-y-6">
-            <p className="text-red-400 uppercase tracking-[0.22em] text-xs">Large Cuts • Smoker & Roast Ready</p>
+            <p className="text-red-400 uppercase tracking-[0.22em] text-xs">Large Cuts • Bulk Orders & Freezer Packs</p>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold leading-tight">
-              Whole briskets, ribs, and centerpieces sized for gatherings.
+              Half cows, freezer packs, and bulk orders sized for the family freezer.
             </h1>
             <p className="text-gray-200 max-w-2xl">
-              Big-format briskets, ribs, and roasts trimmed for pits and slow ovens. We leave fat where it matters and
-              keep labels readable so prep is easy.
+              Reserve quarter, half, or whole animal shares plus curated freezer packs. Live inventory keeps this page
+              focused on true bulk buys instead of the full meat counter.
             </p>
             <div className="flex flex-wrap gap-3">
               <button
@@ -240,8 +213,8 @@ function LargeCutsPage() {
               </Link>
             </div>
             <div className="flex flex-wrap gap-2 text-sm text-white/85">
-              <span className="border border-white/20 px-4 py-2 rounded-full">Smoker & roaster formats</span>
-              <span className="border border-white/20 px-4 py-2 rounded-full">0–4°C cold-packed</span>
+              <span className="border border-white/20 px-4 py-2 rounded-full">Quarter, half, and whole options</span>
+              <span className="border border-white/20 px-4 py-2 rounded-full">Cold-packed for freezer storage</span>
               <span className="border border-white/20 px-4 py-2 rounded-full">Delivery or pickup</span>
             </div>
             <div className="grid sm:grid-cols-3 gap-4 pt-2">
@@ -271,20 +244,20 @@ function LargeCutsPage() {
             <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-white/5 shadow-[0_30px_90px_-50px_rgba(0,0,0,0.8)]">
               <img
                 src={largeCutsHero}
-                alt="Whole briskets, ribs, and roasts ready for the pit"
+                alt="Bulk meat orders and freezer packs ready for pickup"
                 className="w-full h-full object-cover aspect-[4/3] lg:aspect-[5/4]"
                 loading="lazy"
               />
               <div className="absolute inset-0 bg-gradient-to-tr from-black/55 via-black/10 to-transparent" />
               <div className="absolute top-4 left-4 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/60 border border-white/10 text-xs font-semibold">
                 <Flame size={14} className="text-red-200" />
-                Smoker ready
+                Bulk-order ready
               </div>
               <div className="absolute bottom-4 left-4 right-4 flex flex-wrap gap-3">
                 <div className="flex-1 min-w-[180px] rounded-2xl bg-black/65 border border-white/10 px-4 py-3">
-                  <div className="text-xs uppercase tracking-[0.18em] text-white/70">Large format lane</div>
+                  <div className="text-xs uppercase tracking-[0.18em] text-white/70">Bulk order lane</div>
                   <div className="text-lg font-semibold text-white">{heroStatLine}</div>
-                  <div className="text-xs text-white/70">Trim left on where it matters.</div>
+                  <div className="text-xs text-white/70">Deposits and freezer packs in one place.</div>
                 </div>
                 <div className="flex-1 min-w-[180px] rounded-2xl bg-white/10 border border-white/20 px-4 py-3 text-white">
                   <div className="text-xs uppercase tracking-[0.18em] text-white/80">Cold chain</div>
@@ -304,8 +277,8 @@ function LargeCutsPage() {
               <p className="text-red-600 uppercase tracking-[0.25em] text-xs">Shop</p>
               <h2 className="text-4xl font-semibold">Large cuts</h2>
               <p className="text-gray-600 max-w-2xl">
-                Tap a category to filter. Inventory is live—when a roast or packer sells out it disappears here. If you
-                need something not listed, hit contact and we will hold it.
+                Tap a category to filter. Inventory is live, so bulk packs disappear when sold. If you need a specific
+                freezer order held, hit contact and we will reserve it.
               </p>
             </div>
             <div className="flex flex-wrap gap-2 text-sm">
@@ -315,11 +288,6 @@ function LargeCutsPage() {
               <span className="px-3 py-1 rounded-full bg-red-50 text-red-700 border border-red-100">
                 {selectedCategory === "all" ? "All large cuts" : `Filtered: ${selectedCategory}`}
               </span>
-              {showFullCatalogNotice && (
-                <span className="px-3 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-100">
-                  Showing full catalog until more large cuts load
-                </span>
-              )}
             </div>
           </div>
 
@@ -370,7 +338,7 @@ function LargeCutsPage() {
           <div className="bg-white rounded-3xl border border-red-100 shadow-xl p-6 space-y-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="space-y-1">
-                <div className="text-xs uppercase tracking-[0.22em] text-red-600">Large-format catalog</div>
+                <div className="text-xs uppercase tracking-[0.22em] text-red-600">Bulk-order catalog</div>
                 <div className="flex flex-wrap gap-2 text-sm text-gray-600">
                   <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-800">
                     {visibleProducts.length} products
