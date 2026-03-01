@@ -156,13 +156,17 @@ function LargeCutsPage() {
   }, [products, catalogCategory]);
 
   const visibleProducts = useMemo(() => {
+    const sortedLargeCutPool = [...largeCutPool].sort((a, b) => b.price_cents - a.price_cents);
+
     if (selectedCategory === "all") {
-      return [...largeCutPool].sort((a, b) => b.price_cents - a.price_cents);
+      return sortedLargeCutPool;
     }
 
-    return largeCutPool
+    const matchingProducts = largeCutPool
       .filter((product) => getSpecies(product) === selectedCategory)
       .sort((a, b) => b.price_cents - a.price_cents);
+
+    return matchingProducts.length ? matchingProducts : sortedLargeCutPool.slice(0, 4);
   }, [largeCutPool, selectedCategory]);
 
   const countsByCategory = useMemo(() => {
@@ -174,17 +178,6 @@ function LargeCutsPage() {
     });
     return counts;
   }, [largeCutPool]);
-
-  const availableAnimalFilters = useMemo(
-    () => animalFilters.filter((filter) => (countsByCategory.get(filter.key) ?? 0) > 0),
-    [countsByCategory],
-  );
-
-  useEffect(() => {
-    if (selectedCategory === "all") return;
-    if ((countsByCategory.get(selectedCategory) ?? 0) > 0) return;
-    setSelectedCategory("all");
-  }, [countsByCategory, selectedCategory]);
 
   const isLoading = loading || catalogCategory === null;
   const scrollToCatalog = () => catalogRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -303,7 +296,7 @@ function LargeCutsPage() {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 justify-items-center">
-            {availableAnimalFilters.map((filter) => {
+            {animalFilters.map((filter) => {
               const icon = filter.icon;
               const isActive = selectedCategory === filter.key;
               const isImage = typeof icon === "string";
