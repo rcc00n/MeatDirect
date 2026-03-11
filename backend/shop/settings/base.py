@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "anymail",
     "corsheaders",
     "rest_framework",
+    "security.apps.SecurityConfig",
     "products",
     "orders",
     "payments",

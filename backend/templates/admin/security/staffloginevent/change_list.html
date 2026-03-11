@@ -1,0 +1,58 @@
+{% extends "admin/change_list.html" %}
+
+{% block object-tools %}{% endblock %}
+
+{% block result_list %}
+  <section class="staff-login-summary">
+    <h2>Staff login history</h2>
+    <p>
+      Successful staff sign-ins over the last 30 days
+      &middot; {{ summary.total }} total
+      &middot; {{ summary.employees }} employees
+    </p>
+    <div class="staff-login-summary__chips">
+      <span>Admin: {{ summary.admin_total }}</span>
+      <span>Site: {{ summary.site_total }}</span>
+    </div>
+  </section>
+  {{ block.super }}
+{% endblock %}
+
+{% block extrahead %}
+  {{ block.super }}
+  <style>
+    .staff-login-summary {
+      margin: 0 0 18px;
+      padding: 18px 20px;
+      border: 1px solid #dbe3f0;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #f8fafc, #eef6ff);
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+    }
+    .staff-login-summary h2 {
+      margin: 0 0 6px;
+      font-size: 22px;
+    }
+    .staff-login-summary p {
+      margin: 0;
+      color: #334155;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .staff-login-summary__chips {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+    .staff-login-summary__chips span {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #0f172a;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+    }
+  </style>
+{% endblock %}
+
