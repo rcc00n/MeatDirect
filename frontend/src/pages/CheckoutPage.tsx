@@ -35,6 +35,11 @@ function CheckoutPageInner() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (!error || typeof window === "undefined") return;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [error]);
+
   const handleSubmit = async (values: CheckoutSubmitValues) => {
     if (!items.length) return;
 
@@ -123,9 +128,13 @@ function CheckoutPageInner() {
     return (
       <div className="checkout-status-page">
         <div className="checkout-status-card checkout-status-card--error">
+          <div className="checkout-status-card__crest" aria-hidden="true" />
           <p className="checkout-status-card__eyebrow">Payment error</p>
           <h2 className="checkout-status-card__title">Your payment was not completed</h2>
           <p className="checkout-status-card__body">{error}</p>
+          <p className="checkout-status-card__body checkout-status-card__body--muted">
+            No receipt will be issued until Stripe confirms the payment successfully.
+          </p>
           <div className="checkout-status-card__actions">
             <button type="button" className="checkout-status-card__button" onClick={() => setError(null)}>
               Try again
@@ -170,9 +179,16 @@ function CheckoutPage() {
   const [stripePromise, setStripePromise] = useState<Promise<Stripe | null> | null>(null);
   const [loadingStripe, setLoadingStripe] = useState(true);
   const [stripeError, setStripeError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!stripeError || typeof window === "undefined") return;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [stripeError]);
+
   const renderStatusScreen = (title: string, message: string, tone: "default" | "error" = "default") => (
     <div className="checkout-status-page">
       <div className={`checkout-status-card${tone === "error" ? " checkout-status-card--error" : ""}`}>
+        <div className="checkout-status-card__crest" aria-hidden="true" />
         <p className="checkout-status-card__eyebrow">Secure checkout</p>
         <h2 className="checkout-status-card__title">{title}</h2>
         <p className="checkout-status-card__body">{message}</p>

@@ -13,6 +13,12 @@ function SuccessPage() {
   const hasTrackedRef = useRef(false);
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, []);
+
+  useEffect(() => {
     if (hasTrackedRef.current) return;
     if (typeof window === "undefined" || typeof window.fbq !== "function") {
       return;
@@ -39,8 +45,26 @@ function SuccessPage() {
   return (
     <div className="checkout-status-page checkout-status-page--standalone">
       <div className="checkout-status-card checkout-status-card--success">
+        <div className="checkout-status-card__crest" aria-hidden="true" />
         <p className="checkout-status-card__eyebrow">Payment success</p>
         <h1 className="checkout-status-card__title">Payment received</h1>
+
+        <div className="checkout-status-card__metrics">
+          {state.orderId && (
+            <div className="checkout-status-card__metric">
+              <span className="checkout-status-card__metric-label">Order</span>
+              <strong className="checkout-status-card__metric-value">#{state.orderId}</strong>
+            </div>
+          )}
+          {typeof state.orderTotalCents === "number" && (
+            <div className="checkout-status-card__metric">
+              <span className="checkout-status-card__metric-label">Amount</span>
+              <strong className="checkout-status-card__metric-value">
+                {(state.currency ?? "CAD")} {(state.orderTotalCents / 100).toFixed(2)}
+              </strong>
+            </div>
+          )}
+        </div>
 
         {state.orderId && (
           <p className="checkout-status-card__body">
