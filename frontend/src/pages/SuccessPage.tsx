@@ -37,44 +37,38 @@ function SuccessPage() {
   }, [state.currency, state.orderId, state.orderTotalCents]);
 
   return (
-    <div style={{ maxWidth: 600, margin: "40px auto", textAlign: "center" }}>
-      <h1 style={{ fontSize: 32, marginBottom: 16 }}>Payment received</h1>
+    <div className="checkout-status-page checkout-status-page--standalone">
+      <div className="checkout-status-card checkout-status-card--success">
+        <p className="checkout-status-card__eyebrow">Payment success</p>
+        <h1 className="checkout-status-card__title">Payment received</h1>
 
-      {state.orderId && (
-        <p style={{ fontSize: 16, marginBottom: 8 }}>
-          Your payment was completed successfully for order <strong>#{state.orderId}</strong>.
+        {state.orderId && (
+          <p className="checkout-status-card__body">
+            Your payment was completed successfully for order <strong>#{state.orderId}</strong>.
+          </p>
+        )}
+
+        <p className="checkout-status-card__body checkout-status-card__body--muted">
+          Thank you for your order. We&apos;ll start preparing it right away.
         </p>
-      )}
+        <p className="checkout-status-card__body checkout-status-card__body--muted">
+          We&apos;ll email your pickup or delivery details as soon as the order processing steps finish.
+        </p>
+        <p className="checkout-status-card__body">
+          Delivery heads-up: orders before 12 PM arrive the same day between 4–5 PM. After noon, expect delivery by 1
+          PM tomorrow. You can reply to your confirmation email with any gate codes or extra notes.
+        </p>
 
-      <p style={{ marginBottom: 8, color: "#475569" }}>
-        Thank you for your order. We&apos;ll start preparing it right away.
-      </p>
-      <p style={{ marginBottom: 16, color: "#475569" }}>
-        We&apos;ll email your pickup or delivery details as soon as the order processing steps finish.
-      </p>
-      <p style={{ marginBottom: 16, color: "#0f172a" }}>
-        Delivery heads-up: orders before 12 PM arrive the same day between 4–5 PM. After noon, expect delivery by 1 PM
-        tomorrow. You can reply to your confirmation email with any gate codes or extra notes.
-      </p>
+        <p className="checkout-status-card__body">
+          For pickup orders, please bring your confirmation email and a photo ID to the store.
+        </p>
 
-      <p style={{ marginBottom: 24, color: "#0f172a" }}>
-        For pickup orders, please bring your confirmation email and a photo ID to the store.
-      </p>
-
-      <Link
-        to="/"
-        style={{
-          display: "inline-block",
-          padding: "10px 18px",
-          borderRadius: 999,
-          border: "1px solid #16a34a",
-          color: "#16a34a",
-          fontWeight: 600,
-          textDecoration: "none",
-        }}
-      >
-        Back to store
-      </Link>
+        <div className="checkout-status-card__actions">
+          <Link to="/" className="checkout-status-card__button">
+            Back to store
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }

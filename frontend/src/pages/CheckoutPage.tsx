@@ -119,6 +119,30 @@ function CheckoutPageInner() {
     }
   };
 
+  if (error) {
+    return (
+      <div className="checkout-status-page">
+        <div className="checkout-status-card checkout-status-card--error">
+          <p className="checkout-status-card__eyebrow">Payment error</p>
+          <h2 className="checkout-status-card__title">Your payment was not completed</h2>
+          <p className="checkout-status-card__body">{error}</p>
+          <div className="checkout-status-card__actions">
+            <button type="button" className="checkout-status-card__button" onClick={() => setError(null)}>
+              Try again
+            </button>
+            <button
+              type="button"
+              className="checkout-status-card__button checkout-status-card__button--ghost"
+              onClick={() => navigate("/cart")}
+            >
+              Back to cart
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="checkout-form-shell">
       {items.length === 0 ? (
@@ -130,7 +154,6 @@ function CheckoutPageInner() {
           submitting={submitting}
         />
       )}
-      {error && <div className="checkout-alert checkout-alert--error">{error}</div>}
       {submitting && (
         <div className="checkout-alert checkout-alert--info">
           Authorizing your payment securely. Please do not close or refresh this page.
@@ -147,6 +170,15 @@ function CheckoutPage() {
   const [stripePromise, setStripePromise] = useState<Promise<Stripe | null> | null>(null);
   const [loadingStripe, setLoadingStripe] = useState(true);
   const [stripeError, setStripeError] = useState<string | null>(null);
+  const renderStatusScreen = (title: string, message: string, tone: "default" | "error" = "default") => (
+    <div className="checkout-status-page">
+      <div className={`checkout-status-card${tone === "error" ? " checkout-status-card--error" : ""}`}>
+        <p className="checkout-status-card__eyebrow">Secure checkout</p>
+        <h2 className="checkout-status-card__title">{title}</h2>
+        <p className="checkout-status-card__body">{message}</p>
+      </div>
+    </div>
+  );
   const renderLayout = (content: ReactNode) => (
     <div className="checkout-page">
       <div className="checkout-shell">
@@ -232,13 +264,11 @@ function CheckoutPage() {
   }, [envStripeKey]);
 
   if (stripeError) {
-    return renderLayout(<div className="checkout-alert checkout-alert--error">{stripeError}</div>);
+    return renderLayout(renderStatusScreen("We could not open checkout", stripeError, "error"));
   }
 
   if (loadingStripe || !stripePromise) {
-    return renderLayout(
-      <div className="checkout-alert checkout-alert--info">Preparing a secure payment form...</div>,
-    );
+    return renderLayout(renderStatusScreen("Preparing secure checkout", "Loading the payment form now."));
   }
 
   return renderLayout(

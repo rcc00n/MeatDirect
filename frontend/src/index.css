@@ -4484,6 +4484,105 @@ a {
   color: #475569;
 }
 
+.checkout-status-page {
+  min-height: calc(100vh - 280px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 0;
+}
+
+.checkout-status-page--standalone {
+  min-height: 100vh;
+  padding: 32px 16px;
+  background: radial-gradient(circle at top left, #f8fafc, #fff 55%);
+}
+
+.checkout-status-card {
+  width: min(100%, 720px);
+  background: linear-gradient(180deg, #ffffff, #f8fafc);
+  border: 1px solid #e2e8f0;
+  border-radius: 28px;
+  box-shadow: 0 32px 80px -52px rgba(15, 23, 42, 0.45);
+  padding: 32px 24px;
+  text-align: center;
+  display: grid;
+  gap: 14px;
+}
+
+.checkout-status-card--error {
+  border-color: #fecaca;
+  background: linear-gradient(180deg, #fff7f7, #fff1f2);
+}
+
+.checkout-status-card--success {
+  border-color: #bbf7d0;
+  background: linear-gradient(180deg, #f4fff6, #effdf4);
+}
+
+.checkout-status-card__eyebrow {
+  margin: 0;
+  color: #ef4444;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.checkout-status-card__title {
+  margin: 0;
+  font-size: clamp(32px, 5vw, 52px);
+  line-height: 1.02;
+}
+
+.checkout-status-card__body {
+  margin: 0;
+  color: #0f172a;
+  font-size: 17px;
+  line-height: 1.65;
+}
+
+.checkout-status-card__body--muted {
+  color: #475569;
+}
+
+.checkout-status-card__actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.checkout-status-card__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 170px;
+  padding: 14px 20px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: linear-gradient(135deg, #16a34a, #0ea5e9);
+  color: #fff;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
+  box-shadow: 0 20px 42px -28px rgba(14, 165, 233, 0.65);
+}
+
+.checkout-status-card__button:hover {
+  transform: translateY(-1px);
+}
+
+.checkout-status-card__button--ghost {
+  background: #fff;
+  border-color: #cbd5e1;
+  color: #0f172a;
+  box-shadow: none;
+}
+
 .checkout-summary {
   display: flex;
   align-items: center;
@@ -4565,6 +4664,10 @@ a {
 
   .checkout-header__title {
     font-size: 30px;
+  }
+
+  .checkout-status-card {
+    padding: 40px 36px;
   }
 }
 
