@@ -1,6 +1,8 @@
+import logging
 import os
 
 import stripe
+from django.db import transaction
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -10,6 +12,7 @@ from orders.utils import DeliveryZoneError, calculate_tax_cents, get_delivery_qu
 from products.models import Product
 
 stripe.api_key = os.environ.get("STRIPE_SECRET_KEY", "sk_test_placeholder")
+logger = logging.getLogger(__name__)
 
 
 @api_view(["GET"])
@@ -152,64 +155,70 @@ def create_checkout(request):
     tax_cents = calculate_tax_cents(subtotal_cents, delivery_fee_cents)
     total_cents = subtotal_cents + delivery_fee_cents + tax_cents
 
-    order = Order.objects.create(
-        full_name=data.get("full_name", ""),
-        email=data.get("email", ""),
-        phone=data.get("phone", ""),
-        order_type=order_type,
-        address_line1=address.get("line1", ""),
-        address_line2=address.get("line2", ""),
-        city=address.get("city", ""),
-        postal_code=address.get("postal_code", ""),
-        delivery_notes=delivery_notes,
-        delivery_service_area=delivery_service_area,
-        delivery_fee_cents=delivery_fee_cents,
-        delivery_eta_text=delivery_eta_text,
-        notes=data.get("notes", ""),
-        pickup_location=data.get("pickup_location", ""),
-        pickup_instructions=data.get("pickup_instructions", ""),
-        subtotal_cents=subtotal_cents,
-        tax_cents=tax_cents,
-        total_cents=total_cents,
-        status=Order.Status.PLACED,
-    )
-
-    order_items = [
-        OrderItem(
-            order=order,
-            product=item_data["product"],
-            product_name=item_data["product_name"],
-            quantity=item_data["quantity"],
-            unit_price_cents=item_data["unit_price_cents"],
-            total_cents=item_data["total_cents"],
-        )
-        for item_data in order_items_data
-    ]
-    OrderItem.objects.bulk_create(order_items)
-
     try:
-        intent = stripe.PaymentIntent.create(
-            amount=total_cents,
-            currency="cad",
-            automatic_payment_methods={"enabled": True},
-            receipt_email=order.email,
-            metadata={"order_id": str(order.id)},
-        )
+        with transaction.atomic():
+            order = Order.objects.create(
+                full_name=data.get("full_name", ""),
+                email=data.get("email", ""),
+                phone=data.get("phone", ""),
+                order_type=order_type,
+                address_line1=address.get("line1", ""),
+                address_line2=address.get("line2", ""),
+                city=address.get("city", ""),
+                postal_code=address.get("postal_code", ""),
+                delivery_notes=delivery_notes,
+                delivery_service_area=delivery_service_area,
+                delivery_fee_cents=delivery_fee_cents,
+                delivery_eta_text=delivery_eta_text,
+                notes=data.get("notes", ""),
+                pickup_location=data.get("pickup_location", ""),
+                pickup_instructions=data.get("pickup_instructions", ""),
+                subtotal_cents=subtotal_cents,
+                tax_cents=tax_cents,
+                total_cents=total_cents,
+                status=Order.Status.PLACED,
+            )
+
+            order_items = [
+                OrderItem(
+                    order=order,
+                    product=item_data["product"],
+                    product_name=item_data["product_name"],
+                    quantity=item_data["quantity"],
+                    unit_price_cents=item_data["unit_price_cents"],
+                    total_cents=item_data["total_cents"],
+                )
+                for item_data in order_items_data
+            ]
+            OrderItem.objects.bulk_create(order_items)
+
+            intent = stripe.PaymentIntent.create(
+                amount=total_cents,
+                currency="cad",
+                automatic_payment_methods={"enabled": True},
+                receipt_email=order.email,
+                metadata={"order_id": str(order.id)},
+            )
+
+            payment_intent_id = (
+                intent.get("id")
+                if hasattr(intent, "get")
+                else getattr(intent, "id", "")
+            )
+            client_secret = (
+                intent.get("client_secret")
+                if hasattr(intent, "get")
+                else getattr(intent, "client_secret", None)
+            )
+
+            order.stripe_payment_intent_id = payment_intent_id
+            order.save(update_fields=["stripe_payment_intent_id"])
     except Exception as exc:
+        logger.exception("Unable to create checkout PaymentIntent")
         return Response(
             {"detail": "Unable to create payment intent.", "error": str(exc)},
             status=status.HTTP_502_BAD_GATEWAY,
         )
-
-    payment_intent_id = intent.get("id") if hasattr(intent, "get") else getattr(intent, "id", "")
-    client_secret = (
-        intent.get("client_secret")
-        if hasattr(intent, "get")
-        else getattr(intent, "client_secret", None)
-    )
-
-    order.stripe_payment_intent_id = payment_intent_id
-    order.save(update_fields=["stripe_payment_intent_id"])
 
     return Response(
         {

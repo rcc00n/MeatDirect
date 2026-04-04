@@ -53,6 +53,22 @@ def send_order_receipt_email(order: Order) -> EmailNotification:
     from_email = settings.DEFAULT_FROM_EMAIL
 
     try:
+        pdf_bytes = generate_order_receipt_pdf(order)
+        notification = EmailNotification.objects.create(
+            order=order,
+            kind=ORDER_RECEIPT_KIND,
+            to_email=order.email,
+            subject=subject,
+            status="pending",
+        )
+        if pdf_bytes:
+            filename = f"order_{order.id}_receipt.pdf"
+            notification.receipt_pdf.save(
+                filename,
+                ContentFile(pdf_bytes),
+                save=True,
+            )
+
         msg = EmailMultiAlternatives(
             subject,
             text_body,
@@ -60,8 +76,6 @@ def send_order_receipt_email(order: Order) -> EmailNotification:
             [order.email],
         )
         msg.attach_alternative(html_body, "text/html")
-
-        pdf_bytes = generate_order_receipt_pdf(order)
         msg.attach("order_receipt.pdf", pdf_bytes, "application/pdf")
 
         message_id: Optional[str] = None
@@ -75,23 +89,11 @@ def send_order_receipt_email(order: Order) -> EmailNotification:
         sent_at = timezone.now() if sent_count else None
         error = "" if sent_count else "Email backend did not send message"
 
-        notification = EmailNotification.objects.create(
-            order=order,
-            kind=ORDER_RECEIPT_KIND,
-            to_email=order.email,
-            subject=subject,
-            status=status,
-            message_id=message_id or "",
-            error=error,
-            sent_at=sent_at,
-        )
-        if pdf_bytes and status == "sent":
-            filename = f"order_{order.id}_receipt.pdf"
-            notification.receipt_pdf.save(
-                filename,
-                ContentFile(pdf_bytes),
-                save=True,
-            )
+        notification.status = status
+        notification.message_id = message_id or ""
+        notification.error = error
+        notification.sent_at = sent_at
+        notification.save(update_fields=["status", "message_id", "error", "sent_at"])
         return notification
     except Exception as exc:
         return EmailNotification.objects.create(

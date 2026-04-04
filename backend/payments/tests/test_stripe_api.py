@@ -298,3 +298,4 @@ class CreateCheckoutTests(TestCase):
         body = response.json()
         self.assertEqual(body["detail"], "Unable to create payment intent.")
         self.assertIn("stripe unavailable", body["error"])
+        self.assertEqual(Order.objects.count(), 0)

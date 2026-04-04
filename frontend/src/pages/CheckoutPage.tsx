@@ -8,6 +8,24 @@ import { type OrderPayload } from "../api/orders";
 import { createCheckout, fetchStripeConfig } from "../api/payments";
 import { useCart } from "../context/CartContext";
 
+function getReadablePaymentError(error: unknown): string {
+  if (!(error instanceof Error)) {
+    return "We could not start your payment. No charge was completed. Please try again or contact support.";
+  }
+
+  const message = error.message.trim();
+
+  if (!message) {
+    return "We could not start your payment. No charge was completed. Please try again or contact support.";
+  }
+
+  if (message.includes("Unable to create payment intent")) {
+    return "We could not start your payment on the server. No charge was completed. Please try again in a few minutes or contact support.";
+  }
+
+  return message;
+}
+
 function CheckoutPageInner() {
   const navigate = useNavigate();
   const stripe = useStripe();
@@ -79,22 +97,23 @@ function CheckoutPageInner() {
       });
 
       if (result.error) {
-        setError(result.error.message || "Payment failed. Please try again.");
+        setError(
+          result.error.message ||
+            "Payment was not approved. No charge was completed. Please check your card details or try another card."
+        );
       } else if (result.paymentIntent?.status === "succeeded") {
         clear();
         navigate("/success", {
-          state: { orderId: order_id, orderTotalCents: order.total_cents, currency: "USD" },
+          state: { orderId: order_id, orderTotalCents: order.total_cents, currency: "CAD" },
         });
       } else {
-        setError("Payment did not complete. Please try again.");
+        setError(
+          "Payment is not confirmed yet. No receipt will be issued until Stripe marks the payment as successful."
+        );
       }
     } catch (apiError) {
       console.error("Failed to submit order / payment", apiError);
-      setError(
-        apiError instanceof Error
-          ? apiError.message
-          : "Unable to submit order right now. Please try again.",
-      );
+      setError(getReadablePaymentError(apiError));
     } finally {
       setSubmitting(false);
     }
@@ -112,7 +131,11 @@ function CheckoutPageInner() {
         />
       )}
       {error && <div className="checkout-alert checkout-alert--error">{error}</div>}
-      {submitting && <div className="checkout-alert checkout-alert--info">Processing payment...</div>}
+      {submitting && (
+        <div className="checkout-alert checkout-alert--info">
+          Authorizing your payment securely. Please do not close or refresh this page.
+        </div>
+      )}
     </div>
   );
 }

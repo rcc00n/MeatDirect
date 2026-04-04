@@ -38,11 +38,11 @@ function SuccessPage() {
 
   return (
     <div style={{ maxWidth: 600, margin: "40px auto", textAlign: "center" }}>
-      <h1 style={{ fontSize: 32, marginBottom: 16 }}>Payment success 🎉</h1>
+      <h1 style={{ fontSize: 32, marginBottom: 16 }}>Payment received</h1>
 
       {state.orderId && (
         <p style={{ fontSize: 16, marginBottom: 8 }}>
-          Your order ID: <strong>#{state.orderId}</strong>
+          Your payment was completed successfully for order <strong>#{state.orderId}</strong>.
         </p>
       )}
 
@@ -50,7 +50,7 @@ function SuccessPage() {
         Thank you for your order. We&apos;ll start preparing it right away.
       </p>
       <p style={{ marginBottom: 16, color: "#475569" }}>
-        You&apos;ll receive an email with pickup or delivery details shortly.
+        We&apos;ll email your pickup or delivery details as soon as the order processing steps finish.
       </p>
       <p style={{ marginBottom: 16, color: "#0f172a" }}>
         Delivery heads-up: orders before 12 PM arrive the same day between 4–5 PM. After noon, expect delivery by 1 PM

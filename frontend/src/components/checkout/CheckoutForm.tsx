@@ -310,9 +310,6 @@ function CheckoutForm({ subtotalCents, submitting = false, onSubmit }: CheckoutF
             }}
           />
         </div>
-        <p className="checkout-hint">
-          For testing, use card <strong>4242 4242 4242 4242</strong> with any future expiry and any CVC.
-        </p>
       </div>
 
       {formError && <div className="checkout-alert checkout-alert--error">{formError}</div>}

@@ -1,4 +1,6 @@
 from datetime import datetime
+import tempfile
+from unittest import mock
 
 from django.core import mail
 from django.test import TestCase, override_settings
@@ -67,6 +69,20 @@ class SendOrderReceiptEmailTests(TestCase):
         self.assertEqual(filename, "order_receipt.pdf")
         self.assertEqual(mimetype, "application/pdf")
         self.assertTrue(content)
+        self.assertTrue(notification.receipt_pdf.name)
+
+    def test_receipt_pdf_is_saved_even_when_email_backend_does_not_send(self):
+        with tempfile.TemporaryDirectory() as media_root:
+            with override_settings(MEDIA_ROOT=media_root):
+                with mock.patch(
+                    "notifications.emails.EmailMultiAlternatives.send",
+                    return_value=0,
+                ):
+                    notification = send_order_receipt_email(self.order)
+
+        self.assertEqual(notification.status, "failed")
+        self.assertEqual(notification.error, "Email backend did not send message")
+        self.assertTrue(notification.receipt_pdf.name)
 
     def test_send_order_receipt_email_once_is_idempotent(self):
         first = send_order_receipt_email_once(self.order)
