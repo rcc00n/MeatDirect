@@ -23,15 +23,14 @@ class StripeWebhookView(APIView):
         payload = request.body
         sig_header = request.META.get("HTTP_STRIPE_SIGNATURE")
 
-        if STRIPE_WEBHOOK_SECRET:
-            try:
-                event = stripe.Webhook.construct_event(
-                    payload, sig_header, STRIPE_WEBHOOK_SECRET
-                )
-            except (ValueError, stripe.error.SignatureVerificationError):
-                return Response(status=status.HTTP_400_BAD_REQUEST)
-        else:
-            event = request.data
+        if not STRIPE_WEBHOOK_SECRET.strip():
+            return Response({"detail": "Webhook is not configured."}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+        if not sig_header:
+            return Response({"detail": "Invalid webhook signature."}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            event = stripe.Webhook.construct_event(payload, sig_header, STRIPE_WEBHOOK_SECRET)
+        except (ValueError, stripe.error.SignatureVerificationError):
+            return Response({"detail": "Invalid webhook signature."}, status=status.HTTP_400_BAD_REQUEST)
 
         event_type = event.get("type") if isinstance(event, dict) else getattr(event, "type", None)
         data_object = (

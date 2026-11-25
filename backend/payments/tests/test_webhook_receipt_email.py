@@ -1,3 +1,7 @@
+import hashlib
+import hmac
+import json
+import time
 from unittest import mock
 
 from django.core import mail
@@ -16,6 +20,12 @@ from products.models import Product
     DEFAULT_FROM_EMAIL="no-reply@example.com",
 )
 class StripeWebhookReceiptEmailTests(TestCase):
+    def post_signed(self, payload):
+        body = json.dumps(payload, separators=(",", ":"))
+        timestamp = str(int(time.time()))
+        signature = hmac.new(b"whsec_local_fixture", f"{timestamp}.{body}".encode(), hashlib.sha256).hexdigest()
+        return self.client.post(reverse("stripe-webhook"), body, content_type="application/json", HTTP_STRIPE_SIGNATURE=f"t={timestamp},v1={signature}")
+
     def setUp(self):
         self.client = APIClient()
         self.product = Product.objects.create(
@@ -51,7 +61,7 @@ class StripeWebhookReceiptEmailTests(TestCase):
 
     @mock.patch("payments.webhooks.sync_products_from_square")
     @mock.patch("payments.webhooks.decrement_square_inventory_for_order")
-    @mock.patch("payments.webhooks.STRIPE_WEBHOOK_SECRET", new="")
+    @mock.patch("payments.webhooks.STRIPE_WEBHOOK_SECRET", new="whsec_local_fixture")
     def test_payment_intent_succeeded_records_payment_and_sends_receipt(
         self, mock_decrement, mock_sync
     ):
@@ -69,9 +79,7 @@ class StripeWebhookReceiptEmailTests(TestCase):
         }
 
         with self.captureOnCommitCallbacks(execute=True):
-            response = self.client.post(
-                reverse("stripe-webhook"), payload, format="json"
-            )
+            response = self.post_signed(payload)
 
         self.assertEqual(response.status_code, 200)
         self.order.refresh_from_db()
@@ -110,7 +118,7 @@ class StripeWebhookReceiptEmailTests(TestCase):
         self.assertEqual(mimetype, "application/pdf")
         self.assertTrue(content)
 
-    @mock.patch("payments.webhooks.STRIPE_WEBHOOK_SECRET", new="")
+    @mock.patch("payments.webhooks.STRIPE_WEBHOOK_SECRET", new="whsec_local_fixture")
     def test_webhook_ignores_event_without_order_id_metadata(self):
         payload = {
             "type": "payment_intent.succeeded",
@@ -125,7 +133,7 @@ class StripeWebhookReceiptEmailTests(TestCase):
             },
         }
 
-        response = self.client.post(reverse("stripe-webhook"), payload, format="json")
+        response = self.post_signed(payload)
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["detail"], "No order_id in metadata")
@@ -134,7 +142,7 @@ class StripeWebhookReceiptEmailTests(TestCase):
         self.assertEqual(self.order.stripe_payment_intent_id, "")
         self.assertEqual(Payment.objects.count(), 0)
 
-    @mock.patch("payments.webhooks.STRIPE_WEBHOOK_SECRET", new="")
+    @mock.patch("payments.webhooks.STRIPE_WEBHOOK_SECRET", new="whsec_local_fixture")
     def test_webhook_with_unknown_order_id_is_noop(self):
         payload = {
             "type": "payment_intent.succeeded",
@@ -149,7 +157,7 @@ class StripeWebhookReceiptEmailTests(TestCase):
             },
         }
 
-        response = self.client.post(reverse("stripe-webhook"), payload, format="json")
+        response = self.post_signed(payload)
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["received"], True)
@@ -169,7 +177,7 @@ class StripeWebhookReceiptEmailTests(TestCase):
 
         self.assertEqual(response.status_code, 400)
 
-    @mock.patch("payments.webhooks.STRIPE_WEBHOOK_SECRET", new="")
+    @mock.patch("payments.webhooks.STRIPE_WEBHOOK_SECRET", new="whsec_local_fixture")
     def test_webhook_ignores_non_success_payment_events(self):
         payload = {
             "type": "payment_intent.payment_failed",
@@ -184,9 +192,31 @@ class StripeWebhookReceiptEmailTests(TestCase):
             },
         }
 
-        response = self.client.post(reverse("stripe-webhook"), payload, format="json")
+        response = self.post_signed(payload)
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["received"], True)
         self.order.refresh_from_db()
         self.assertEqual(self.order.status, Order.Status.PLACED)
+
+
+    @mock.patch("payments.webhooks.STRIPE_WEBHOOK_SECRET", new="")
+    @mock.patch("payments.webhooks.stripe.Webhook.construct_event")
+    @mock.patch("payments.webhooks.send_order_receipt_email_once")
+    @mock.patch("payments.webhooks.decrement_square_inventory_for_order")
+    def test_missing_signing_configuration_never_accepts_or_changes_an_order(self, inventory, email, construct):
+        response = self.client.post(reverse("stripe-webhook"), {"type": "payment_intent.succeeded", "data": {"object": {"metadata": {"order_id": str(self.order.id)}}}}, format="json")
+        self.assertEqual(response.status_code, 503)
+        self.order.refresh_from_db()
+        self.assertEqual(self.order.status, Order.Status.PLACED)
+        self.assertEqual(Payment.objects.count(), 0)
+        construct.assert_not_called(); email.assert_not_called(); inventory.assert_not_called()
+
+    @mock.patch("payments.webhooks.STRIPE_WEBHOOK_SECRET", new="whsec_local_fixture")
+    def test_missing_and_forged_signatures_leave_order_unchanged(self):
+        for signature in ("", "t=1,v1=invalid"):
+            response = self.client.post(reverse("stripe-webhook"), {"type": "payment_intent.succeeded"}, format="json", HTTP_STRIPE_SIGNATURE=signature)
+            self.assertEqual(response.status_code, 400)
+        self.order.refresh_from_db()
+        self.assertEqual(self.order.status, Order.Status.PLACED)
+        self.assertEqual(Payment.objects.count(), 0)
